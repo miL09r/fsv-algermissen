@@ -396,7 +396,7 @@ h1 {
 .news-card h3,
 .team-card h3,
 .feature-card h3,
-.widget-placeholder h2,
+.football-widget h2,
 .admin-panel h2 {
   margin: 0 0 10px;
   color: var(--black);
@@ -473,7 +473,7 @@ h1 {
   align-items: start;
 }
 
-.widget-placeholder {
+.football-widget {
   padding: 24px;
   color: var(--white);
   background:
@@ -483,9 +483,80 @@ h1 {
   border-radius: var(--radius);
 }
 
-.widget-placeholder h2,
-.widget-placeholder p {
+.football-widget + .football-widget {
+  margin-top: 14px;
+}
+
+.football-widget h2,
+.football-widget p {
   color: var(--white);
+}
+
+.football-widget-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.football-widget-head span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 9px;
+  color: var(--black);
+  background: var(--lime);
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.fussballde_widget {
+  min-height: 360px;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--white);
+  border-radius: var(--radius);
+}
+
+.football-widget-empty {
+  display: grid;
+  gap: 16px;
+}
+
+.football-widget-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius);
+}
+
+.football-widget-meta div {
+  padding: 12px;
+  background: rgba(7, 16, 24, 0.55);
+}
+
+.football-widget-meta dt {
+  color: #a9bdd1;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.football-widget-meta dd {
+  margin: 4px 0 0;
+  color: var(--white);
+  font-weight: 900;
+}
+
+.football-widget-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .side-panel {
@@ -623,6 +694,15 @@ textarea {
 
   .hero-stats {
     grid-template-columns: 1fr;
+  }
+
+  .football-widget-head,
+  .football-widget-meta {
+    display: block;
+  }
+
+  .football-widget-head span {
+    margin-top: 8px;
   }
 
   .hero {

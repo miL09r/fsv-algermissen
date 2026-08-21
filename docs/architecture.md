@@ -19,7 +19,7 @@ Teams, News, Vereinsseiten, Sponsoren, Downloads und FUSSBALL.DE Widget-Zuordnun
 
 ## FUSSBALL.DE
 
-Widget-IDs werden ueber `football_widgets` beziehungsweise aktuell ueber `footballWidgets` in `src/lib/data.ts` referenziert. Komponenten zeigen bewusst nur Platzhalter, bis die domaingebundenen Widget-IDs fuer die Cloudflare-Testdomain und spaeter `www.fsvalgermissen.de` vorliegen.
+Widget-IDs werden ueber `football_widgets` beziehungsweise aktuell ueber `footballWidgets` in `src/lib/data.ts` referenziert. Die Astro-Komponente rendert den offiziellen `https://www.fussball.de/widgets.js`-Loader und `data-id`/`data-type`-Container, sobald die domaingebundenen Codes aus `next.fussball.de/widgets` hinterlegt sind. Solange diese IDs fehlen, zeigt sie pro Team einen klaren Hinweis mit den bekannten FSV-Team- und Vereins-IDs aus der Bestandsseite.
 
 ## Medien
 

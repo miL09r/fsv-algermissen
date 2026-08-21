@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import NewsCard from "../../components/NewsCard.astro";
-import FootballWidgetPlaceholder from "../../components/FootballWidgetPlaceholder.astro";
+import FootballWidget from "../../components/FootballWidget.astro";
 import { getNewsForTeam, teams } from "../../lib/data";
 
 export const prerender = true;
@@ -44,9 +44,19 @@ const teamNews = getNewsForTeam(team.slug);
         </div>
       </div>
       <div>
-        <FootballWidgetPlaceholder team={team} variant="upcoming" />
-        <FootballWidgetPlaceholder team={team} variant="latest" />
-        <FootballWidgetPlaceholder team={team} variant="table" />
+        {team.area !== "darts" ? (
+          <>
+            <FootballWidget team={team} variant="upcoming" />
+            <FootballWidget team={team} variant="latest" />
+            <FootballWidget team={team} variant="table" />
+          </>
+        ) : (
+          <div class="content-card">
+            <p class="eyebrow">Spielbetrieb</p>
+            <h2>{team.league}</h2>
+            <p>Darts-Ergebnisse und Tabellen werden spaeter ueber die passende Ligadatenquelle angebunden.</p>
+          </div>
+        )}
       </div>
     </div>
   </section>

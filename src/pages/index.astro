@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import NewsCard from "../components/NewsCard.astro";
 import TeamGrid from "../components/TeamGrid.astro";
-import FootballWidgetPlaceholder from "../components/FootballWidgetPlaceholder.astro";
+import FootballWidget from "../components/FootballWidget.astro";
 import { clubPages, filterSponsors, getNewsForArea, getPublishedNews, teams } from "../lib/data";
 
 const latestNews = getPublishedNews().slice(0, 5);
@@ -63,9 +63,9 @@ const dartsNews = getNewsForArea("darts").slice(0, 2);
       <p>FUSSBALL.DE Widgets werden spaeter zentral konfiguriert, ohne Quellcodedateien pro Team anzupassen.</p>
     </div>
     <div class="feature-grid">
-      <FootballWidgetPlaceholder variant="upcoming" />
-      <FootballWidgetPlaceholder variant="latest" />
-      <FootballWidgetPlaceholder variant="table" />
+      <FootballWidget variant="upcoming" />
+      <FootballWidget variant="latest" />
+      <FootballWidget variant="table" />
     </div>
   </section>
 

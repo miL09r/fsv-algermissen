@@ -14,6 +14,25 @@ export type Team = {
   contacts: Array<{ role: string; name: string; email?: string; phone?: string }>;
   image?: string;
   sponsorSlugs?: string[];
+  externalIds?: {
+    clubId?: string;
+    teamId?: string;
+    leagueId?: string;
+    currentWebsiteUrl?: string;
+  };
+};
+
+export type FootballWidgetConfig = {
+  fixtureWidgetId?: string;
+  fixtureWidgetType?: string;
+  tableWidgetId?: string;
+  tableWidgetType?: string;
+  latestWidgetId?: string;
+  latestWidgetType?: string;
+  upcomingWidgetId?: string;
+  upcomingWidgetType?: string;
+  fussballDeUrl?: string;
+  note?: string;
 };
 
 export type NewsItem = {
@@ -76,7 +95,13 @@ export const teams: Team[] = [
     trainingLocation: "REWE-Rudat-Arena",
     contacts: [{ role: "Sportliche Leitung", name: "wird im CMS gepflegt" }],
     image: "https://images.ebcdn.de/club-4844/TeamImage_10821.jpg?404=default.png&format=jpg&mode=max&v=4&width=1180",
-    sponsorSlugs: ["cosmophone"]
+    sponsorSlugs: ["cosmophone"],
+    externalIds: {
+      clubId: "4844",
+      teamId: "10821",
+      leagueId: "3496",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/10821/1-herren"
+    }
   },
   {
     slug: "2-herren",
@@ -88,7 +113,12 @@ export const teams: Team[] = [
     trainingTimes: ["Trainingszeiten werden migriert"],
     trainingLocation: "Ostpreussen-Stadion",
     contacts: [{ role: "Ansprechpartner", name: "wird im CMS gepflegt" }],
-    image: "https://images.ebcdn.de/club-4844/TeamImage_10822.jpg?404=default.png&format=jpg&mode=max&v=3&width=1180"
+    image: "https://images.ebcdn.de/club-4844/TeamImage_10822.jpg?404=default.png&format=jpg&mode=max&v=3&width=1180",
+    externalIds: {
+      clubId: "4844",
+      teamId: "10822",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/10822/2-herren"
+    }
   },
   {
     slug: "ue32",
@@ -98,7 +128,12 @@ export const teams: Team[] = [
     description:
       "Seniorenfussball, Vereinsbindung und Spielbetrieb fuer die Alt-Herren.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Ansprechpartner", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Ansprechpartner", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "10824",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/10824/alt-herren-(ue-32)"
+    }
   },
   {
     slug: "ue40",
@@ -108,7 +143,12 @@ export const teams: Team[] = [
     description:
       "Die Alt-Senioren gehoeren sichtbar zur Vereinsstruktur und erhalten eigene Inhalte.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Ansprechpartner", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Ansprechpartner", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "10825",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/10825/alt-senioren-(ue-40)"
+    }
   },
   {
     slug: "jsg-nord",
@@ -119,7 +159,11 @@ export const teams: Team[] = [
       "Die Jugendspielgemeinschaft ist der zentrale Einstieg in die Jugendarbeit und verknuepft die Jahrgaenge von A bis Bambinis.",
     trainingTimes: ["jahrgangsabhaengig"],
     contacts: [{ role: "Jugend", name: "Maik Hartmann" }],
-    image: "https://images.ebcdn.de/club-4844/ArticleTeaser_90487.jpg?format=webp&height=1000&mode=crop&v=1&width=1600"
+    image: "https://images.ebcdn.de/club-4844/ArticleTeaser_90487.jpg?format=webp&height=1000&mode=crop&v=1&width=1600",
+    externalIds: {
+      clubId: "4844",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/jsg-nord"
+    }
   },
   {
     slug: "a-junioren",
@@ -129,7 +173,12 @@ export const teams: Team[] = [
     ageGroup: "A",
     description: "Mannschaftsseite fuer die aeltesten Junioren im FSV/JSG-Kontext.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "10918",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/10918/a-junioren"
+    }
   },
   {
     slug: "b-junioren",
@@ -139,7 +188,12 @@ export const teams: Team[] = [
     ageGroup: "B",
     description: "Struktureller Platz fuer News, Training, Trainer und FUSSBALL.DE Widgets.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "10920",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/10920/b-junioren"
+    }
   },
   {
     slug: "c-junioren",
@@ -149,7 +203,12 @@ export const teams: Team[] = [
     ageGroup: "C",
     description: "C-Junioren mit automatischer News-Zuordnung und spaeterer Spielplanintegration.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "10922",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/10922/c-junioren"
+    }
   },
   {
     slug: "d-junioren",
@@ -159,7 +218,12 @@ export const teams: Team[] = [
     ageGroup: "D",
     description: "D-Junioren als eigener Bereich innerhalb der JSG- und Jugendstruktur.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "10925",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/10925/d-junioren"
+    }
   },
   {
     slug: "e-junioren",
@@ -170,7 +234,12 @@ export const teams: Team[] = [
     description:
       "Die Architektur erlaubt mehrere Teams pro Jahrgang, etwa E I, E II oder weitere Mannschaften.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "13780",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/13780/e-junioren-team-1-und-2"
+    }
   },
   {
     slug: "f-junioren",
@@ -180,7 +249,12 @@ export const teams: Team[] = [
     ageGroup: "F",
     description: "F-Junioren mit Raum fuer Trainingszeiten, Ansprechpartner und kindgerechte News.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "12586",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/12586/f-junioren"
+    }
   },
   {
     slug: "g-junioren",
@@ -190,7 +264,12 @@ export const teams: Team[] = [
     ageGroup: "G",
     description: "G-Junioren als frueher Einstieg in den Fussball beim FSV.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "15160",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/15160/g-junioren"
+    }
   },
   {
     slug: "bambinis",
@@ -199,7 +278,12 @@ export const teams: Team[] = [
     area: "jugend",
     description: "Die Bambinis bekommen eine eigene Seite statt nur als Randnotiz aufzutauchen.",
     trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }]
+    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    externalIds: {
+      clubId: "4844",
+      teamId: "18861",
+      currentWebsiteUrl: "https://www.fsvalgermissen.de/mannschaft/18861/bambinis"
+    }
   },
   {
     slug: "darts-a-team",
@@ -418,13 +502,18 @@ export const downloads = [
   "Nutzungsvertrag Clubhaus"
 ];
 
-export const footballWidgets = teams.reduce<Record<string, {
-  fixtureWidgetId?: string;
-  tableWidgetId?: string;
-  latestWidgetId?: string;
-  upcomingWidgetId?: string;
-}>>((acc, team) => {
-  acc[team.slug] = {};
+export const clubFootballWidgets: FootballWidgetConfig = {
+  fussballDeUrl: "https://www.fussball.de/",
+  note:
+    "Vereinsweite Widget-IDs werden in next.fussball.de fuer die aktuelle Domain erstellt und hier hinterlegt."
+};
+
+export const footballWidgets = teams.reduce<Record<string, FootballWidgetConfig>>((acc, team) => {
+  acc[team.slug] = {
+    fussballDeUrl: team.externalIds?.currentWebsiteUrl,
+    note:
+      "Team-Widget-IDs werden in next.fussball.de erzeugt. data-id und data-type aus dem Codeblock hier eintragen."
+  };
   return acc;
 }, {});
 

@@ -11,6 +11,7 @@ Umgesetzt:
 - zentrale News mit Mehrfachzuordnung.
 - `/news` mit Client-Filter.
 - automatische News-Ausgabe auf Teamseiten.
+- FUSSBALL.DE Widget-Komponente mit offiziellem Loader und zentraler Konfiguration.
 - D1-Schema und Migration.
 - Admin-Login- und News-Grundgeruest.
 - responsive Gestaltung und SEO-Basis.
@@ -20,12 +21,11 @@ Offen aus Milestone 1:
 - echte Authentifizierung gegen D1.
 - CMS-Schreiboperationen.
 - vollstaendige Inhaltsmigration aller Detailtexte und Dokumente.
-- finale Widget-IDs fuer FUSSBALL.DE.
+- finale domaingebundene Widget-IDs aus `next.fussball.de/widgets`.
 
 ## Milestone 2
 
 - FUSSBALL.DE Widget-IDs fuer Testdomain erfassen.
-- Widget-Komponente mit offiziellen Loadern aktivieren.
 - Startseiten-Matchcenter dynamisch aufbauen.
 - Spielplan, Ergebnisse und Tabellen auf Teamseiten anbinden.
 - D1-seitige Konfiguration im Admin bearbeitbar machen.
