@@ -1,6 +1,3 @@
-import { pbkdf2, randomBytes, timingSafeEqual } from "node:crypto";
-import { promisify } from "node:util";
-
 type D1Statement<T = unknown> = {
   bind: (...values: unknown[]) => D1Statement<T>;
   first: <R = T>() => Promise<R | null>;
@@ -21,7 +18,6 @@ export type AdminUser = {
 
 const sessionCookie = "fsv_session";
 const iterations = 210000;
-const derivePbkdf2 = promisify(pbkdf2);
 
 const hexToBytes = (hex: string) => {
   const bytes = new Uint8Array(hex.length / 2);
@@ -30,6 +26,35 @@ const hexToBytes = (hex: string) => {
   }
   return bytes;
 };
+
+const bytesToHex = (bytes: Uint8Array) => Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+
+const toArrayBuffer = (bytes: Uint8Array) => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+
+async function derivePbkdf2(password: string, salt: Uint8Array, iterationCount: number) {
+  const passwordBytes = new TextEncoder().encode(password);
+  const key = await crypto.subtle.importKey("raw", toArrayBuffer(passwordBytes), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      hash: "SHA-256",
+      salt: toArrayBuffer(salt),
+      iterations: iterationCount
+    },
+    key,
+    256
+  );
+  return new Uint8Array(bits);
+}
+
+function equalBytes(a: Uint8Array, b: Uint8Array) {
+  if (a.length !== b.length) return false;
+  let difference = 0;
+  for (let index = 0; index < a.length; index += 1) {
+    difference |= a[index] ^ b[index];
+  }
+  return difference === 0;
+}
 
 export async function getDb(locals: unknown) {
   const runtimeDb = (locals as { runtime?: { env?: { DB?: D1DatabaseLike } } }).runtime?.env?.DB;
@@ -44,20 +69,22 @@ export async function getDb(locals: unknown) {
 }
 
 export function randomToken(byteLength = 32) {
-  return randomBytes(byteLength).toString("hex");
+  const bytes = new Uint8Array(byteLength);
+  crypto.getRandomValues(bytes);
+  return bytesToHex(bytes);
 }
 
 export async function hashPassword(password: string, salt = randomToken(16)) {
-  const derived = await derivePbkdf2(password, hexToBytes(salt), iterations, 32, "sha256");
-  return `pbkdf2-sha256$${iterations}$${salt}$${derived.toString("hex")}`;
+  const derived = await derivePbkdf2(password, hexToBytes(salt), iterations);
+  return `pbkdf2-sha256$${iterations}$${salt}$${bytesToHex(derived)}`;
 }
 
 export async function verifyPassword(password: string, storedHash: string) {
   const [algorithm, iterationText, salt, expected] = storedHash.split("$");
   if (algorithm !== "pbkdf2-sha256" || !iterationText || !salt || !expected) return false;
-  const actual = await derivePbkdf2(password, hexToBytes(salt), Number(iterationText), 32, "sha256");
+  const actual = await derivePbkdf2(password, hexToBytes(salt), Number(iterationText));
   const expectedBytes = hexToBytes(expected);
-  return actual.length === expectedBytes.length && timingSafeEqual(actual, expectedBytes);
+  return equalBytes(actual, expectedBytes);
 }
 
 export async function createSession(db: D1DatabaseLike, userId: number) {
