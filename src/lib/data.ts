@@ -356,7 +356,7 @@ export const teams: Team[] = [
     area: "darts",
     league: "Bezirksklasse 4",
     description:
-      "Das A-Team der Magpies bildet einen sichtbaren Darts-Bereich mit eigener Teamseite.",
+      "Das A-Team der Magpies spielt in der Bezirksklasse 4 und gehoert zum Darts-Bereich im Clubhaus.",
     trainingTimes: ["Montag 19:00", "Mittwoch 19:00"],
     trainingLocation: "Clubhaus",
     contacts: [{ role: "Kontakt", name: "Sebastian Boes" }]
@@ -367,7 +367,7 @@ export const teams: Team[] = [
     shortName: "B-Team",
     area: "darts",
     league: "Kreisoberliga 3",
-    description: "Das B-Team ist Teil der Darts-Struktur und wird redaktionell gleichwertig gefuehrt.",
+    description: "Das B-Team spielt in der Kreisoberliga 3 und wird redaktionell gleichwertig gefuehrt.",
     trainingTimes: ["Montag 19:00", "Mittwoch 19:00"],
     trainingLocation: "Clubhaus",
     contacts: [{ role: "Kontakt", name: "Sebastian Boes" }]
@@ -378,7 +378,7 @@ export const teams: Team[] = [
     shortName: "C-Team",
     area: "darts",
     league: "Kreisklasse 06",
-    description: "Das C-Team rundet den Darts-Bereich mit eigener Seite und News-Zuordnung ab.",
+    description: "Das C-Team spielt in der Kreisklasse 06 und rundet den Darts-Bereich der Magpies ab.",
     trainingTimes: ["Montag 19:00", "Mittwoch 19:00"],
     trainingLocation: "Clubhaus",
     contacts: [{ role: "Kontakt", name: "Sebastian Boes" }]
@@ -670,6 +670,110 @@ export const news: NewsItem[] = [
     author: "Redaktion"
   },
   {
+    slug: "hilfe-fuer-den-kleinen-kuba",
+    title: "Hilfe fuer den kleinen Kuba",
+    teaser: "Hannover 96 und der FSV Algermissen starten gemeinsam einen Spendenaufruf.",
+    body:
+      "Der sechsjaehrige Kuba ist in seiner Mobilitaet stark eingeschraenkt. Gemeinsam mit Hannover 96 ruft der FSV Algermissen zu Spenden fuer ein spezielles Dreirad mit E-Motor und einen passenden Rollstuhl auf. Durch Aktionen im Jugendbereich und Mannschaftskassen sind bereits rund 400 Euro zusammengekommen.",
+    date: "2026-03-05",
+    status: "published",
+    category: "Verein",
+    teamSlugs: ["jsg-nord"],
+    areaTags: ["verein", "jugend"],
+    author: "Redaktion"
+  },
+  {
+    slug: "hannover-96-fussballschule-dezember",
+    title: "Hannover 96 Fussballschule Talents+Friends zu Gast",
+    teaser: "Der Besuch der Hannover 96 Fussballschule wurde fuer den FSV angekuendigt.",
+    body:
+      "Die Hannover 96 Fussballschule Talents+Friends ist beim FSV Algermissen zu Gast und verbindet Fussball, Training und Vereinsleben.",
+    date: "2025-12-11",
+    status: "published",
+    category: "Jugend",
+    teamSlugs: ["jsg-nord"],
+    areaTags: ["verein", "jugend"],
+    author: "Jugendredaktion"
+  },
+  {
+    slug: "gruenkohlessen-2026",
+    title: "Gruenkohlessen satt am 31.01.26",
+    teaser: "Der FSV laedt zum gemeinsamen Gruenkohlessen ein.",
+    body:
+      "Das Vereinsleben bleibt auch abseits des Platzes sichtbar: Am 31.01.2026 findet das Gruenkohlessen satt statt.",
+    date: "2025-11-12",
+    status: "published",
+    category: "Verein",
+    teamSlugs: [],
+    areaTags: ["verein"],
+    author: "Redaktion"
+  },
+  {
+    slug: "spieltag-14",
+    title: "Spieltag 14",
+    teaser: "Informationen zum 14. Spieltag im Herrenbereich.",
+    body:
+      "Der 14. Spieltag wurde auf der alten Website als aktuelle Vereinsmeldung gefuehrt und ist jetzt in der neuen News-Struktur sichtbar.",
+    date: "2025-11-08",
+    status: "published",
+    category: "Fussball",
+    teamSlugs: ["1-herren", "2-herren"],
+    areaTags: ["senioren"],
+    author: "Sportredaktion"
+  },
+  {
+    slug: "nachholspiel-schellerten",
+    title: "Nachholspiel gegen Schellerten",
+    teaser: "Nachholspiel am 15.10.2025 um 19:00 Uhr.",
+    body:
+      "Das Nachholspiel gegen Schellerten wurde fuer den 15.10.2025 um 19:00 Uhr angekuendigt.",
+    date: "2025-10-15",
+    status: "published",
+    category: "Fussball",
+    teamSlugs: ["1-herren"],
+    areaTags: ["senioren"],
+    author: "Sportredaktion"
+  },
+  {
+    slug: "spielbericht-sportnews-hildesheim",
+    title: "Spielbericht von Sportnews Hildesheim",
+    teaser: "FSV Algermissen - SV Teutonia Sorsum 2:1.",
+    body:
+      "Der Spielbericht zum Spiel FSV Algermissen gegen SV Teutonia Sorsum wurde auf der alten Website im Bereich der 1. Herren gefuehrt.",
+    date: "2025-10-15",
+    status: "published",
+    category: "1. Herren",
+    teamSlugs: ["1-herren"],
+    areaTags: ["senioren"],
+    author: "Sportredaktion"
+  },
+  {
+    slug: "bittere-niederlage-zweite-herren",
+    title: "Bittere Niederlage fuer die II. Herren",
+    teaser: "FSV Algermissen II verliert gegen SG Huemax/Borsum 2:3.",
+    body:
+      "Die 2. Herren startete ausgeglichen, fuehrte zwischenzeitlich und musste sich nach mehreren Platzverweisen und einer langen Nachspielzeit am Ende mit 2:3 geschlagen geben.",
+    date: "2025-10-15",
+    status: "published",
+    category: "2. Herren",
+    teamSlugs: ["2-herren"],
+    areaTags: ["senioren"],
+    author: "Sportredaktion"
+  },
+  {
+    slug: "unentschieden-im-derby",
+    title: "Unentschieden im Derby",
+    teaser: "TuS Luehnde - FSV Algermissen 1:1.",
+    body:
+      "Das Derby gegen TuS Luehnde endete fuer die 1. Herren mit einem 1:1-Unentschieden.",
+    date: "2025-10-05",
+    status: "published",
+    category: "1. Herren",
+    teamSlugs: ["1-herren"],
+    areaTags: ["senioren"],
+    author: "Sportredaktion"
+  },
+  {
     slug: "darts-magpies-aufstieg",
     title: "Aufstieg der Magpies ist perfekt",
     teaser: "Die Darts-Mannschaften feiern ihren sportlichen Erfolg im Clubhaus.",
@@ -744,6 +848,16 @@ export const clubPages: ClubPage[] = [
       }
     ],
     links: [{ label: "Leitbild herunterladen", href: "/verein/downloads" }]
+  },
+  {
+    slug: "datenschutzordnung",
+    title: "Datenschutzordnung",
+    teaser: "Datenschutz und Vereinsdokumente des FSV Algermissen.",
+    body: [
+      "Die Datenschutzordnung ist als eigener Vereinsbereich hinterlegt und gehoert zu den zentralen Dokumenten des FSV Algermissen.",
+      "Das Dokument wird im Downloadbereich gepflegt, damit es bei Aktualisierungen zentral ausgetauscht werden kann."
+    ],
+    links: [{ label: "Zum Downloadbereich", href: "/verein/downloads" }]
   },
   {
     slug: "clubhaus",
@@ -831,6 +945,18 @@ export const clubPages: ClubPage[] = [
     ]
   },
   {
+    slug: "kleinanzeigen",
+    title: "Kleinanzeigen",
+    teaser: "Nachhaltige Boerse fuer Vereins- und JSG-Nord-Mitglieder.",
+    body: [
+      "Hier koennen Vereins- und JSG-Nord-Mitglieder gut erhaltene Fussballschuhe sowie Trainingsanzuege zum Verkauf anbieten.",
+      "Anzeigen koennen per Mail mit Foto, Groesse, Preisvorstellung und Kontaktmoeglichkeit an Jugendleiter@jsg-nord.com geschickt werden.",
+      "Wichtig: Der Verein vermittelt nicht. Der Kontakt findet direkt zwischen Interessent und Verkaeufer statt. Sobald etwas nicht mehr verfuegbar ist, reicht eine formlose Mail, damit die Anzeige geloescht werden kann.",
+      "Lasst uns gemeinsam etwas nachhaltiger werden - und die Geldbeutel der Familien schonen."
+    ],
+    contacts: [{ role: "Kleinanzeigen", name: "Jugendleitung JSG Nord", email: "Jugendleiter@jsg-nord.com" }]
+  },
+  {
     slug: "fanartikel",
     title: "Fanartikel",
     teaser: "Fanshop, Restposten und Artikel rund um den FSV.",
@@ -899,6 +1025,7 @@ footballWidgets["2-herren"] = {
 
 export const nav = [
   { label: "News", href: "/news" },
+  { label: "Kleinanzeigen", href: "/verein/kleinanzeigen" },
   {
     label: "Fussball",
     href: "/teams/1-herren",
