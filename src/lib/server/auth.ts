@@ -1,3 +1,5 @@
+import { pbkdf2Sync, randomBytes, timingSafeEqual } from "node:crypto";
+
 type D1Statement<T = unknown> = {
   bind: (...values: unknown[]) => D1Statement<T>;
   first: <R = T>() => Promise<R | null>;
@@ -18,11 +20,6 @@ export type AdminUser = {
 
 const sessionCookie = "fsv_session";
 const iterations = 210000;
-
-const bytesToHex = (bytes: Uint8Array) =>
-  Array.from(bytes)
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
 
 const hexToBytes = (hex: string) => {
   const bytes = new Uint8Array(hex.length / 2);
@@ -45,41 +42,20 @@ export async function getDb(locals: unknown) {
 }
 
 export function randomToken(byteLength = 32) {
-  const bytes = new Uint8Array(byteLength);
-  crypto.getRandomValues(bytes);
-  return bytesToHex(bytes);
+  return randomBytes(byteLength).toString("hex");
 }
 
 export async function hashPassword(password: string, salt = randomToken(16)) {
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
-  const derived = await crypto.subtle.deriveBits(
-    {
-      name: "PBKDF2",
-      hash: "SHA-256",
-      salt: hexToBytes(salt),
-      iterations
-    },
-    key,
-    256
-  );
-  return `pbkdf2-sha256$${iterations}$${salt}$${bytesToHex(new Uint8Array(derived))}`;
+  const derived = pbkdf2Sync(password, hexToBytes(salt), iterations, 32, "sha256");
+  return `pbkdf2-sha256$${iterations}$${salt}$${derived.toString("hex")}`;
 }
 
 export async function verifyPassword(password: string, storedHash: string) {
   const [algorithm, iterationText, salt, expected] = storedHash.split("$");
   if (algorithm !== "pbkdf2-sha256" || !iterationText || !salt || !expected) return false;
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
-  const derived = await crypto.subtle.deriveBits(
-    {
-      name: "PBKDF2",
-      hash: "SHA-256",
-      salt: hexToBytes(salt),
-      iterations: Number(iterationText)
-    },
-    key,
-    256
-  );
-  return bytesToHex(new Uint8Array(derived)) === expected;
+  const actual = pbkdf2Sync(password, hexToBytes(salt), Number(iterationText), 32, "sha256");
+  const expectedBytes = hexToBytes(expected);
+  return actual.length === expectedBytes.length && timingSafeEqual(actual, expectedBytes);
 }
 
 export async function createSession(db: D1DatabaseLike, userId: number) {
