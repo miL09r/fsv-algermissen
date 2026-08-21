@@ -20,39 +20,11 @@ export const POST: APIRoute = async ({ request, locals, cookies, redirect }) => 
     .bind(email)
     .first<{ id: number; password_hash: string }>();
 
-  let isValidPassword = false;
-  if (user) {
-    try {
-      isValidPassword = await verifyPassword(password, user.password_hash);
-    } catch (error) {
-      return Response.json(
-        {
-          stage: "verify",
-          name: error instanceof Error ? error.name : "Unknown",
-          message: error instanceof Error ? error.message : "Unknown error"
-        },
-        { status: 500 }
-      );
-    }
-  }
-
-  if (!user || !isValidPassword) {
+  if (!user || !(await verifyPassword(password, user.password_hash))) {
     return redirect("/admin?error=login", 303);
   }
 
-  let session;
-  try {
-    session = await createSession(db, user.id);
-    setSessionCookie(cookies, session.sessionId, session.expiresAt);
-  } catch (error) {
-    return Response.json(
-      {
-        stage: "session",
-        name: error instanceof Error ? error.name : "Unknown",
-        message: error instanceof Error ? error.message : "Unknown error"
-      },
-      { status: 500 }
-    );
-  }
+  const session = await createSession(db, user.id);
+  setSessionCookie(cookies, session.sessionId, session.expiresAt);
   return redirect("/admin", 303);
 };
