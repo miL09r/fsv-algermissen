@@ -1,0 +1,15 @@
+node_modules
+.pnpm-store
+dist
+.astro
+.wrangler
+.dev.vars
+.env
+.env.*
+!.env.example
+npm-debug.log*
+
+# Legacy files from the previous workspace project, not part of FSV v3.
+/app.js
+/index.html
+/styles.css

@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NewsCard from "../components/NewsCard.astro";
+import { getPublishedNews } from "../lib/data";
+
+const items = getPublishedNews();
+const filters = [
+  "Alle",
+  ...Array.from(new Set(items.flatMap((item) => [item.category, ...item.areaTags]))).sort()
+];
+---
+
+<BaseLayout title="News" description="Alle News des FSV Algermissen, filterbar nach Verein, Teams, Jugend, Darts und Sponsoren.">
+  <header class="page-title">
+    <p class="eyebrow">Zentrale News</p>
+    <h1>Alle Nachrichten des FSV</h1>
+    <p>Artikel werden einmal erfasst und koennen mehreren Teams oder Bereichen zugeordnet werden.</p>
+  </header>
+
+  <section class="section">
+    <div class="filter-row" role="toolbar" aria-label="News filtern">
+      {filters.map((filter, index) => (
+        <button type="button" data-filter={filter.toLowerCase()} aria-pressed={index === 0 ? "true" : "false"}>
+          {filter}
+        </button>
+      ))}
+    </div>
+    <div class="news-grid" data-news-list>
+      {items.map((item) => (
+        <div data-tags={[item.category, ...item.areaTags].join(" ").toLowerCase()}>
+          <NewsCard item={item} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <script>
+    const buttons = Array.from(document.querySelectorAll("[data-filter]"));
+    const cards = Array.from(document.querySelectorAll("[data-tags]"));
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.getAttribute("data-filter") ?? "alle";
+        buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+        cards.forEach((card) => {
+          const tags = card.getAttribute("data-tags") ?? "";
+          card.toggleAttribute("hidden", filter !== "alle" && !tags.includes(filter));
+        });
+      });
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NewsCard from "../../components/NewsCard.astro";
+import FootballWidgetPlaceholder from "../../components/FootballWidgetPlaceholder.astro";
+import { getNewsForTeam, teams } from "../../lib/data";
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return teams.map((team) => ({ params: { slug: team.slug }, props: { team } }));
+}
+
+const { team } = Astro.props;
+const teamNews = getNewsForTeam(team.slug);
+---
+
+<BaseLayout title={team.name} description={`${team.name} beim FSV Algermissen: News, Training, Ansprechpartner und Spielbetrieb.`}>
+  <header class="page-title">
+    <p class="eyebrow">{team.area}</p>
+    <h1>{team.name}</h1>
+    <p>{team.description}</p>
+  </header>
+
+  <section class="section">
+    <div class="split">
+      <div>
+        {team.image && <img class="content-card" src={team.image} alt="" loading="lazy" />}
+        <div class="feature-grid" style="margin-top: 18px;">
+          <div class="feature-card">
+            <h3>Training</h3>
+            {team.trainingTimes.map((time) => <p>{time}</p>)}
+            {team.trainingLocation && <p><strong>Ort:</strong> {team.trainingLocation}</p>}
+          </div>
+          <div class="feature-card">
+            <h3>Ansprechpartner</h3>
+            {team.contacts.map((contact) => (
+              <p><strong>{contact.role}:</strong> {contact.name}</p>
+            ))}
+          </div>
+          <div class="feature-card">
+            <h3>Wettbewerb</h3>
+            <p>{team.league ?? "Liga und Wettbewerb werden aus FUSSBALL.DE/CMS ergaenzt."}</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <FootballWidgetPlaceholder team={team} variant="upcoming" />
+        <FootballWidgetPlaceholder team={team} variant="latest" />
+        <FootballWidgetPlaceholder team={team} variant="table" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Team-News</p>
+        <h2>Aktuelles zu {team.shortName}</h2>
+      </div>
+      <p>Diese Liste entsteht automatisch aus den News-Zuordnungen.</p>
+    </div>
+    <div class="news-grid">
+      {teamNews.length > 0 ? teamNews.map((item) => <NewsCard item={item} />) : (
+        <div class="content-card">
+          <h3>Noch keine zugeordneten News</h3>
+          <p>Im CMS koennen Artikel spaeter diesem Team zugeordnet werden.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

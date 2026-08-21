@@ -1,0 +1,158 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NewsCard from "../components/NewsCard.astro";
+import TeamGrid from "../components/TeamGrid.astro";
+import FootballWidgetPlaceholder from "../components/FootballWidgetPlaceholder.astro";
+import { clubPages, filterSponsors, getNewsForArea, getPublishedNews, teams } from "../lib/data";
+
+const latestNews = getPublishedNews().slice(0, 5);
+const youthNews = getNewsForArea("jugend").slice(0, 2);
+const dartsNews = getNewsForArea("darts").slice(0, 2);
+---
+
+<BaseLayout title="FSV Algermissen" description="Die neue Website des gesamten FSV Algermissen: Fussball, Jugend, Darts, Verein und Sponsoren.">
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">FSV Algermissen v. 1911 / 1990 e.V.</p>
+      <h1>Ein Ort. Ein Verein. Alle Teams.</h1>
+      <p>
+        Die neue Cloudflare Edition stellt den ganzen FSV in den Mittelpunkt:
+        Herren, Senioren, JSG Nord, Bambinis, Darts, Ehrenamt, Sportstaetten,
+        Clubhaus und Partner.
+      </p>
+      <div class="hero-actions">
+        <a class="button" href="/news">News lesen</a>
+        <a class="button secondary" href="/teams/jsg-nord">Zur Jugend</a>
+      </div>
+      <dl class="hero-stats" aria-label="Vereinsueberblick">
+        <div>
+          <dt>seit</dt>
+          <dd>1911 / 1990</dd>
+        </div>
+        <div>
+          <dt>Teams</dt>
+          <dd>Herren bis Bambinis</dd>
+        </div>
+        <div>
+          <dt>Darts</dt>
+          <dd>A-, B- und C-Team</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Aktuelles</p>
+        <h2>News aus dem ganzen Verein</h2>
+      </div>
+      <p>Eine zentrale News-Struktur sorgt dafuer, dass Berichte automatisch in den passenden Bereichen erscheinen.</p>
+    </div>
+    <div class="news-grid">
+      {latestNews.map((item) => <NewsCard item={item} />)}
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Matchcenter</p>
+        <h2>Spielbetrieb vorbereitet</h2>
+      </div>
+      <p>FUSSBALL.DE Widgets werden spaeter zentral konfiguriert, ohne Quellcodedateien pro Team anzupassen.</p>
+    </div>
+    <div class="feature-grid">
+      <FootballWidgetPlaceholder variant="upcoming" />
+      <FootballWidgetPlaceholder variant="latest" />
+      <FootballWidgetPlaceholder variant="table" />
+    </div>
+  </section>
+
+  <TeamGrid teams={teams.filter((team) => team.area === "senioren")} title="Herren und Senioren" />
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Jugend / JSG Nord</p>
+        <h2>Von Bambinis bis A-Junioren</h2>
+      </div>
+      <p>Jahrgaenge koennen mehrere Teams fuehren, damit E I, E II oder weitere Mannschaften sauber abbildbar bleiben.</p>
+    </div>
+    <div class="split">
+      <TeamGrid teams={teams.filter((team) => team.area === "jugend")} />
+      <div class="side-panel">
+        <h3>Aktuelles aus der Jugend</h3>
+        {youthNews.map((item) => <NewsCard item={item} compact />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Darts</p>
+        <h2>Magpies im Clubhaus</h2>
+      </div>
+      <p>Darts ist ein eigener Vereinsbereich mit A-, B- und C-Team, Training, Kontakt und News.</p>
+    </div>
+    <div class="split">
+      <TeamGrid teams={teams.filter((team) => team.area === "darts")} />
+      <div class="side-panel dark">
+        <h3>Darts-News</h3>
+        {dartsNews.map((item) => <NewsCard item={item} compact />)}
+        <a class="button" href="/darts">Darts-Bereich oeffnen</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Vereinsleben</p>
+        <h2>Vorstand, Clubhaus und Sportstaetten</h2>
+      </div>
+      <p>Bestehende Vereinsseiten bleiben erhalten und werden als CMS-Seiten vorbereitet.</p>
+    </div>
+    <div class="feature-grid">
+      {clubPages.slice(0, 6).map((page) => (
+        <a class="feature-card" href={`/verein/${page.slug}`}>
+          <h3>{page.title}</h3>
+          <p>{page.teaser}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Partner</p>
+        <h2>Sponsoren des FSV</h2>
+      </div>
+      <p>Premium-, Exklusiv- und Team-Sponsoren koennen spaeter im CMS gepflegt und Teams zugeordnet werden.</p>
+    </div>
+    <div class="sponsor-grid">
+      {filterSponsors("Premium-Partner").concat(filterSponsors("Exklusiv-Partner")).slice(0, 6).map((sponsor) => (
+        <a class="sponsor-card" href={sponsor.website ?? "/verein/sponsoren"}>
+          <p class="eyebrow">{sponsor.category}</p>
+          <h3>{sponsor.name}</h3>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Mitglied werden</p>
+        <h2>Mitmachen beim FSV Algermissen</h2>
+      </div>
+      <p>Der neue Auftritt fuehrt Mitglieder, Foerderer und Fans schneller zu Ansprechpartnern, Downloads und Vereinsbereichen.</p>
+    </div>
+    <div class="action-row">
+      <a class="button" href="/verein/downloads">Formulare</a>
+      <a class="button secondary" href="/verein/foerderverein">Foerderverein</a>
+    </div>
+  </section>
+</BaseLayout>

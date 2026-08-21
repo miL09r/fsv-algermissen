@@ -1,0 +1,23 @@
+---
+import { clubPages, site } from "../lib/data";
+---
+
+<footer class="site-footer">
+  <div>
+    <strong>{site.fullName}</strong>
+    <p>Eine Website fuer den ganzen Verein: Herren, Jugend, Darts, Ehrenamt, Sportstaetten und Partner.</p>
+  </div>
+  <div>
+    <h2>Verein</h2>
+    <ul>
+      {clubPages.slice(0, 6).map((page) => <li><a href={`/verein/${page.slug}`}>{page.title}</a></li>)}
+    </ul>
+  </div>
+  <div>
+    <h2>Extern</h2>
+    <ul>
+      {site.socialLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+      <li><a href="https://fsvalgermissen.fan12.de/">Fanshop</a></li>
+    </ul>
+  </div>
+</footer>

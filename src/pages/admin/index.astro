@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Admin" description="Admin-Bereich fuer das CMS des FSV Algermissen.">
+  <header class="page-title">
+    <p class="eyebrow">CMS</p>
+    <h1>Admin-Login</h1>
+    <p>Grundgeruest fuer Admins, Redakteure und Team-Redakteure. Die produktive Authentifizierung wird serverseitig mit D1-Sessions umgesetzt.</p>
+  </header>
+
+  <section class="section">
+    <div class="admin-grid">
+      <form class="admin-panel form-grid" method="post" action="/api/admin/login">
+        <h2>Anmelden</h2>
+        <label>
+          E-Mail
+          <input type="email" name="email" autocomplete="username" required />
+        </label>
+        <label>
+          Passwort
+          <input type="password" name="password" autocomplete="current-password" required />
+        </label>
+        <button class="button" type="submit">Einloggen</button>
+        <p>Milestone 1 prueft noch keine Zugangsdaten. Keine Passwoerter im Repository ablegen.</p>
+      </form>
+      <div class="admin-panel">
+        <h2>Rollenmodell</h2>
+        <p><strong>Admin:</strong> alle Inhalte, Benutzer, Teams, Sponsoren, Medien und Einstellungen.</p>
+        <p><strong>Redakteur:</strong> News und Medien.</p>
+        <p><strong>Team-Redakteur:</strong> nur freigegebene Teams oder Bereiche.</p>
+        <a class="button" href="/admin/news">News-Modul ansehen</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

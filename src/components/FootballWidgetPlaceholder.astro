@@ -1,0 +1,25 @@
+---
+import type { Team } from "../lib/data";
+
+type Props = {
+  team?: Team;
+  variant: "upcoming" | "latest" | "table" | "fixtures";
+};
+
+const { team, variant } = Astro.props;
+const labels = {
+  upcoming: "Naechste Spiele",
+  latest: "Letzte Ergebnisse",
+  table: "Tabelle",
+  fixtures: "Spielplan"
+};
+---
+
+<section class="widget-placeholder" aria-label={labels[variant]}>
+  <p class="eyebrow">FUSSBALL.DE vorbereitet</p>
+  <h2>{labels[variant]}</h2>
+  <p>
+    {team ? `${team.name}: ` : "Vereinsweit: "}
+    Widget-ID wird zentral hinterlegt, sobald die Cloudflare-Testdomain feststeht.
+  </p>
+</section>

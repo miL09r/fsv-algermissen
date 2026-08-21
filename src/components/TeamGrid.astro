@@ -1,0 +1,26 @@
+---
+import type { Team, TeamArea } from "../lib/data";
+
+type Props = {
+  teams: Team[];
+  area?: TeamArea;
+  title?: string;
+};
+
+const { teams, area, title } = Astro.props;
+const visibleTeams = area ? teams.filter((team) => team.area === area) : teams;
+---
+
+<section class="section">
+  {title && <div class="section-heading"><p class="eyebrow">Mannschaften</p><h2>{title}</h2></div>}
+  <div class="team-grid">
+    {visibleTeams.map((team) => (
+      <a class="team-card" href={`/teams/${team.slug}`}>
+        {team.image && <img src={team.image} alt="" loading="lazy" />}
+        <span>{team.area}</span>
+        <h3>{team.name}</h3>
+        <p>{team.league ?? team.description}</p>
+      </a>
+    ))}
+  </div>
+</section>

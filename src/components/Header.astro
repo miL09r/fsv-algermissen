@@ -1,0 +1,31 @@
+---
+import { nav, site } from "../lib/data";
+---
+
+<header class="site-header">
+  <a class="brand" href="/" aria-label="Startseite FSV Algermissen">
+    <img
+      src="https://images.ebcdn.de/club-4844/logo.png?format=webp&height=1200&mode=crop&v=2&width=1200"
+      alt=""
+      width="54"
+      height="54"
+      loading="eager"
+    />
+    <span>
+      <strong>{site.name}</strong>
+      <small>von 1911 / 1990 e.V.</small>
+    </span>
+  </a>
+  <nav class="main-nav" aria-label="Hauptnavigation">
+    {nav.map((item) => (
+      <div class="nav-group">
+        <a href={item.href}>{item.label}</a>
+        {item.children && (
+          <div class="flyout" aria-label={`${item.label} Unterseiten`}>
+            {item.children.map((child) => <a href={child.href}>{child.label}</a>)}
+          </div>
+        )}
+      </div>
+    ))}
+  </nav>
+</header>

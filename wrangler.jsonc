@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fsv-algermissen-v3",
+  "compatibility_date": "2026-08-21",
+  "pages_build_output_dir": "./dist",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "fsv-algermissen-v3",
+      "database_id": "replace-with-cloudflare-d1-id",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA_BUCKET",
+      "bucket_name": "fsv-algermissen-media"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "replace-with-cloudflare-kv-session-id"
+    }
+  ],
+  "vars": {
+    "APP_TIMEZONE": "Europe/Berlin",
+    "PUBLIC_SITE_NAME": "FSV Algermissen"
+  }
+}

@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TeamGrid from "../components/TeamGrid.astro";
+import NewsCard from "../components/NewsCard.astro";
+import { getNewsForArea, teams } from "../lib/data";
+
+const dartsTeams = teams.filter((team) => team.area === "darts");
+const dartsNews = getNewsForArea("darts");
+---
+
+<BaseLayout title="Darts" description="Darts beim FSV Algermissen: A-Team, B-Team, C-Team, Training und News.">
+  <header class="page-title">
+    <p class="eyebrow">Darts</p>
+    <h1>Magpies im FSV</h1>
+    <p>Training montags und mittwochs um 19 Uhr im Clubhaus. A-, B- und C-Team werden als eigene Mannschaften gefuehrt.</p>
+  </header>
+
+  <TeamGrid teams={dartsTeams} title="Darts-Teams" />
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Aktuelles</p>
+        <h2>Darts-News</h2>
+      </div>
+      <p>Darts-Beitraege laufen im zentralen News-System mit.</p>
+    </div>
+    <div class="news-grid">
+      {dartsNews.map((item) => <NewsCard item={item} />)}
+    </div>
+  </section>
+</BaseLayout>

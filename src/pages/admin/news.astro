@@ -1,0 +1,58 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { news, teams } from "../../lib/data";
+---
+
+<BaseLayout title="News verwalten" description="CMS-Grundgeruest fuer News mit Mehrfachzuordnung.">
+  <header class="page-title">
+    <p class="eyebrow">CMS</p>
+    <h1>News-Modul</h1>
+    <p>Ein Artikel kann mehreren Teams oder Bereichen zugeordnet werden und muss nicht mehrfach gespeichert werden.</p>
+  </header>
+
+  <section class="section">
+    <div class="split">
+      <form class="admin-panel form-grid">
+        <h2>Artikel anlegen</h2>
+        <label>
+          Titel
+          <input name="title" placeholder="Jugendcamp 2026" />
+        </label>
+        <label>
+          Slug
+          <input name="slug" placeholder="jugendcamp-2026" />
+        </label>
+        <label>
+          Status
+          <select name="status">
+            <option>Entwurf</option>
+            <option>Veroeffentlicht</option>
+            <option>Geplant</option>
+          </select>
+        </label>
+        <label>
+          Team-/Bereichszuordnung
+          <select name="teams" multiple size="8">
+            {teams.map((team) => <option value={team.slug}>{team.name}</option>)}
+          </select>
+        </label>
+        <label>
+          Teaser
+          <textarea name="teaser"></textarea>
+        </label>
+        <button class="button" type="button">Speichern vorbereitet</button>
+      </form>
+
+      <div class="admin-panel">
+        <h2>Aktuelle Seed-News</h2>
+        {news.map((item) => (
+          <div class="content-card" style="margin-top: 12px;">
+            <p class="eyebrow">{item.status} · {item.category}</p>
+            <h3>{item.title}</h3>
+            <p>{item.teamSlugs.length ? item.teamSlugs.join(", ") : "Verein allgemein"}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

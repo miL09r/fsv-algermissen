@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { downloads, filterSponsors, clubPages } from "../../lib/data";
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return clubPages.map((page) => ({ params: { slug: page.slug }, props: { page } }));
+}
+
+const { page } = Astro.props;
+const isDownloads = page.slug === "downloads";
+const isSponsors = page.slug === "sponsoren";
+---
+
+<BaseLayout title={page.title} description={page.teaser}>
+  <header class="page-title">
+    <p class="eyebrow">Verein</p>
+    <h1>{page.title}</h1>
+    <p>{page.teaser}</p>
+  </header>
+
+  <section class="section">
+    <div class="split">
+      <article class="content-card">
+        {page.body.map((paragraph) => <p>{paragraph}</p>)}
+        {page.ctaLabel && page.ctaHref && <a class="button" href={page.ctaHref}>{page.ctaLabel}</a>}
+      </article>
+      <aside class="content-card">
+        <h2>CMS vorbereitet</h2>
+        <p>Diese Seite ist als strukturierter Vereinsbereich angelegt und kann spaeter aus D1 gepflegt werden.</p>
+      </aside>
+    </div>
+  </section>
+
+  {isDownloads && (
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Downloads</p>
+          <h2>Dokumente</h2>
+        </div>
+        <p>Dateien werden spaeter in R2 gespeichert und im CMS verwaltet.</p>
+      </div>
+      <div class="feature-grid">
+        {downloads.map((download) => (
+          <div class="feature-card">
+            <h3>{download}</h3>
+            <p class="status-pill">Migration offen</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {isSponsors && (
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Partner</p>
+          <h2>Sponsorengruppen</h2>
+        </div>
+        <p>Kategorien und Reihenfolge sind im Datenmodell vorbereitet.</p>
+      </div>
+      <div class="sponsor-grid">
+        {filterSponsors().map((sponsor) => (
+          <a class="sponsor-card" href={sponsor.website ?? "#"}>
+            <p class="eyebrow">{sponsor.category}</p>
+            <h3>{sponsor.name}</h3>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>
