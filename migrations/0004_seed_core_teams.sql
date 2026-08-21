@@ -4,8 +4,8 @@ INSERT OR IGNORE INTO teams (slug, name, short_name, area, age_group, sort_order
 VALUES
   ('1-herren', '1. Herren', '1. Herren', 'senioren', NULL, 10, 'Die 1. Herren geht in dieser Saison in der Kreisliga Staffel A an den Start.', 'Kreisliga Staffel A', 'REWE-Rudat-Arena', 'https://images.ebcdn.de/club-4844/TeamImage_10821.jpg?v=5&width=1920&format=webp&mode=max'),
   ('2-herren', '2. Herren', '2. Herren', 'senioren', NULL, 20, 'Die 2. Herren geht in dieser Saison in der 2. Kreisklasse Staffel A an den Start.', '2. Kreisklasse Staffel A', 'Ostpreussen-Stadion', 'https://images.ebcdn.de/club-4844/TeamImage_10822.jpg?v=3&width=1920&format=webp&mode=max'),
-  ('ue32', 'Alt-Herren (UE32)', 'UE32', 'senioren', NULL, 30, 'Die UE32 spielt in der 2. Kreisklasse 8er-Feld und trainiert mittwochs am Grasweg.', 'UE32 2. Kreisklasse Staffel A', 'Sportplatz am Grasweg', NULL),
-  ('ue40', 'Alt-Senioren (UE-40)', 'UE-40', 'senioren', NULL, 40, 'Die Alt-Senioren gehoeren sichtbar zur Vereinsstruktur.', NULL, NULL, NULL),
+  ('ue32', 'Alt-Herren (Ü32)', 'Ü32', 'senioren', NULL, 30, 'Die Ü32 spielt in der 2. Kreisklasse 8er-Feld und trainiert mittwochs am Grasweg.', 'Ü32 2. Kreisklasse Staffel A', 'Sportplatz am Grasweg', NULL),
+  ('ue40', 'Alt-Senioren (Ü40)', 'Ü40', 'senioren', NULL, 40, 'Die Alt-Senioren gehören sichtbar zur Vereinsstruktur.', NULL, NULL, NULL),
   ('jsg-nord', 'JSG Nord', 'JSG Nord', 'jugend', NULL, 100, 'Die Jugendspielgemeinschaft ist der zentrale Einstieg in die Jugendarbeit.', NULL, NULL, 'https://images.ebcdn.de/club-4844/ArticleTeaser_90487.jpg?format=webp&height=1000&mode=crop&v=1&width=1600'),
   ('a-junioren', 'A-Junioren', 'A-Junioren', 'jugend', 'A', 110, 'Die A-Junioren der JSG Nord sind der U19-Bereich im FSV/JSG-Kontext.', 'A-Junioren Kreisliga Staffel A', 'Luehnde, Hangeraethsweg', NULL),
   ('b-junioren', 'B-Junioren', 'B-Junioren', 'jugend', 'B', 120, 'B-Junioren mit Spielbetrieb, Training, Trainerteam und aktuellen Mannschaftsinfos.', NULL, NULL, NULL),

@@ -43,6 +43,15 @@ const matchcenterResults = await getSiteMatchResults(await getDb(Astro.locals));
           <a class="button secondary" href="/teams/1-herren">Zu den Teams</a>
         </div>
       </div>
+      <div class="hero-crest" aria-hidden="true">
+        <img
+          src="https://images.ebcdn.de/club-4844/logo.png?format=webp&height=1200&mode=crop&v=2&width=1200"
+          alt=""
+          width="220"
+          height="220"
+          loading="eager"
+        />
+      </div>
       <aside class="hero-panel" aria-label="Aktuelles im Banner">
         <ResultBanner results={heroResults} />
         {topNews && (

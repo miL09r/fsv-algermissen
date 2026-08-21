@@ -1,14 +1,14 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { downloads, filterSponsors, clubPages } from "../../lib/data";
+import { downloads, filterSponsors } from "../../lib/data";
+import { getDb } from "../../lib/server/auth";
+import { getSiteClubPage } from "../../lib/server/club-pages";
 
-export const prerender = true;
+export const prerender = false;
 
-export function getStaticPaths() {
-  return clubPages.map((page) => ({ params: { slug: page.slug }, props: { page } }));
-}
-
-const { page } = Astro.props;
+const slug = String(Astro.params.slug ?? "");
+const page = await getSiteClubPage(await getDb(Astro.locals), slug);
+if (!page) return Astro.redirect("/verein/vorstand");
 const isDownloads = page.slug === "downloads";
 const isSponsors = page.slug === "sponsoren";
 ---
@@ -28,10 +28,78 @@ const isSponsors = page.slug === "sponsoren";
       </article>
       <aside class="content-card">
         <h2>FSV Algermissen</h2>
-        <p>Alle Vereinsbereiche sind direkt ueber die Navigation erreichbar. Fuer Fragen helfen Vorstand und Ansprechpartner gern weiter.</p>
+        <p>Alle Vereinsbereiche sind direkt über die Navigation erreichbar. Für Fragen helfen Vorstand und Ansprechpartner gern weiter.</p>
+        {page.sourceUrl && <a class="button ghost" href={page.sourceUrl}>Originalbereich öffnen</a>}
       </aside>
     </div>
   </section>
+
+  {(page.contacts || page.openingHours || page.infoBlocks || page.links || page.products) && (
+    <section class="section band">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Details</p>
+          <h2>{page.title} im Überblick</h2>
+        </div>
+        <p>Kontakte, Zeiten und verknüpfte Inhalte aus dem Vereinsbereich.</p>
+      </div>
+
+      {page.contacts && (
+        <div class="feature-grid">
+          {page.contacts.map((contact) => (
+            <div class="feature-card">
+              <p class="eyebrow">{contact.role}</p>
+              <h3>{contact.name}</h3>
+              {contact.phone && <p><a href={`tel:${contact.phone.replaceAll(" ", "")}`}>{contact.phone}</a></p>}
+              {contact.email && <p><a href={`mailto:${contact.email}`}>{contact.email}</a></p>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {page.openingHours && (
+        <div class="club-detail-grid">
+          {page.openingHours.map((entry) => (
+            <div class="club-detail-row">
+              <strong>{entry.day}</strong>
+              <span>{entry.context}</span>
+              <b>{entry.time}</b>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {page.infoBlocks && (
+        <div class="feature-grid">
+          {page.infoBlocks.map((block) => (
+            <div class="feature-card">
+              <h3>{block.title}</h3>
+              {block.text?.map((paragraph) => <p>{paragraph}</p>)}
+              {block.items?.map((item) => <p>{item}</p>)}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {page.products && (
+        <div class="feature-grid">
+          {page.products.map((product) => (
+            <div class="feature-card">
+              <h3>{product.name}</h3>
+              {product.description && <p>{product.description}</p>}
+              {product.price && <p class="status-pill">{product.price}</p>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {page.links && (
+        <div class="action-row club-link-row">
+          {page.links.map((link) => <a class="button secondary" href={link.href}>{link.label}</a>)}
+        </div>
+      )}
+    </section>
+  )}
 
   {isDownloads && (
     <section class="section">

@@ -1,5 +1,5 @@
 ---
-import type { MatchResult } from "../lib/data";
+import { teams, type MatchResult } from "../lib/data";
 
 type Props = {
   results: MatchResult[];
@@ -23,6 +23,13 @@ const fsvScore = (result: MatchResult) => {
 const scoreLabel = (result: MatchResult) =>
   result.homeGoals === undefined || result.awayGoals === undefined ? "-:-" : `${result.homeGoals}:${result.awayGoals}`;
 
+const isFsvTeam = (name: string) => /algermissen|jsg nord/i.test(name);
+
+const sportIcon = (result: MatchResult) => {
+  const resultTeam = teams.find((team) => team.slug === result.teamSlug);
+  return resultTeam?.area === "darts" ? "➜" : "⚽";
+};
+
 const metaLabel = (result: MatchResult) =>
   result.status === "fixture"
     ? `${formatDate(result.date)}${result.kickoffTime ? ` · ${result.kickoffTime} Uhr` : ""}`
@@ -38,12 +45,17 @@ const metaLabel = (result: MatchResult) =>
     {results.map((result) => (
       <a class="result-chip" href={`/teams/${result.teamSlug}`}>
         <span class:list={["result-state", `result-state-${fsvScore(result).toLowerCase()}`]}>{fsvScore(result)}</span>
+        <span class="result-sport-icon" aria-hidden="true">{sportIcon(result)}</span>
         <span>
           <strong>{result.teamName}</strong>
           <small>{result.status === "fixture" ? "Naechstes Spiel" : "Letztes Ergebnis"} · {metaLabel(result)}</small>
         </span>
         <b>{scoreLabel(result)}</b>
-        <span class="result-teams">{result.homeTeam} - {result.awayTeam}</span>
+        <span class="result-teams">
+          <span class:list={[isFsvTeam(result.homeTeam) && "result-team-fsv"]}>{result.homeTeam}</span>
+          <span aria-hidden="true"> - </span>
+          <span class:list={[isFsvTeam(result.awayTeam) && "result-team-fsv"]}>{result.awayTeam}</span>
+        </span>
       </a>
     ))}
   </div>

@@ -77,10 +77,28 @@ export type NewsItem = {
 export type Sponsor = {
   slug: string;
   name: string;
-  category: "Premium-Partner" | "Exklusiv-Partner" | "Partner" | "Team-Sponsor";
+  category: "Premium-Partner" | "Exklusiv-Partner" | "Partner" | "Team-Sponsor" | "Trikotsponsor";
   website?: string;
   description?: string;
   logoUrl?: string;
+};
+
+export type ClubContact = {
+  role: string;
+  name: string;
+  phone?: string;
+  email?: string;
+};
+
+export type ClubLink = {
+  label: string;
+  href: string;
+};
+
+export type ClubInfoBlock = {
+  title: string;
+  text?: string[];
+  items?: string[];
 };
 
 export type ClubPage = {
@@ -88,6 +106,12 @@ export type ClubPage = {
   title: string;
   teaser: string;
   body: string[];
+  sourceUrl?: string;
+  contacts?: ClubContact[];
+  links?: ClubLink[];
+  infoBlocks?: ClubInfoBlock[];
+  openingHours?: Array<{ day: string; context: string; time: string }>;
+  products?: Array<{ name: string; description?: string; price?: string }>;
   ctaLabel?: string;
   ctaHref?: string;
 };
@@ -156,12 +180,12 @@ export const teams: Team[] = [
   },
   {
     slug: "ue32",
-    name: "Alt-Herren (UE32)",
-    shortName: "UE32",
+    name: "Alt-Herren (Ü32)",
+    shortName: "Ü32",
     area: "senioren",
-    league: "UE32 2. Kreisklasse Staffel A",
+    league: "Ü32 2. Kreisklasse Staffel A",
     description:
-      "Die UE32 spielt in der 2. Kreisklasse 8er-Feld und trainiert mittwochs am Grasweg.",
+      "Die Ü32 spielt in der 2. Kreisklasse 8er-Feld und trainiert mittwochs am Grasweg.",
     trainingTimes: ["Mittwoch 19:00"],
     trainingLocation: "Sportplatz am Grasweg",
     contacts: [{ role: "Ansprechpartner", name: "Alexander Reslan", email: "alexander.reslan@fsvalgermissen.de" }],
@@ -174,11 +198,11 @@ export const teams: Team[] = [
   },
   {
     slug: "ue40",
-    name: "Alt-Senioren (UE-40)",
-    shortName: "UE-40",
+    name: "Alt-Senioren (Ü40)",
+    shortName: "Ü40",
     area: "senioren",
     description:
-      "Die Alt-Senioren gehoeren sichtbar zur Vereinsstruktur und erhalten eigene Inhalte.",
+      "Die Alt-Senioren gehören sichtbar zur Vereinsstruktur und erhalten eigene Inhalte.",
     trainingTimes: ["nach Absprache"],
     contacts: [{ role: "Ansprechpartner", name: "FSV Algermissen" }],
     externalIds: {
@@ -374,13 +398,20 @@ export const sponsors: Sponsor[] = [
   },
   { slug: "sportkluft", name: "Sportkluft", category: "Exklusiv-Partner", website: "https://sportkluft.eu/" },
   { slug: "telis", name: "Telis Finanz - Umut Buz", category: "Exklusiv-Partner", website: "https://www.telis-finanz.de/" },
+  { slug: "danilo-henne", name: "Danilo Henne", category: "Partner", website: "https://www.schwaebisch-hall.de/" },
+  { slug: "autofit-siewert", name: "Autofit - Ralf Siewert", category: "Partner", website: "https://siewert-automobile.de/" },
+  { slug: "bormann", name: "Bormann - Dachdeckermeisterbetrieb", category: "Partner", website: "https://www.dachdecker-algermissen.de/" },
   { slug: "continentale", name: "Die Continentale", category: "Partner" },
+  { slug: "karl-weiterer", name: "Karl Weiterer", category: "Partner", website: "https://www.branchen.stadtplan.de/" },
+  { slug: "vgh-schulze", name: "VGH - Markus Schulze", category: "Partner", website: "https://www.vgh.de/" },
   { slug: "lokschuppen", name: "Wirtshaus zum Lokschuppen", category: "Partner", website: "https://wirtshaus-zum-lokschuppen.de/" },
+  { slug: "trinkgut-sarstedt", name: "Trinkgut Sarstedt - Jacob e. K.", category: "Partner", website: "https://www.trinkgut.de/" },
+  { slug: "werbewerkstatt", name: "Die Werbewerkstatt", category: "Partner", website: "https://diewerbewerkstatt.info/" },
   {
     slug: "gasthaus-weiterer",
     name: "Gasthaus Weiterer",
     category: "Team-Sponsor",
-    description: "Team-Partner der Alt-Herren UE32."
+    description: "Team-Partner der Alt-Herren Ü32."
   },
   {
     slug: "coiffeur-juan",
@@ -390,7 +421,11 @@ export const sponsors: Sponsor[] = [
     description:
       "Exklusives Allround-Friseur Atelier fuer stilvolle Haarschnitte und erstklassige Stylings.",
     logoUrl: "https://images.ebcdn.de/club-4844/SponsorImage_3293.png?v=4&width=600&format=webp&height=400&mode=max"
-  }
+  },
+  { slug: "gleitz-verlag", name: "Gleitz - Verlag", category: "Partner", website: "https://www.gleitz-online.de/" },
+  { slug: "dammeyer", name: "Dammeyer - Bauunternehmen", category: "Partner", website: "https://dammeyer-bauunternehmen.de/" },
+  { slug: "einbecker", name: "Einbecker", category: "Trikotsponsor", website: "https://gilde-brauerei.com/" },
+  { slug: "koehring", name: "Köhring - Fliesenlegermeister", category: "Trikotsponsor", website: "https://www.fliesen-koehring.de/" }
 ];
 
 export const teamProfiles: TeamProfile[] = [
@@ -473,7 +508,7 @@ export const teamProfiles: TeamProfile[] = [
     teamSlug: "ue32",
     headline: "8er-Feld, Mittwochabend, Grasweg",
     intro: [
-      "Die UE32 spielt in der 2. Kreisklasse 8er-Feld.",
+      "Die Ü32 spielt in der 2. Kreisklasse 8er-Feld.",
       "Trainiert wird jeden Mittwoch um 19 Uhr auf dem Sportplatz am Grasweg. Ansprechpartner ist Alexander Reslan."
     ],
     staff: [{ role: "Ansprechpartner", name: "Alexander Reslan" }],
@@ -579,13 +614,13 @@ export const matchResults: MatchResult[] = [
   },
   {
     teamSlug: "ue32",
-    teamName: "UE32",
+    teamName: "Ü32",
     homeTeam: "SC Drispenstedt",
     awayTeam: "FSV Algermissen",
     date: "2026-08-21",
     kickoffTime: "19:00",
     season: currentSeason,
-    competition: "UE32 2. Kreisklasse Staffel A",
+    competition: "Ü32 2. Kreisklasse Staffel A",
     matchday: "1. Spieltag",
     sourceUrl: "https://www.fussball.de/mannschaft/fsv-algermissen-fsv-algermissen-niedersachsen/-/saison/2627/team-id/01SBNP0VUG000000VS548984VTL2SVNK",
     status: "fixture"
@@ -669,28 +704,65 @@ export const clubPages: ClubPage[] = [
     slug: "vorstand",
     title: "Der Vorstand",
     teaser: "Ansprechpartner und Ressorts des FSV Algermissen.",
+    sourceUrl: "https://www.fsvalgermissen.de/der-vorstand",
     body: [
-      "Der Vorstand fuehrt den Verein mit Stand der Mitgliederversammlung vom 19.05.2026.",
-      "Ressorts: Vorsitz, Finanzen, Sport, Mitglieder und Engagement, Liegenschaften, Oeffentlichkeit/Sponsoring/Digitales und Jugend."
+      "Der Vorstand des Fußball- und Sportverein Algermissen von 1911 / 1990 e.V. ist mit Stand 19.05.2026 gepflegt.",
+      "Die Zuständigkeiten sind bewusst einzeln hinterlegt, damit Rollen, Namen und Kontaktdaten im Redaktionsbereich getrennt bearbeitet werden können."
+    ],
+    contacts: [
+      { role: "1. Vorsitzender", name: "Stephan Käsehage", phone: "0171 - 1770000", email: "stephan.kaesehage@fsvalgermissen.de" },
+      { role: "2. Vorsitzender", name: "Sebastian Boes", phone: "0151 - 20253112" },
+      { role: "Finanzen", name: "Jan Hendrik Ahrens", phone: "0160 - 4031848", email: "jan.ahrens@fsvalgermissen.de" },
+      { role: "Sport", name: "Liam Harborth", phone: "01573 - 1997664", email: "liam.harborth@fsvalgermissen.de" },
+      { role: "Mitglieder und Engagement", name: "Godehard Rohmann", phone: "0170 - 2453987", email: "godehard.rohmann@fsvalgermissen.de" },
+      { role: "Liegenschaften", name: "Henry Algermissen", phone: "0172 - 5453427", email: "henry.algermissen@t-online.de" },
+      { role: "Öffentlichkeit, Sponsoring & Digitales", name: "Jörn Thamm", phone: "0151 - 70876796", email: "joern.thamm@fsvalgermissen.de" },
+      { role: "Jugend", name: "Maik Hartmann", phone: "0173 - 3585496", email: "maik.hartmann@fsvalgermissen.de" }
     ]
   },
   {
     slug: "leitbild",
     title: "Leitbild",
     teaser: "Modern, offen, traditionsbewusst und generationenuebergreifend.",
+    sourceUrl: "https://www.fsvalgermissen.de/leitbild",
     body: [
-      "Das Leitbild beschreibt den FSV als aktiven Bestandteil des gesellschaftlichen Lebens in Algermissen.",
-      "Jugendarbeit, Ehrenamt, Gemeinnuetzigkeit, Integration, Fairness und solide Finanzierung bleiben zentrale Inhalte."
-    ]
+      "Der FSV versteht sich als aktiver Bestandteil der örtlichen Lebenskultur und als wichtiger Teil eines funktionierenden Gemeinwesens.",
+      "Der Verein ist modern und offen für neue Ideen, bleibt dabei traditionsbewusst und verbindet leistungsorientierten Sport mit Breitensport.",
+      "Gemeinnützigkeit, Ehrenamt, faire Zusammenarbeit, qualifizierte Aus- und Weiterbildung, solide Finanzierung und die Jugendarbeit bilden zentrale Leitplanken."
+    ],
+    infoBlocks: [
+      {
+        title: "Wofür der FSV steht",
+        items: [
+          "Sport- und Freizeitangebote für unterschiedliche Wünsche der Mitglieder",
+          "Jung und Alt zusammenführen und zwischen Generationen vermitteln",
+          "Integration, politische und religiöse Neutralität",
+          "Umweltbewusstes und ressourcenschonendes Handeln"
+        ]
+      }
+    ],
+    links: [{ label: "Leitbild herunterladen", href: "https://www.fsvalgermissen.de/leitbild" }]
   },
   {
     slug: "clubhaus",
     title: "Das Clubhaus",
     teaser: "Treffpunkt, Stammtisch, Bundesliga-Abende, Darts und Spieltagsleben.",
+    sourceUrl: "https://www.fsvalgermissen.de/das-clubhaus",
     body: [
-      "Das Clubhaus ist Herz und Treffpunkt des Vereins. Die Bestandsseite nennt den Stammtisch donnerstags ab 19 Uhr, Bundesliga-Abende und Oeffnung zum Spielbetrieb.",
-      "Dokumente und Formulare rund um das Clubhaus sind im Downloadbereich gebuendelt."
+      "Das Clubhaus ist Treffpunkt und Herz des Vereins. Donnerstags ab 19 Uhr ist Stammtisch, freitags läuft Bundesliga live auf Großbild und sonntags ist rund um den Spielbetrieb geöffnet.",
+      "Montags trainieren die Darter im Clubhaus. Donnerstags zum Stammtisch laufen auch weiterhin die Geschäftszeiten.",
+      "Das Clubhaus steht Vereinsmitgliedern und Mitgliedern des Freundeskreises regelmäßig samstags für Feiern zur Verfügung."
     ],
+    openingHours: [
+      { day: "Donnerstag", context: "Stammtisch / Geschäftszeiten", time: "19:00 Uhr - last order 23:00 Uhr" },
+      { day: "Freitag", context: "Spielbetrieb Ü32/Ü40", time: "19:00 Uhr - last order 23:30 Uhr" },
+      { day: "Freitag", context: "Bundesliga live", time: "20:00 Uhr - last order 23:30 Uhr" },
+      { day: "Sonntag", context: "Sommerspielplan, 2 Spiele", time: "12:30 Uhr - last order 19:00 Uhr" },
+      { day: "Sonntag", context: "Sommerspielplan, 1 Spiel", time: "14:00 Uhr - last order 19:00 Uhr" },
+      { day: "Sonntag", context: "Winterspielplan, 2 Spiele", time: "11:30 Uhr - last order 18:00 Uhr" },
+      { day: "Sonntag", context: "Winterspielplan, 1 Spiel", time: "13:00 Uhr - last order 18:00 Uhr" }
+    ],
+    links: [{ label: "Nutzungsvertrag Clubhaus", href: "/verein/downloads" }],
     ctaLabel: "Downloads ansehen",
     ctaHref: "/verein/downloads"
   },
@@ -698,55 +770,90 @@ export const clubPages: ClubPage[] = [
     slug: "rewe-rudat-arena",
     title: "REWE-Rudat-Arena",
     teaser: "Sportstaette am Grasweg mit Anfahrt und Dokumenten.",
+    sourceUrl: "https://www.fsvalgermissen.de/rewe-rudat-arena",
     body: [
-      "Die Arena am Grasweg ist die zentrale Sportstaette fuer Training, Spielbetrieb und Vereinsleben.",
-      "Anfahrt, Dokumente und Informationen stehen im Download- und Vereinsbereich bereit."
+      "Die REWE-Rudat-Arena am Grasweg ist die zentrale Sportstätte für Training, Spielbetrieb und Vereinsleben.",
+      "Anfahrt und Hygienekonzept werden als eigene Links geführt, damit die Angaben später im Redaktionsbereich einzeln aktualisiert werden können."
+    ],
+    links: [
+      { label: "Anfahrt öffnen", href: "https://www.google.com/maps/search/?api=1&query=REWE-Rudat-Arena%20Algermissen" },
+      { label: "Hygienekonzept", href: "/verein/downloads" }
     ]
   },
   {
     slug: "ostpreussen-stadion",
-    title: "Ostpreussen-Stadion",
+    title: "Ostpreußen-Stadion",
     teaser: "Weitere Sportstaette des FSV mit eigener Informationsseite.",
+    sourceUrl: "https://www.fsvalgermissen.de/ostpreussen-stadion",
     body: [
-      "Auch das Ostpreussen-Stadion bleibt als Vereinsbereich erhalten und wird nicht in der Navigation versteckt.",
-      "Informationen zu Anfahrt und Nutzung sind direkt ueber den Vereinsbereich erreichbar."
+      "Auch das Ostpreußen-Stadion bleibt als eigener Vereinsbereich sichtbar.",
+      "Anfahrt und Hygienekonzept sind direkt mit dieser Sportstätte verknüpft."
+    ],
+    links: [
+      { label: "Anfahrt öffnen", href: "https://www.google.com/maps/search/?api=1&query=Ostpreu%C3%9Fen-Stadion%20Algermissen" },
+      { label: "Hygienekonzept", href: "/verein/downloads" }
     ]
   },
   {
     slug: "sponsoren",
     title: "Sponsoren",
     teaser: "Premium-Partner, Exklusiv-Partner, Partner und Team-Sponsoren.",
+    sourceUrl: "https://www.fsvalgermissen.de/sponsoren",
     body: [
-      "Sponsoren werden nach Premium-Partnern, Exklusiv-Partnern, Partnern und Team-Sponsoren dargestellt.",
+      "Sponsoren werden nach Premium-Partnern, Exklusiv-Partnern, Partnern, Team-Sponsoren und Trikotsponsoren dargestellt.",
       "Die Startseite zeigt eine Auswahl, die Sponsorenseite alle aktiven Partner."
     ]
   },
   {
     slug: "foerderverein",
-    title: "Fussballfoerderverein",
-    teaser: "Unterstuetzung fuer Fussball und Vereinsentwicklung.",
+    title: "Fußballförderverein",
+    teaser: "Unterstützung für Fußball, Nachwuchs und Vereinsentwicklung.",
+    sourceUrl: "https://www.fsvalgermissen.de/fussballfoerderverein",
     body: [
-      "Der bestehende Foerderverein bleibt als eigenstaendiger Navigationspunkt erhalten.",
-      "Mitgliedschaft, Foerderziele und Dokumente sind hier gebuendelt."
+      "Mit nur 2,00 Euro Mindestbeitrag im Monat kann der FSV Algermissen bei seiner Weiterentwicklung und der Förderung junger Talente unterstützt werden.",
+      "Das Projekt 100 x 100 ruft 100 Förderer auf, jeweils 100 Euro zur Unterstützung des FSV beizutragen."
+    ],
+    contacts: [
+      { role: "Vorsitzender", name: "Frank Linkogel" },
+      { role: "Stellv. Vorsitzender", name: "Godehard Rohmann" },
+      { role: "Kassenwart", name: "Michael Linkogel" },
+      { role: "Schriftführerin", name: "Cordula Engelke" }
+    ],
+    links: [
+      { label: "Eintrittserklärung", href: "/verein/downloads" },
+      { label: "Satzung", href: "/verein/downloads" }
     ]
   },
   {
     slug: "downloads",
     title: "Downloads",
     teaser: "Formulare, Satzungen, Ordnungen und Clubhaus-Unterlagen.",
+    sourceUrl: "https://www.fsvalgermissen.de/downloads",
     body: [
-      "Vereinssatzung, Datenschutzordnung, Beitragsordnung, Eintrittserklaerungen, NFV-Passantrag und Clubhaus-Nutzungsvertrag sind als zentrale Download-Kategorien vorgesehen.",
-      "Alle wichtigen Vereinsunterlagen sind im Downloadbereich gebuendelt."
+      "Hier stehen die wichtigsten Formulare und Vereinsunterlagen zentral zur Verfügung.",
+      "Downloads sind als eigene Datensätze geführt und können später unabhängig von Seitentexten ausgetauscht werden."
     ]
   },
   {
     slug: "fanartikel",
     title: "Fanartikel",
     teaser: "Fanshop, Restposten und Artikel rund um den FSV.",
+    sourceUrl: "https://www.fsvalgermissen.de/fanartikel-%28nicht-im-fanshop%29",
     body: [
-      "Schals, Tassen, Feuerzeuge, Pins und weitere Artikel werden als redaktioneller Bereich abgebildet.",
-      "Der externe Fanshop bleibt als Link erhalten."
+      "Zusätzlich zum externen Fanshop gibt es beim FSV einzelne Artikel und Restposten.",
+      "Alle Artikel sind bei Heimspielen erhältlich. Zusätzlich können Artikel per Mail an fanshop@fsvalgermissen.de bestellt werden."
     ],
+    products: [
+      { name: "Trainingsjacke + Hose", description: "Restposten" },
+      { name: "Poloshirt", description: "Restposten" },
+      { name: "Schal", price: "10,- EUR" },
+      { name: "Wendeschal", description: "Ein Ort - Ein Verein" },
+      { name: "Tasse", description: "FSV Algermissen", price: "10,- EUR" },
+      { name: "Feuerzeug", description: "Elektronikfeuerzeug FSV Algermissen", price: "2,- EUR" },
+      { name: "Pin", description: "Wappen mit Schmetterlingverschluss", price: "3,50 EUR" },
+      { name: "Aufkleber + Kuli", description: "auf Anfrage erhältlich" }
+    ],
+    links: [{ label: "Per Mail bestellen", href: "mailto:fanshop@fsvalgermissen.de" }],
     ctaLabel: "Zum externen Fanshop",
     ctaHref: "https://fsvalgermissen.fan12.de/"
   }
@@ -756,10 +863,14 @@ export const downloads = [
   "Vereinssatzung",
   "Datenschutzordnung",
   "Beitragsordnung",
-  "Eintrittserklaerung",
-  "Eintrittserklaerung ausfuellbar",
+  "Eintrittserklärung",
+  "Eintrittserklärung ausfüllbar",
   "Passantrag NFV",
-  "Nutzungsvertrag Clubhaus"
+  "Passantrag NFV als PDF",
+  "Passantrag NFV Online-Ausfüllhilfe",
+  "Nutzungsvertrag Clubhaus",
+  "Satzung Fußballförderverein",
+  "Eintrittserklärung Fußballförderverein"
 ];
 
 export const clubFootballWidgets: FootballWidgetConfig = {

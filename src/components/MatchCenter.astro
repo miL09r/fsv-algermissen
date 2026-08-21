@@ -1,5 +1,5 @@
 ---
-import type { MatchResult, Team } from "../lib/data";
+import { teams, type MatchResult, type Team } from "../lib/data";
 
 type Props = {
   results: MatchResult[];
@@ -17,6 +17,13 @@ const scoreLabel = (result: MatchResult) =>
 const teamLabel = (result: MatchResult) => result.teamName || team?.shortName || "FSV";
 
 const isFixture = (result: MatchResult) => result.status === "fixture";
+
+const isFsvTeam = (name: string) => /algermissen|jsg nord/i.test(name);
+
+const sportIcon = (result: MatchResult) => {
+  const resultTeam = teams.find((item) => item.slug === result.teamSlug);
+  return resultTeam?.area === "darts" ? "➜" : "⚽";
+};
 
 const lastResults = results
   .filter((result) => !isFixture(result) && result.homeGoals !== undefined && result.awayGoals !== undefined)
@@ -44,12 +51,17 @@ const hasContent = lastResults.length > 0 || nextFixtures.length > 0;
         <div class="matchcenter-list">
           {lastResults.map((result) => (
             <a class="matchcenter-card" href={`/teams/${result.teamSlug}`}>
+              <span class="matchcenter-sport-icon" aria-hidden="true">{sportIcon(result)}</span>
               <span class="matchcenter-meta">
                 <b>{teamLabel(result)}</b>
                 <small>{formatDate(result.date)}{result.matchday ? ` · ${result.matchday}` : ""}</small>
               </span>
               <strong class="matchcenter-score">{scoreLabel(result)}</strong>
-              <span class="matchcenter-teams">{result.homeTeam} - {result.awayTeam}</span>
+              <span class="matchcenter-teams">
+                <span class:list={["matchcenter-team-name", isFsvTeam(result.homeTeam) && "matchcenter-team-fsv"]}>{result.homeTeam}</span>
+                <span aria-hidden="true"> - </span>
+                <span class:list={["matchcenter-team-name", isFsvTeam(result.awayTeam) && "matchcenter-team-fsv"]}>{result.awayTeam}</span>
+              </span>
             </a>
           ))}
           {lastResults.length === 0 && <p class="matchcenter-empty">Noch kein Ergebnis eingetragen.</p>}
@@ -61,12 +73,17 @@ const hasContent = lastResults.length > 0 || nextFixtures.length > 0;
         <div class="matchcenter-list">
           {nextFixtures.map((result) => (
             <a class="matchcenter-card" href={`/teams/${result.teamSlug}`}>
+              <span class="matchcenter-sport-icon" aria-hidden="true">{sportIcon(result)}</span>
               <span class="matchcenter-meta">
                 <b>{teamLabel(result)}</b>
                 <small>{formatDate(result.date)}{result.kickoffTime ? ` · ${result.kickoffTime} Uhr` : ""}</small>
               </span>
               <strong class="matchcenter-score">-:-</strong>
-              <span class="matchcenter-teams">{result.homeTeam} - {result.awayTeam}</span>
+              <span class="matchcenter-teams">
+                <span class:list={["matchcenter-team-name", isFsvTeam(result.homeTeam) && "matchcenter-team-fsv"]}>{result.homeTeam}</span>
+                <span aria-hidden="true"> - </span>
+                <span class:list={["matchcenter-team-name", isFsvTeam(result.awayTeam) && "matchcenter-team-fsv"]}>{result.awayTeam}</span>
+              </span>
             </a>
           ))}
           {nextFixtures.length === 0 && <p class="matchcenter-empty">Noch kein naechstes Spiel eingetragen.</p>}

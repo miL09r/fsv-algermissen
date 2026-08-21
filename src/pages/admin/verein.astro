@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCurrentUser, getDb } from "../../lib/server/auth";
+import { getSiteClubPages } from "../../lib/server/club-pages";
+
+export const prerender = false;
+
+const db = await getDb(Astro.locals);
+const user = await getCurrentUser(db, Astro.cookies);
+if (!user) return Astro.redirect("/admin?error=auth");
+
+const pages = await getSiteClubPages(db);
+const message = Astro.url.searchParams;
+---
+
+<BaseLayout title="Vereinsseiten verwalten" description="Vereinsseiten bearbeiten.">
+  <header class="page-title">
+    <p class="eyebrow">Redaktion</p>
+    <h1>Vereinsseiten</h1>
+    <p>Vorstand, Leitbild, Clubhaus, Sportstätten, Sponsoren, Förderverein, Downloads und Fanartikel bearbeiten.</p>
+  </header>
+
+  <section class="section">
+    {message.get("page") === "ok" && <p class="status-pill">Vereinsseite gespeichert</p>}
+    <div class="admin-grid">
+      {pages.map((page) => (
+        <form class="admin-panel form-grid" method="post" action="/api/admin/pages/update">
+          <input type="hidden" name="slug" value={page.slug} />
+          <h2>{page.title}</h2>
+          <label>
+            Titel
+            <input name="title" value={page.title} required />
+          </label>
+          <label>
+            Kurztext
+            <textarea name="teaser" required>{page.teaser}</textarea>
+          </label>
+          <label>
+            Inhalt
+            <textarea name="body" required>{page.body.join("\n\n")}</textarea>
+          </label>
+          <button class="button" type="submit">Speichern</button>
+        </form>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
