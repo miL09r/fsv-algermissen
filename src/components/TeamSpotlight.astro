@@ -10,7 +10,21 @@ type Props = {
 };
 
 const { team, profile, sponsors = [], compact = false, showLink = true } = Astro.props;
-const visiblePlayers = compact ? profile?.players.slice(0, 6) : profile?.players.slice(0, 12);
+const lineup = profile?.players.slice(0, 11) ?? [];
+const substitutes = profile?.players.slice(11, compact ? 14 : 18) ?? [];
+const lineupSlots = [
+  "gk",
+  "def-l",
+  "def-cl",
+  "def-cr",
+  "def-r",
+  "mid-l",
+  "mid-c",
+  "mid-r",
+  "att-l",
+  "att-c",
+  "att-r"
+];
 ---
 
 <article class:list={["team-spotlight", compact && "team-spotlight-compact"]}>
@@ -29,9 +43,24 @@ const visiblePlayers = compact ? profile?.players.slice(0, 6) : profile?.players
       </div>
     )}
 
-    {visiblePlayers && visiblePlayers.length > 0 && (
-      <div class="player-strip" aria-label={`Kader ${team.name}`}>
-        {visiblePlayers.map((player) => (
+    {lineup.length > 0 && (
+      <div class="pitch-lineup" aria-label={`Aufstellung ${team.name}`}>
+        <span class="pitch-goal pitch-goal-top"></span>
+        <span class="pitch-goal pitch-goal-bottom"></span>
+        <span class="pitch-circle"></span>
+        {lineup.map((player, index) => (
+          <span class:list={["lineup-player", `lineup-${lineupSlots[index] ?? "bench"}`]}>
+            {player.image && <img src={player.image} alt="" loading="lazy" />}
+            <b>{player.number ?? "-"}</b>
+            <span>{player.name}</span>
+          </span>
+        ))}
+      </div>
+    )}
+
+    {substitutes.length > 0 && (
+      <div class="player-strip" aria-label={`Kaderbank ${team.name}`}>
+        {substitutes.map((player) => (
           <span class="player-pill">
             {player.image && <img src={player.image} alt="" loading="lazy" />}
             <b>{player.number ?? "-"}</b>

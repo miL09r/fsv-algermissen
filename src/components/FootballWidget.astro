@@ -87,9 +87,7 @@ const meta = [
   ) : (
     <div class="football-widget-empty">
       <p>
-        Fuer {contextLabel} ist noch keine Widget-ID fuer diese Domain hinterlegt.
-        Sobald der Code aus next.fussball.de vorliegt, wird dieses Feld automatisch
-        zum Live-Widget.
+        Aktuelle Spielinformationen zu {contextLabel} gibt es direkt bei FUSSBALL.DE.
       </p>
 
       {meta.length > 0 && (
@@ -104,7 +102,7 @@ const meta = [
       )}
 
       <div class="football-widget-actions">
-        <a class="button secondary" href={externalUrl}>Aktuelle Daten oeffnen</a>
+        <a class="button secondary" href={externalUrl}>Zu FUSSBALL.DE</a>
       </div>
     </div>
   )}

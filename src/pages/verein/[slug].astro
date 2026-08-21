@@ -27,8 +27,8 @@ const isSponsors = page.slug === "sponsoren";
         {page.ctaLabel && page.ctaHref && <a class="button" href={page.ctaHref}>{page.ctaLabel}</a>}
       </article>
       <aside class="content-card">
-        <h2>CMS vorbereitet</h2>
-        <p>Diese Seite ist als strukturierter Vereinsbereich angelegt und kann spaeter aus D1 gepflegt werden.</p>
+        <h2>FSV Algermissen</h2>
+        <p>Alle Vereinsbereiche sind direkt ueber die Navigation erreichbar. Fuer Fragen helfen Vorstand und Ansprechpartner gern weiter.</p>
       </aside>
     </div>
   </section>
@@ -40,13 +40,13 @@ const isSponsors = page.slug === "sponsoren";
           <p class="eyebrow">Downloads</p>
           <h2>Dokumente</h2>
         </div>
-        <p>Dateien werden spaeter in R2 gespeichert und im CMS verwaltet.</p>
+        <p>Wichtige Formulare und Vereinsunterlagen auf einen Blick.</p>
       </div>
       <div class="feature-grid">
         {downloads.map((download) => (
           <div class="feature-card">
             <h3>{download}</h3>
-            <p class="status-pill">Migration offen</p>
+            <p class="status-pill">Dokument</p>
           </div>
         ))}
       </div>
@@ -60,7 +60,7 @@ const isSponsors = page.slug === "sponsoren";
           <p class="eyebrow">Partner</p>
           <h2>Sponsorengruppen</h2>
         </div>
-        <p>Kategorien und Reihenfolge sind im Datenmodell vorbereitet.</p>
+        <p>Partner und Sponsoren, die den FSV Algermissen unterstuetzen.</p>
       </div>
       <div class="sponsor-grid">
         {filterSponsors().map((sponsor) => (

@@ -1,39 +1,149 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { teams } from "../../lib/data";
+import { getCurrentUser, getDb } from "../../lib/server/auth";
+
+export const prerender = false;
+
+type RegistrationRequest = {
+  id: number;
+  email: string;
+  name: string;
+  requested_scope: string | null;
+  created_at: string;
+};
+
+const db = getDb(Astro.locals);
+const user = await getCurrentUser(db, Astro.cookies);
+const isAdmin = user?.role === "admin";
+const pendingRequests =
+  db && isAdmin
+    ? (
+        await db
+          .prepare(
+            `SELECT id, email, name, requested_scope, created_at
+             FROM registration_requests
+             WHERE status = 'pending'
+             ORDER BY created_at DESC`
+          )
+          .all<RegistrationRequest>()
+      ).results
+    : [];
+const editableTeams = teams.filter((team) => team.area !== "darts");
+const message = Astro.url.searchParams;
 ---
 
-<BaseLayout title="Admin" description="Admin-Bereich fuer das CMS des FSV Algermissen.">
+<BaseLayout title="Admin" description="Redaktionsbereich des FSV Algermissen.">
   <header class="page-title">
-    <p class="eyebrow">CMS</p>
-    <h1>Admin-Login</h1>
-    <p>Grundgeruest fuer Admins, Redakteure und Team-Redakteure. Die produktive Authentifizierung wird serverseitig mit D1-Sessions umgesetzt.</p>
+    <p class="eyebrow">Redaktion</p>
+    <h1>{user ? `Willkommen, ${user.name}` : "Admin-Login"}</h1>
+    <p>{user ? "Inhalte, Benutzer und Mannschaftsbereiche verwalten." : "Anmelden oder Zugang fuer die Redaktion beantragen."}</p>
   </header>
 
   <section class="section">
-    <div class="admin-grid">
-      <form class="admin-panel form-grid" method="post" action="/api/admin/login">
-        <h2>Anmelden</h2>
-        <label>
-          E-Mail
-          <input type="email" name="email" autocomplete="username" required />
-        </label>
-        <label>
-          Passwort
-          <input type="password" name="password" autocomplete="current-password" required />
-        </label>
-        <button class="button" type="submit">Einloggen</button>
-        <p>Milestone 1 prueft noch keine Zugangsdaten. Keine Passwoerter im Repository ablegen.</p>
-      </form>
-      <div class="admin-panel">
-        <h2>Rollenmodell</h2>
-        <p><strong>Admin:</strong> alle Inhalte, Benutzer, Teams, Sponsoren, Medien und Einstellungen.</p>
-        <p><strong>Redakteur:</strong> News und Medien.</p>
-        <p><strong>Team-Redakteur:</strong> nur freigegebene Teams oder Bereiche.</p>
-        <div class="action-row">
-          <a class="button" href="/admin/news">News-Modul ansehen</a>
-          <a class="button secondary" href="/admin/teams">Teams & Ergebnisse</a>
-        </div>
+    {!db && (
+      <div class="content-card">
+        <h2>Datenbank nicht verbunden</h2>
+        <p>Der Redaktionsbereich braucht die Cloudflare-D1-Bindung <strong>DB</strong>.</p>
       </div>
-    </div>
+    )}
+
+    {!user ? (
+      <div class="admin-grid">
+        <form class="admin-panel form-grid" method="post" action="/api/admin/login">
+          <h2>Anmelden</h2>
+          {message.get("error") === "login" && <p class="status-pill danger">Login fehlgeschlagen</p>}
+          <label>
+            E-Mail
+            <input type="email" name="email" autocomplete="username" required />
+          </label>
+          <label>
+            Passwort
+            <input type="password" name="password" autocomplete="current-password" required />
+          </label>
+          <button class="button" type="submit">Einloggen</button>
+        </form>
+
+        <form class="admin-panel form-grid" method="post" action="/api/admin/register">
+          <h2>Zugang beantragen</h2>
+          {message.get("register") === "pending" && <p class="status-pill">Anfrage wurde gesendet</p>}
+          <label>
+            Name
+            <input name="name" autocomplete="name" required />
+          </label>
+          <label>
+            E-Mail
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label>
+            Passwort
+            <input type="password" name="password" autocomplete="new-password" minlength="10" required />
+          </label>
+          <fieldset>
+            <legend>Gewuenschter Bereich</legend>
+            <label><input type="checkbox" name="scope" value="haupt-news" /> Haupt-News</label>
+            {editableTeams.slice(0, 8).map((team) => (
+              <label><input type="checkbox" name="scope" value={team.slug} /> {team.name}</label>
+            ))}
+          </fieldset>
+          <button class="button secondary" type="submit">Registrierung senden</button>
+        </form>
+      </div>
+    ) : (
+      <div class="admin-grid">
+        <div class="admin-panel">
+          <h2>Bereiche</h2>
+          <p><strong>Rolle:</strong> {user.role}</p>
+          <div class="action-row">
+            <a class="button" href="/admin/news">News verwalten</a>
+            <a class="button secondary" href="/admin/teams">Teams & Ergebnisse</a>
+          </div>
+          <form method="post" action="/api/admin/logout" style="margin-top: 14px;">
+            <button class="button ghost" type="submit">Ausloggen</button>
+          </form>
+        </div>
+
+        {isAdmin && (
+          <div class="admin-panel">
+            <h2>Registrierungen freigeben</h2>
+            {message.get("approve") === "ok" && <p class="status-pill">Benutzer freigegeben</p>}
+            {pendingRequests.length === 0 ? (
+              <p>Keine offenen Registrierungen.</p>
+            ) : (
+              pendingRequests.map((request) => (
+                <form class="approval-card" method="post" action="/api/admin/users/approve">
+                  <input type="hidden" name="requestId" value={request.id} />
+                  <h3>{request.name}</h3>
+                  <p>{request.email}</p>
+                  {request.requested_scope && <p><strong>Wunsch:</strong> {request.requested_scope}</p>}
+                  <label>
+                    Rolle
+                    <select name="role">
+                      <option value="team_editor">Team-Redakteur</option>
+                      <option value="editor">Redakteur</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </label>
+                  <fieldset>
+                    <legend>Inhaltsbereiche</legend>
+                    <label><input type="checkbox" name="content" value="haupt-news" /> Haupt-News</label>
+                    <label><input type="checkbox" name="content" value="verein" /> Verein</label>
+                    <label><input type="checkbox" name="content" value="sponsoren" /> Sponsoren</label>
+                  </fieldset>
+                  <fieldset>
+                    <legend>Mannschaften</legend>
+                    {editableTeams.map((team) => (
+                      <label><input type="checkbox" name="teams" value={team.slug} /> {team.name}</label>
+                    ))}
+                  </fieldset>
+                  <label class="inline-check"><input type="checkbox" name="canPublish" /> darf veroeffentlichen</label>
+                  <button class="button" type="submit">Freigeben</button>
+                </form>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+    )}
   </section>
 </BaseLayout>

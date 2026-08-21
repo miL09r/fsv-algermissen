@@ -11,6 +11,7 @@ const formatDate = (value: string) =>
   new Intl.DateTimeFormat("de-DE", { day: "2-digit", month: "2-digit", year: "2-digit" }).format(new Date(value));
 
 const fsvScore = (result: MatchResult) => {
+  if (result.homeGoals === undefined || result.awayGoals === undefined) return "NS";
   const isHome = result.homeTeam.toLowerCase().includes("algermissen");
   const goalsFor = isHome ? result.homeGoals : result.awayGoals;
   const goalsAgainst = isHome ? result.awayGoals : result.homeGoals;
@@ -18,12 +19,20 @@ const fsvScore = (result: MatchResult) => {
   if (goalsFor < goalsAgainst) return "N";
   return "U";
 };
+
+const scoreLabel = (result: MatchResult) =>
+  result.homeGoals === undefined || result.awayGoals === undefined ? "-:-" : `${result.homeGoals}:${result.awayGoals}`;
+
+const metaLabel = (result: MatchResult) =>
+  result.status === "fixture"
+    ? `${formatDate(result.date)}${result.kickoffTime ? ` · ${result.kickoffTime} Uhr` : ""}`
+    : `${formatDate(result.date)} · ${result.matchday ?? result.competition}`;
 ---
 
 <div class="result-banner" aria-label="Letzte Ergebnisse">
   <div class="result-banner-head">
-    <p class="eyebrow">Letzte Ergebnisse</p>
-    <strong>1. und 2. Herren</strong>
+    <p class="eyebrow">Saison 26/27</p>
+    <strong>Ergebnisse & Spiele</strong>
   </div>
   <div class="result-track">
     {results.map((result) => (
@@ -31,9 +40,9 @@ const fsvScore = (result: MatchResult) => {
         <span class:list={["result-state", `result-state-${fsvScore(result).toLowerCase()}`]}>{fsvScore(result)}</span>
         <span>
           <strong>{result.teamName}</strong>
-          <small>{formatDate(result.date)} · {result.matchday ?? result.competition}</small>
+          <small>{result.status === "fixture" ? "Naechstes Spiel" : "Letztes Ergebnis"} · {metaLabel(result)}</small>
         </span>
-        <b>{result.homeGoals}:{result.awayGoals}</b>
+        <b>{scoreLabel(result)}</b>
         <span class="result-teams">{result.homeTeam} - {result.awayTeam}</span>
       </a>
     ))}

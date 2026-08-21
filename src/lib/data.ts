@@ -35,13 +35,16 @@ export type MatchResult = {
   teamName: string;
   homeTeam: string;
   awayTeam: string;
-  homeGoals: number;
-  awayGoals: number;
+  homeGoals?: number;
+  awayGoals?: number;
   date: string;
+  kickoffTime?: string;
+  season: string;
   competition: string;
   matchday?: string;
   reportTitle?: string;
   sourceUrl?: string;
+  status?: "result" | "fixture";
 };
 
 export type FootballWidgetConfig = {
@@ -106,6 +109,8 @@ export const site = {
   ]
 };
 
+export const currentSeason = "2026/2027";
+
 export const teams: Team[] = [
   {
     slug: "1-herren",
@@ -117,7 +122,7 @@ export const teams: Team[] = [
       "Die 1. Herren geht in dieser Saison in der Kreisliga Staffel A an den Start.",
     trainingTimes: ["Dienstag 19:00-21:00", "Donnerstag 19:00-21:00"],
     trainingLocation: "REWE-Rudat-Arena",
-    contacts: [{ role: "Sportliche Leitung", name: "wird im CMS gepflegt" }],
+    contacts: [{ role: "Sportliche Leitung", name: "FSV Algermissen" }],
     image: "https://images.ebcdn.de/club-4844/TeamImage_10821.jpg?v=5&width=1920&format=webp&mode=max",
     sponsorSlugs: ["cosmophone"],
     externalIds: {
@@ -151,13 +156,16 @@ export const teams: Team[] = [
   },
   {
     slug: "ue32",
-    name: "Alt-Herren (UE-32)",
-    shortName: "UE-32",
+    name: "Alt-Herren (UE32)",
+    shortName: "UE32",
     area: "senioren",
+    league: "UE32 2. Kreisklasse Staffel A",
     description:
-      "Seniorenfussball, Vereinsbindung und Spielbetrieb fuer die Alt-Herren.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Ansprechpartner", name: "wird im CMS gepflegt" }],
+      "Die UE32 spielt in der 2. Kreisklasse 8er-Feld und trainiert mittwochs am Grasweg.",
+    trainingTimes: ["Mittwoch 19:00"],
+    trainingLocation: "Sportplatz am Grasweg",
+    contacts: [{ role: "Ansprechpartner", name: "Alexander Reslan", email: "alexander.reslan@fsvalgermissen.de" }],
+    sponsorSlugs: ["gasthaus-weiterer"],
     externalIds: {
       clubId: "4844",
       teamId: "10824",
@@ -171,8 +179,8 @@ export const teams: Team[] = [
     area: "senioren",
     description:
       "Die Alt-Senioren gehoeren sichtbar zur Vereinsstruktur und erhalten eigene Inhalte.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Ansprechpartner", name: "wird im CMS gepflegt" }],
+    trainingTimes: ["nach Absprache"],
+    contacts: [{ role: "Ansprechpartner", name: "FSV Algermissen" }],
     externalIds: {
       clubId: "4844",
       teamId: "10825",
@@ -200,9 +208,12 @@ export const teams: Team[] = [
     shortName: "A-Junioren",
     area: "jugend",
     ageGroup: "A",
-    description: "Mannschaftsseite fuer die aeltesten Junioren im FSV/JSG-Kontext.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    league: "A-Junioren Kreisliga Staffel A",
+    description: "Die A-Junioren der JSG Nord sind der U19-Bereich im FSV/JSG-Kontext.",
+    trainingTimes: ["Montag 17:00-18:30", "Donnerstag 17:00-18:30"],
+    trainingLocation: "Luehnde, Hangeraethsweg",
+    contacts: [{ role: "Trainer", name: "Sebastian Boppel", email: "2007er@jsg-nord.com", phone: "015154309230" }],
+    sponsorSlugs: ["cosmophone"],
     externalIds: {
       clubId: "4844",
       teamId: "10918",
@@ -215,9 +226,9 @@ export const teams: Team[] = [
     shortName: "B-Junioren",
     area: "jugend",
     ageGroup: "B",
-    description: "Struktureller Platz fuer News, Training, Trainer und FUSSBALL.DE Widgets.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    description: "B-Junioren mit Spielbetrieb, Training, Trainerteam und aktuellen Mannschaftsinfos.",
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
       clubId: "4844",
       teamId: "10920",
@@ -230,9 +241,9 @@ export const teams: Team[] = [
     shortName: "C-Junioren",
     area: "jugend",
     ageGroup: "C",
-    description: "C-Junioren mit automatischer News-Zuordnung und spaeterer Spielplanintegration.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    description: "C-Junioren der JSG Nord mit eigener Mannschaftsseite und aktuellen Vereinsmeldungen.",
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
       clubId: "4844",
       teamId: "10922",
@@ -246,8 +257,8 @@ export const teams: Team[] = [
     area: "jugend",
     ageGroup: "D",
     description: "D-Junioren als eigener Bereich innerhalb der JSG- und Jugendstruktur.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
       clubId: "4844",
       teamId: "10925",
@@ -262,8 +273,8 @@ export const teams: Team[] = [
     ageGroup: "E",
     description:
       "Die Architektur erlaubt mehrere Teams pro Jahrgang, etwa E I, E II oder weitere Mannschaften.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
       clubId: "4844",
       teamId: "13780",
@@ -277,8 +288,8 @@ export const teams: Team[] = [
     area: "jugend",
     ageGroup: "F",
     description: "F-Junioren mit Raum fuer Trainingszeiten, Ansprechpartner und kindgerechte News.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
       clubId: "4844",
       teamId: "12586",
@@ -292,8 +303,8 @@ export const teams: Team[] = [
     area: "jugend",
     ageGroup: "G",
     description: "G-Junioren als frueher Einstieg in den Fussball beim FSV.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
       clubId: "4844",
       teamId: "15160",
@@ -306,8 +317,8 @@ export const teams: Team[] = [
     shortName: "Bambinis",
     area: "jugend",
     description: "Die Bambinis bekommen eine eigene Seite statt nur als Randnotiz aufzutauchen.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
-    contacts: [{ role: "Trainerteam", name: "wird im CMS gepflegt" }],
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
       clubId: "4844",
       teamId: "18861",
@@ -366,6 +377,12 @@ export const sponsors: Sponsor[] = [
   { slug: "continentale", name: "Die Continentale", category: "Partner" },
   { slug: "lokschuppen", name: "Wirtshaus zum Lokschuppen", category: "Partner", website: "https://wirtshaus-zum-lokschuppen.de/" },
   {
+    slug: "gasthaus-weiterer",
+    name: "Gasthaus Weiterer",
+    category: "Team-Sponsor",
+    description: "Team-Partner der Alt-Herren UE32."
+  },
+  {
     slug: "coiffeur-juan",
     name: "Coiffeur Juan",
     category: "Team-Sponsor",
@@ -384,7 +401,7 @@ export const teamProfiles: TeamProfile[] = [
       "Die 1. Herren geht in dieser Saison in der Kreisliga Staffel A an den Start.",
       "Trainiert wird dienstags und donnerstags von 19 bis 21 Uhr. Als Team-Partner ist Cosmophone auf der bestehenden Website gefuehrt."
     ],
-    staff: [{ role: "Sportliche Leitung", name: "wird im CMS gepflegt" }],
+    staff: [{ role: "Sportliche Leitung", name: "FSV Algermissen" }],
     players: [
       { name: "Malte Niemann", number: "1", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_16583.jpg?v=1&width=1000&format=webp&height=1000&mode=crop" },
       { name: "Manuel Pieper", number: "12", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_69988.jpg?v=1&width=1000&format=webp&height=1000&mode=crop" },
@@ -433,6 +450,46 @@ export const teamProfiles: TeamProfile[] = [
       { name: "Felix-Jonathan Herrmann", number: "16" },
       { name: "Kornelius Paasche", number: "20" }
     ]
+  },
+  {
+    teamSlug: "a-junioren",
+    headline: "U19-Fussball bei der JSG Nord",
+    intro: [
+      "Die A-Junioren spielen in der A-Junioren Kreisliga Staffel A.",
+      "Trainer ist Sebastian Boppel. Trainiert wird montags und donnerstags von 17:00 bis 18:30 Uhr in Luehnde am Hangeraethsweg."
+    ],
+    staff: [{ role: "Trainer", name: "Sebastian Boppel" }],
+    players: [
+      { name: "JSG Nord U19", number: "1" },
+      { name: "Jahrgang 2007", number: "4" },
+      { name: "Jahrgang 2008", number: "5" },
+      { name: "Jahrgang 2007", number: "6" },
+      { name: "Jahrgang 2008", number: "8" },
+      { name: "Jahrgang 2007", number: "10" },
+      { name: "Jahrgang 2008", number: "11" }
+    ]
+  },
+  {
+    teamSlug: "ue32",
+    headline: "8er-Feld, Mittwochabend, Grasweg",
+    intro: [
+      "Die UE32 spielt in der 2. Kreisklasse 8er-Feld.",
+      "Trainiert wird jeden Mittwoch um 19 Uhr auf dem Sportplatz am Grasweg. Ansprechpartner ist Alexander Reslan."
+    ],
+    staff: [{ role: "Ansprechpartner", name: "Alexander Reslan" }],
+    players: [
+      { name: "Fabian Fricke", number: "3" },
+      { name: "Joern Thamm", number: "14" },
+      { name: "Leif Even", number: "14" },
+      { name: "Sebastian Ulbricht", number: "33" },
+      { name: "Matthias Rack", number: "23" },
+      { name: "Jan Algermissen", number: "24" },
+      { name: "Phillipp Werder", number: "40" },
+      { name: "Maik Hartmann", number: "9" },
+      { name: "Steffen Fuchs", number: "10" },
+      { name: "Daniel Krafczyk", number: "11" },
+      { name: "Marcel Muenster", number: "18" }
+    ]
   }
 ];
 
@@ -441,25 +498,15 @@ export const matchResults: MatchResult[] = [
     teamSlug: "1-herren",
     teamName: "1. Herren",
     homeTeam: "FSV Algermissen",
-    awayTeam: "TSV Foehrste",
-    homeGoals: 4,
-    awayGoals: 1,
-    date: "2026-06-14",
-    competition: "Kreisliga Hildesheim",
-    matchday: "30. Spieltag",
-    sourceUrl: "https://www.fsvalgermissen.de/"
-  },
-  {
-    teamSlug: "1-herren",
-    teamName: "1. Herren",
-    homeTeam: "FSV Algermissen",
     awayTeam: "SV Teutonia Sorsum",
     homeGoals: 3,
     awayGoals: 0,
     date: "2026-08-09",
+    season: currentSeason,
     competition: "Kreisliga Staffel A",
     matchday: "2. Spieltag",
-    sourceUrl: "https://www.fsvalgermissen.de/"
+    sourceUrl: "https://www.fussball.de/mannschaft/fsv-algermissen-fsv-algermissen-niedersachsen/-/saison/2627/team-id/011MIC1BK8000000VTVG0001VTR8C1K7",
+    status: "result"
   },
   {
     teamSlug: "1-herren",
@@ -469,9 +516,11 @@ export const matchResults: MatchResult[] = [
     homeGoals: 0,
     awayGoals: 1,
     date: "2026-08-12",
+    season: currentSeason,
     competition: "Kreisliga Staffel A",
     matchday: "1. Spieltag",
-    sourceUrl: "https://www.fsvalgermissen.de/"
+    sourceUrl: "https://www.fussball.de/mannschaft/fsv-algermissen-fsv-algermissen-niedersachsen/-/saison/2627/team-id/011MIC1BK8000000VTVG0001VTR8C1K7",
+    status: "result"
   },
   {
     teamSlug: "1-herren",
@@ -481,9 +530,11 @@ export const matchResults: MatchResult[] = [
     homeGoals: 3,
     awayGoals: 2,
     date: "2026-08-16",
+    season: currentSeason,
     competition: "Kreisliga Staffel A",
     matchday: "3. Spieltag",
-    sourceUrl: "https://www.fsvalgermissen.de/"
+    sourceUrl: "https://www.fussball.de/mannschaft/fsv-algermissen-fsv-algermissen-niedersachsen/-/saison/2627/team-id/011MIC1BK8000000VTVG0001VTR8C1K7",
+    status: "result"
   },
   {
     teamSlug: "1-herren",
@@ -493,21 +544,51 @@ export const matchResults: MatchResult[] = [
     homeGoals: 2,
     awayGoals: 0,
     date: "2026-08-19",
+    season: currentSeason,
     competition: "Kreisliga Staffel A",
     matchday: "4. Spieltag",
-    sourceUrl: "https://www.fsvalgermissen.de/"
+    sourceUrl: "https://www.fussball.de/mannschaft/fsv-algermissen-fsv-algermissen-niedersachsen/-/saison/2627/team-id/011MIC1BK8000000VTVG0001VTR8C1K7",
+    status: "result"
   },
   {
     teamSlug: "2-herren",
     teamName: "2. Herren",
-    homeTeam: "FSV Algermissen II",
-    awayTeam: "SG Huemax/Borsum",
-    homeGoals: 2,
-    awayGoals: 3,
-    date: "2025-10-15",
-    competition: "2. Herren",
-    reportTitle: "Bittere Niederlage fuer die II. Herren",
-    sourceUrl: "https://www.fsvalgermissen.de/"
+    homeTeam: "SG Foerste/Hasede/Ahrbergen",
+    awayTeam: "FSV Algermissen II",
+    homeGoals: 0,
+    awayGoals: 0,
+    date: "2026-08-16",
+    season: currentSeason,
+    competition: "2. Kreisklasse Staffel A",
+    matchday: "1. Spieltag",
+    sourceUrl: "https://www.fussball.de/mannschaft/fsv-algermissen-ii-fsv-algermissen-niedersachsen/-/saison/2627/team-id/011MIAMK78000000VTVG0001VTR8C1K7",
+    status: "result"
+  },
+  {
+    teamSlug: "a-junioren",
+    teamName: "A-Junioren",
+    homeTeam: "JFC Kaspel",
+    awayTeam: "JSG Nord",
+    date: "2026-08-23",
+    kickoffTime: "10:30",
+    season: currentSeason,
+    competition: "A-Junioren Kreisliga Staffel A",
+    matchday: "1. Spieltag",
+    sourceUrl: "https://www.fussball.de/verein/fsv-algermissen-niedersachsen/-/id/00ES8GN7P4000010VV0AG08LVUPGND5I",
+    status: "fixture"
+  },
+  {
+    teamSlug: "ue32",
+    teamName: "UE32",
+    homeTeam: "SC Drispenstedt",
+    awayTeam: "FSV Algermissen",
+    date: "2026-08-21",
+    kickoffTime: "19:00",
+    season: currentSeason,
+    competition: "UE32 2. Kreisklasse Staffel A",
+    matchday: "1. Spieltag",
+    sourceUrl: "https://www.fussball.de/mannschaft/fsv-algermissen-fsv-algermissen-niedersachsen/-/saison/2627/team-id/01SBNP0VUG000000VS548984VTL2SVNK",
+    status: "fixture"
   }
 ];
 
@@ -517,7 +598,7 @@ export const news: NewsItem[] = [
     title: "Bericht ueber die Mitgliederversammlung 2026",
     teaser: "Der FSV blickt auf ein gelungenes Vereinsjahr und stellt die Weichen fuer die naechsten Aufgaben.",
     body:
-      "Diese Beispielnews bildet die bestehende Vereinsmeldung nach und zeigt, wie eine Vereinsnews ohne Teambindung auf Startseite und News-Seite erscheint.",
+      "Der FSV blickt auf ein gelungenes Vereinsjahr zurueck und stellt die Weichen fuer die naechsten Aufgaben im Verein.",
     date: "2026-05-19",
     status: "published",
     category: "Verein",
@@ -531,7 +612,7 @@ export const news: NewsItem[] = [
     title: "Hannover 96 Fussballschule zu Gast",
     teaser: "Talents+Friends kommt nach Algermissen und verbindet Fussball mit einer Spendenaktion.",
     body:
-      "Diese News ist zugleich Vereins- und Jugendinhalt. Sie wird ueber Tags auf der Startseite, der News-Seite und bei Jugend/JSG sichtbar.",
+      "Talents+Friends bringt Training, Teamgeist und eine Spendenaktion nach Algermissen.",
     date: "2026-03-21",
     status: "published",
     category: "Jugend",
@@ -545,7 +626,7 @@ export const news: NewsItem[] = [
     title: "Neuer Sichtschutz zum Kindergarten",
     teaser: "Umut Buz und Danilo Henne unterstuetzen den FSV mit einem neuen Sichtschutz.",
     body:
-      "Sponsoren- und Vereinsleben-News koennen mehreren Bereichen zugeordnet und spaeter Sponsorenprofilen verknuepft werden.",
+      "Umut Buz und Danilo Henne unterstuetzen den FSV mit einem neuen Sichtschutz am Sportgelaende.",
     date: "2026-03-17",
     status: "published",
     category: "Sponsoren",
@@ -558,7 +639,7 @@ export const news: NewsItem[] = [
     title: "Aufstieg der Magpies ist perfekt",
     teaser: "Die Darts-Mannschaften feiern ihren sportlichen Erfolg im Clubhaus.",
     body:
-      "Darts-News werden zentral gespeichert und erscheinen automatisch im Darts-Bereich sowie auf den Teamseiten.",
+      "Die Darts-Mannschaften feiern ihren sportlichen Erfolg und staerken den Magpies-Bereich im Clubhaus.",
     date: "2024-05-06",
     status: "published",
     category: "Darts",
@@ -570,9 +651,9 @@ export const news: NewsItem[] = [
   {
     slug: "spielbericht-erste-herren",
     title: "Erste Herren startet in die neue Saison",
-    teaser: "Kreisliga, Trainingsrhythmus und Team-Partner sind fuer die Mannschaftsseite vorbereitet.",
+    teaser: "Kreisliga, Trainingsrhythmus und Team-Partner im Blick.",
     body:
-      "Diese Mannschaftsnews ist nur einmal angelegt und wird ueber die Team-Zuordnung automatisch auf der 1.-Herren-Seite angezeigt.",
+      "Die 1. Herren geht in der Kreisliga Staffel A an den Start und trainiert dienstags und donnerstags in der REWE-Rudat-Arena.",
     date: "2026-08-12",
     status: "published",
     category: "1. Herren",
@@ -589,7 +670,7 @@ export const clubPages: ClubPage[] = [
     title: "Der Vorstand",
     teaser: "Ansprechpartner und Ressorts des FSV Algermissen.",
     body: [
-      "Die aktuelle Bestandsseite fuehrt den Vorstand mit Stand 19.05.2026. Die finale Migration sollte Rollen, Kontaktdaten und Freigaben im CMS sauber pruefen.",
+      "Der Vorstand fuehrt den Verein mit Stand der Mitgliederversammlung vom 19.05.2026.",
       "Ressorts: Vorsitz, Finanzen, Sport, Mitglieder und Engagement, Liegenschaften, Oeffentlichkeit/Sponsoring/Digitales und Jugend."
     ]
   },
@@ -608,7 +689,7 @@ export const clubPages: ClubPage[] = [
     teaser: "Treffpunkt, Stammtisch, Bundesliga-Abende, Darts und Spieltagsleben.",
     body: [
       "Das Clubhaus ist Herz und Treffpunkt des Vereins. Die Bestandsseite nennt den Stammtisch donnerstags ab 19 Uhr, Bundesliga-Abende und Oeffnung zum Spielbetrieb.",
-      "Der Mietvertrag wird in Milestone 3 in die Download- und R2-Struktur ueberfuehrt."
+      "Dokumente und Formulare rund um das Clubhaus sind im Downloadbereich gebuendelt."
     ],
     ctaLabel: "Downloads ansehen",
     ctaHref: "/verein/downloads"
@@ -618,8 +699,8 @@ export const clubPages: ClubPage[] = [
     title: "REWE-Rudat-Arena",
     teaser: "Sportstaette am Grasweg mit Anfahrt und Dokumenten.",
     body: [
-      "Die Arena erhaelt eine eigene Seite fuer Anfahrt, Bilder, Belegung und spaetere Spieltagsinformationen.",
-      "Bestehende Hygienekonzepte und Dokumente werden als Downloads modelliert."
+      "Die Arena am Grasweg ist die zentrale Sportstaette fuer Training, Spielbetrieb und Vereinsleben.",
+      "Anfahrt, Dokumente und Informationen stehen im Download- und Vereinsbereich bereit."
     ]
   },
   {
@@ -628,7 +709,7 @@ export const clubPages: ClubPage[] = [
     teaser: "Weitere Sportstaette des FSV mit eigener Informationsseite.",
     body: [
       "Auch das Ostpreussen-Stadion bleibt als Vereinsbereich erhalten und wird nicht in der Navigation versteckt.",
-      "Anfahrts- und Dokumentlinks werden im CMS verwaltbar."
+      "Informationen zu Anfahrt und Nutzung sind direkt ueber den Vereinsbereich erreichbar."
     ]
   },
   {
@@ -636,8 +717,8 @@ export const clubPages: ClubPage[] = [
     title: "Sponsoren",
     teaser: "Premium-Partner, Exklusiv-Partner, Partner und Team-Sponsoren.",
     body: [
-      "Sponsoren werden kategorisiert, sortierbar und optional Teams zugeordnet.",
-      "Die Startseite zeigt eine kuratierte Auswahl, die Sponsorenseite spaeter alle aktiven Partner."
+      "Sponsoren werden nach Premium-Partnern, Exklusiv-Partnern, Partnern und Team-Sponsoren dargestellt.",
+      "Die Startseite zeigt eine Auswahl, die Sponsorenseite alle aktiven Partner."
     ]
   },
   {
@@ -646,7 +727,7 @@ export const clubPages: ClubPage[] = [
     teaser: "Unterstuetzung fuer Fussball und Vereinsentwicklung.",
     body: [
       "Der bestehende Foerderverein bleibt als eigenstaendiger Navigationspunkt erhalten.",
-      "Mitgliedschaft, Foerderziele und Dokumente werden im CMS gepflegt."
+      "Mitgliedschaft, Foerderziele und Dokumente sind hier gebuendelt."
     ]
   },
   {
@@ -655,7 +736,7 @@ export const clubPages: ClubPage[] = [
     teaser: "Formulare, Satzungen, Ordnungen und Clubhaus-Unterlagen.",
     body: [
       "Vereinssatzung, Datenschutzordnung, Beitragsordnung, Eintrittserklaerungen, NFV-Passantrag und Clubhaus-Nutzungsvertrag sind als zentrale Download-Kategorien vorgesehen.",
-      "Dateien sollen spaeter sicher in Cloudflare R2 liegen."
+      "Alle wichtigen Vereinsunterlagen sind im Downloadbereich gebuendelt."
     ]
   },
   {
@@ -758,11 +839,11 @@ export function getTeamProfile(slug: string) {
 
 export function getResultsForTeam(slug: string) {
   return matchResults
-    .filter((result) => result.teamSlug === slug)
+    .filter((result) => result.teamSlug === slug && result.season === currentSeason)
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export function getFeaturedResults(slugs: string[], limitPerTeam = 3) {
+export function getFeaturedResults(slugs: string[], limitPerTeam = 1) {
   return slugs.flatMap((slug) => getResultsForTeam(slug).slice(0, limitPerTeam));
 }
 

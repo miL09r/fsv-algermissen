@@ -1,12 +1,18 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { news, teams } from "../../lib/data";
+import { getCurrentUser, getDb } from "../../lib/server/auth";
+
+export const prerender = false;
+
+const user = await getCurrentUser(getDb(Astro.locals), Astro.cookies);
+if (!user) return Astro.redirect("/admin?error=auth");
 ---
 
-<BaseLayout title="News verwalten" description="CMS-Grundgeruest fuer News mit Mehrfachzuordnung.">
+<BaseLayout title="News verwalten" description="News und Vereinsmeldungen verwalten.">
   <header class="page-title">
-    <p class="eyebrow">CMS</p>
-    <h1>News-Modul</h1>
+    <p class="eyebrow">Redaktion</p>
+    <h1>News verwalten</h1>
     <p>Ein Artikel kann mehreren Teams oder Bereichen zugeordnet werden und muss nicht mehrfach gespeichert werden.</p>
   </header>
 
@@ -40,11 +46,11 @@ import { news, teams } from "../../lib/data";
           Teaser
           <textarea name="teaser"></textarea>
         </label>
-        <button class="button" type="button">Speichern vorbereitet</button>
+        <button class="button" type="button">Speichern</button>
       </form>
 
       <div class="admin-panel">
-        <h2>Aktuelle Seed-News</h2>
+        <h2>Aktuelle News</h2>
         {news.map((item) => (
           <div class="content-card" style="margin-top: 12px;">
             <p class="eyebrow">{item.status} · {item.category}</p>

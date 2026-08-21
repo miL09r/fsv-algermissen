@@ -21,8 +21,8 @@ import {
 const latestNews = getPublishedNews().slice(0, 5);
 const youthNews = getNewsForArea("jugend").slice(0, 2);
 const dartsNews = getNewsForArea("darts").slice(0, 2);
-const heroResults = getFeaturedResults(["1-herren", "2-herren"], 3);
-const spotlightTeams = teams.filter((team) => ["1-herren", "2-herren"].includes(team.slug));
+const heroResults = getFeaturedResults(["1-herren", "2-herren", "a-junioren", "ue32"], 1);
+const spotlightTeams = teams.filter((team) => ["1-herren", "2-herren", "a-junioren", "ue32"].includes(team.slug));
 const topNews = latestNews[0];
 ---
 
@@ -33,8 +33,7 @@ const topNews = latestNews[0];
         <p class="eyebrow">FSV Algermissen v. 1911 / 1990 e.V.</p>
         <h1>FSV Algermissen</h1>
         <p>
-          Fussball, Jugend, Darts und Vereinsleben: kompakt, aktuell und
-          bereit fuer die Pflege im CMS.
+          Fussball, Jugend, Darts und Vereinsleben: kompakt, aktuell und mitten im Dorf.
         </p>
         <div class="hero-actions">
           <a class="button" href="/news">News lesen</a>
@@ -60,7 +59,7 @@ const topNews = latestNews[0];
         <p class="eyebrow">Aktuelles</p>
         <h2>News aus dem ganzen Verein</h2>
       </div>
-      <p>Eine zentrale News-Struktur sorgt dafuer, dass Berichte automatisch in den passenden Bereichen erscheinen.</p>
+      <p>Berichte, Termine und Geschichten aus allen Bereichen des Vereins.</p>
     </div>
     <div class="news-grid">
       {latestNews.map((item) => <NewsCard item={item} />)}
@@ -73,7 +72,7 @@ const topNews = latestNews[0];
         <p class="eyebrow">Matchcenter</p>
         <h2>Live aus FUSSBALL.DE</h2>
       </div>
-      <p>Die offiziellen Widgets bleiben eingebunden. Der Ergebnisbanner nutzt zusaetzlich eigene, CMS-faehige Daten als sauberen Workaround.</p>
+      <p>Spielplaene, Tabellen und Begegnungen direkt aus den Mannschaftsbereichen.</p>
     </div>
     <div class="matchcenter-home">
       <FootballWidget variant="fixtures" />
@@ -84,9 +83,9 @@ const topNews = latestNews[0];
     <div class="section-heading">
       <div>
         <p class="eyebrow">Teamvorstellung</p>
-        <h2>1. und 2. Herren im Fokus</h2>
+        <h2>Teams im Fokus</h2>
       </div>
-      <p>Inhalte, Trainer, Kaderauszuege und Team-Partner liegen datengetrieben vor und koennen spaeter im CMS gepflegt werden.</p>
+      <p>Aktuelle Mannschaften, Ansprechpartner, Partner und Spieler auf einen Blick.</p>
     </div>
     <div class="spotlight-grid">
       {spotlightTeams.map((team) => (
@@ -108,7 +107,7 @@ const topNews = latestNews[0];
         <p class="eyebrow">Jugend / JSG Nord</p>
         <h2>Von Bambinis bis A-Junioren</h2>
       </div>
-      <p>Jahrgaenge koennen mehrere Teams fuehren, damit E I, E II oder weitere Mannschaften sauber abbildbar bleiben.</p>
+      <p>Die Jugendarbeit der JSG Nord vom Einstieg bis zu den A-Junioren.</p>
     </div>
     <div class="split">
       <TeamGrid teams={teams.filter((team) => team.area === "jugend")} />
@@ -143,7 +142,7 @@ const topNews = latestNews[0];
         <p class="eyebrow">Vereinsleben</p>
         <h2>Vorstand, Clubhaus und Sportstaetten</h2>
       </div>
-      <p>Bestehende Vereinsseiten bleiben erhalten und werden als CMS-Seiten vorbereitet.</p>
+      <p>Alles rund um Verantwortung, Sportstaetten, Foerderung und Vereinsservice.</p>
     </div>
     <div class="feature-grid">
       {clubPages.slice(0, 6).map((page) => (
@@ -161,7 +160,7 @@ const topNews = latestNews[0];
         <p class="eyebrow">Partner</p>
         <h2>Sponsoren des FSV</h2>
       </div>
-      <p>Premium-, Exklusiv- und Team-Sponsoren koennen spaeter im CMS gepflegt und Teams zugeordnet werden.</p>
+      <p>Starke Partner aus der Region, die den FSV und seine Mannschaften unterstuetzen.</p>
     </div>
     <SponsorMarquee sponsors={sponsors} />
     <div class="sponsor-grid">

@@ -57,7 +57,7 @@ if (widgetConfig?.fixtureWidgetId) widgetVariants.push("fixtures");
           </div>
           <div class="feature-card">
             <h3>Wettbewerb</h3>
-            <p>{team.league ?? "Liga und Wettbewerb werden aus FUSSBALL.DE/CMS ergaenzt."}</p>
+            <p>{team.league ?? "Aktueller Spielbetrieb beim FSV Algermissen"}</p>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@ if (widgetConfig?.fixtureWidgetId) widgetVariants.push("fixtures");
           <div class="content-card">
             <p class="eyebrow">Spielbetrieb</p>
             <h2>{team.league}</h2>
-            <p>Darts-Ergebnisse und Tabellen werden spaeter ueber die passende Ligadatenquelle angebunden.</p>
+            <p>Aktuelle Ligainfos und Termine der Magpies im Clubhaus.</p>
           </div>
         )}
       </div>
@@ -88,13 +88,13 @@ if (widgetConfig?.fixtureWidgetId) widgetVariants.push("fixtures");
         <p class="eyebrow">Team-News</p>
         <h2>Aktuelles zu {team.shortName}</h2>
       </div>
-      <p>Diese Liste entsteht automatisch aus den News-Zuordnungen.</p>
+      <p>Berichte und Meldungen rund um diese Mannschaft.</p>
     </div>
     <div class="news-grid">
       {teamNews.length > 0 ? teamNews.map((item) => <NewsCard item={item} />) : (
         <div class="content-card">
           <h3>Noch keine zugeordneten News</h3>
-          <p>Im CMS koennen Artikel spaeter diesem Team zugeordnet werden.</p>
+          <p>Sobald es neue Meldungen gibt, erscheinen sie hier auf der Teamseite.</p>
         </div>
       )}
     </div>

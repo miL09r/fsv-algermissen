@@ -1,15 +1,21 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getResultsForTeam, getTeamProfile, teams } from "../../lib/data";
+import { getCurrentUser, getDb } from "../../lib/server/auth";
+
+export const prerender = false;
+
+const user = await getCurrentUser(getDb(Astro.locals), Astro.cookies);
+if (!user) return Astro.redirect("/admin?error=auth");
 
 const editableTeams = teams.filter((team) => team.area !== "darts");
 ---
 
-<BaseLayout title="Teams verwalten" description="CMS-Grundgeruest fuer Teamvorstellungen, Kader und Ergebnisse.">
+<BaseLayout title="Teams verwalten" description="Teamvorstellungen, Kader und Ergebnisse verwalten.">
   <header class="page-title">
-    <p class="eyebrow">CMS</p>
+    <p class="eyebrow">Redaktion</p>
     <h1>Teamprofile und Ergebnisse</h1>
-    <p>Teamvorstellungen, Kaderauszuege, Sponsoren und Ergebnisbanner werden als eigene Inhalte modelliert.</p>
+    <p>Teamvorstellungen, Kaderauszuege, Sponsoren und Ergebnisbanner verwalten.</p>
   </header>
 
   <section class="section">
@@ -34,7 +40,7 @@ const editableTeams = teams.filter((team) => team.area !== "darts");
           Spieler/Kader
           <textarea name="players" placeholder="Name; Rueckennummer; Bild-URL"></textarea>
         </label>
-        <button class="button" type="button">Speichern vorbereitet</button>
+        <button class="button" type="button">Speichern</button>
       </form>
 
       <form class="admin-panel form-grid">
@@ -61,7 +67,7 @@ const editableTeams = teams.filter((team) => team.area !== "darts");
           Datum
           <input type="date" name="date" />
         </label>
-        <button class="button" type="button">Ergebnis speichern vorbereitet</button>
+        <button class="button" type="button">Ergebnis speichern</button>
       </form>
     </div>
   </section>
@@ -69,10 +75,10 @@ const editableTeams = teams.filter((team) => team.area !== "darts");
   <section class="section band">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Aktuelle Seed-Daten</p>
+        <p class="eyebrow">Aktuelle Daten</p>
         <h2>Was schon auf der Seite erscheint</h2>
       </div>
-      <p>Diese Inhalte kommen aktuell aus `src/lib/data.ts` und werden spaeter aus D1 geladen.</p>
+      <p>Diese Inhalte erscheinen aktuell auf der Website.</p>
     </div>
     <div class="feature-grid">
       {editableTeams.slice(0, 6).map((team) => {
