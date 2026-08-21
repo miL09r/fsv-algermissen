@@ -26,16 +26,33 @@ export const POST: APIRoute = async ({ request, locals, cookies, redirect }) => 
   const slug = String(formData.get("slug") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim();
   const teaser = String(formData.get("teaser") ?? "").trim();
+  const imageSrc = String(formData.get("imageSrc") ?? "").trim();
+  const imageAlt = String(formData.get("imageAlt") ?? "").trim();
   const body = String(formData.get("body") ?? "")
     .split(/\r?\n\r?\n/)
     .map((part) => part.trim())
     .filter(Boolean);
+  const contacts = String(formData.get("contacts") ?? "")
+    .split(/\r?\n/)
+    .map((line) => line.split(";").map((part) => part.trim()))
+    .filter((parts) => parts[0] && parts[1])
+    .map(([role, name, phone, email]) => ({
+      role,
+      name,
+      phone: phone || undefined,
+      email: email || undefined
+    }));
 
   if (!clubPages.some((page) => page.slug === slug) || !title || !teaser || body.length === 0) {
     return redirect("/admin/verein?page=invalid", 303);
   }
 
-  const storedBody = JSON.stringify({ teaser, body });
+  const storedBody = JSON.stringify({
+    teaser,
+    body,
+    image: imageSrc ? { src: imageSrc, alt: imageAlt || title } : undefined,
+    contacts: contacts.length ? contacts : undefined
+  });
 
   await db
     .prepare(

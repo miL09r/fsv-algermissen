@@ -1,4 +1,4 @@
-import { clubPages, type ClubPage } from "../data";
+import { clubPages, type ClubContact, type ClubPage } from "../data";
 import type { D1DatabaseLike } from "./auth";
 
 type DbPageRow = {
@@ -10,6 +10,8 @@ type DbPageRow = {
 type StoredPageBody = {
   teaser?: string;
   body?: string[];
+  image?: { src: string; alt: string };
+  contacts?: ClubContact[];
 };
 
 const parseBody = (value: string | null) => {
@@ -39,7 +41,9 @@ export async function getSiteClubPage(db: D1DatabaseLike | undefined, slug: stri
     ...fallback,
     title: row.title || fallback.title,
     teaser: stored.teaser || fallback.teaser,
-    body: stored.body?.length ? stored.body : fallback.body
+    body: stored.body?.length ? stored.body : fallback.body,
+    image: stored.image?.src ? stored.image : fallback.image,
+    contacts: stored.contacts?.length ? stored.contacts : fallback.contacts
   };
 }
 

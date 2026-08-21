@@ -1119,6 +1119,15 @@ h1 {
   margin: 0 0 18px;
 }
 
+.club-page-image {
+  width: calc(100% + 40px);
+  max-width: none;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: -20px -20px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
 .club-detail-row {
   display: grid;
   grid-template-columns: minmax(110px, 0.3fr) minmax(160px, 1fr) auto;

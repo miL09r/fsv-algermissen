@@ -106,7 +106,7 @@ export type ClubPage = {
   title: string;
   teaser: string;
   body: string[];
-  sourceUrl?: string;
+  image?: { src: string; alt: string };
   contacts?: ClubContact[];
   links?: ClubLink[];
   infoBlocks?: ClubInfoBlock[];
@@ -704,10 +704,13 @@ export const clubPages: ClubPage[] = [
     slug: "vorstand",
     title: "Der Vorstand",
     teaser: "Ansprechpartner und Ressorts des FSV Algermissen.",
-    sourceUrl: "https://www.fsvalgermissen.de/der-vorstand",
+    image: {
+      src: "https://images.ebcdn.de/club-4844/PageTeaser_6364.jpg?format=webp&mode=max&v=11&width=2560",
+      alt: "Vorstand des FSV Algermissen"
+    },
     body: [
       "Der Vorstand des Fußball- und Sportverein Algermissen von 1911 / 1990 e.V. ist mit Stand 19.05.2026 gepflegt.",
-      "Die Zuständigkeiten sind bewusst einzeln hinterlegt, damit Rollen, Namen und Kontaktdaten im Redaktionsbereich getrennt bearbeitet werden können."
+      "Vorstandsmitglieder:"
     ],
     contacts: [
       { role: "1. Vorsitzender", name: "Stephan Käsehage", phone: "0171 - 1770000", email: "stephan.kaesehage@fsvalgermissen.de" },
@@ -724,7 +727,6 @@ export const clubPages: ClubPage[] = [
     slug: "leitbild",
     title: "Leitbild",
     teaser: "Modern, offen, traditionsbewusst und generationenuebergreifend.",
-    sourceUrl: "https://www.fsvalgermissen.de/leitbild",
     body: [
       "Der FSV versteht sich als aktiver Bestandteil der örtlichen Lebenskultur und als wichtiger Teil eines funktionierenden Gemeinwesens.",
       "Der Verein ist modern und offen für neue Ideen, bleibt dabei traditionsbewusst und verbindet leistungsorientierten Sport mit Breitensport.",
@@ -741,13 +743,12 @@ export const clubPages: ClubPage[] = [
         ]
       }
     ],
-    links: [{ label: "Leitbild herunterladen", href: "https://www.fsvalgermissen.de/leitbild" }]
+    links: [{ label: "Leitbild herunterladen", href: "/verein/downloads" }]
   },
   {
     slug: "clubhaus",
     title: "Das Clubhaus",
     teaser: "Treffpunkt, Stammtisch, Bundesliga-Abende, Darts und Spieltagsleben.",
-    sourceUrl: "https://www.fsvalgermissen.de/das-clubhaus",
     body: [
       "Das Clubhaus ist Treffpunkt und Herz des Vereins. Donnerstags ab 19 Uhr ist Stammtisch, freitags läuft Bundesliga live auf Großbild und sonntags ist rund um den Spielbetrieb geöffnet.",
       "Montags trainieren die Darter im Clubhaus. Donnerstags zum Stammtisch laufen auch weiterhin die Geschäftszeiten.",
@@ -770,7 +771,6 @@ export const clubPages: ClubPage[] = [
     slug: "rewe-rudat-arena",
     title: "REWE-Rudat-Arena",
     teaser: "Sportstaette am Grasweg mit Anfahrt und Dokumenten.",
-    sourceUrl: "https://www.fsvalgermissen.de/rewe-rudat-arena",
     body: [
       "Die REWE-Rudat-Arena am Grasweg ist die zentrale Sportstätte für Training, Spielbetrieb und Vereinsleben.",
       "Anfahrt und Hygienekonzept werden als eigene Links geführt, damit die Angaben später im Redaktionsbereich einzeln aktualisiert werden können."
@@ -784,7 +784,6 @@ export const clubPages: ClubPage[] = [
     slug: "ostpreussen-stadion",
     title: "Ostpreußen-Stadion",
     teaser: "Weitere Sportstaette des FSV mit eigener Informationsseite.",
-    sourceUrl: "https://www.fsvalgermissen.de/ostpreussen-stadion",
     body: [
       "Auch das Ostpreußen-Stadion bleibt als eigener Vereinsbereich sichtbar.",
       "Anfahrt und Hygienekonzept sind direkt mit dieser Sportstätte verknüpft."
@@ -798,7 +797,6 @@ export const clubPages: ClubPage[] = [
     slug: "sponsoren",
     title: "Sponsoren",
     teaser: "Premium-Partner, Exklusiv-Partner, Partner und Team-Sponsoren.",
-    sourceUrl: "https://www.fsvalgermissen.de/sponsoren",
     body: [
       "Sponsoren werden nach Premium-Partnern, Exklusiv-Partnern, Partnern, Team-Sponsoren und Trikotsponsoren dargestellt.",
       "Die Startseite zeigt eine Auswahl, die Sponsorenseite alle aktiven Partner."
@@ -808,7 +806,6 @@ export const clubPages: ClubPage[] = [
     slug: "foerderverein",
     title: "Fußballförderverein",
     teaser: "Unterstützung für Fußball, Nachwuchs und Vereinsentwicklung.",
-    sourceUrl: "https://www.fsvalgermissen.de/fussballfoerderverein",
     body: [
       "Mit nur 2,00 Euro Mindestbeitrag im Monat kann der FSV Algermissen bei seiner Weiterentwicklung und der Förderung junger Talente unterstützt werden.",
       "Das Projekt 100 x 100 ruft 100 Förderer auf, jeweils 100 Euro zur Unterstützung des FSV beizutragen."
@@ -828,7 +825,6 @@ export const clubPages: ClubPage[] = [
     slug: "downloads",
     title: "Downloads",
     teaser: "Formulare, Satzungen, Ordnungen und Clubhaus-Unterlagen.",
-    sourceUrl: "https://www.fsvalgermissen.de/downloads",
     body: [
       "Hier stehen die wichtigsten Formulare und Vereinsunterlagen zentral zur Verfügung.",
       "Downloads sind als eigene Datensätze geführt und können später unabhängig von Seitentexten ausgetauscht werden."
@@ -838,7 +834,6 @@ export const clubPages: ClubPage[] = [
     slug: "fanartikel",
     title: "Fanartikel",
     teaser: "Fanshop, Restposten und Artikel rund um den FSV.",
-    sourceUrl: "https://www.fsvalgermissen.de/fanartikel-%28nicht-im-fanshop%29",
     body: [
       "Zusätzlich zum externen Fanshop gibt es beim FSV einzelne Artikel und Restposten.",
       "Alle Artikel sind bei Heimspielen erhältlich. Zusätzlich können Artikel per Mail an fanshop@fsvalgermissen.de bestellt werden."

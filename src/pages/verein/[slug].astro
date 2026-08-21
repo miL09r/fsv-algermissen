@@ -23,13 +23,15 @@ const isSponsors = page.slug === "sponsoren";
   <section class="section">
     <div class="split">
       <article class="content-card">
+        {page.image && (
+          <img class="club-page-image" src={page.image.src} alt={page.image.alt} loading="eager" />
+        )}
         {page.body.map((paragraph) => <p>{paragraph}</p>)}
         {page.ctaLabel && page.ctaHref && <a class="button" href={page.ctaHref}>{page.ctaLabel}</a>}
       </article>
       <aside class="content-card">
         <h2>FSV Algermissen</h2>
         <p>Alle Vereinsbereiche sind direkt über die Navigation erreichbar. Für Fragen helfen Vorstand und Ansprechpartner gern weiter.</p>
-        {page.sourceUrl && <a class="button ghost" href={page.sourceUrl}>Originalbereich öffnen</a>}
       </aside>
     </div>
   </section>
