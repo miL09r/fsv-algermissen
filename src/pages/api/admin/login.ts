@@ -4,7 +4,7 @@ import { createSession, getDb, setSessionCookie, verifyPassword } from "../../..
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, locals, cookies, redirect }) => {
-  const db = getDb(locals);
+  const db = await getDb(locals);
   if (!db) return redirect("/admin?error=db", 303);
 
   const formData = await request.formData();

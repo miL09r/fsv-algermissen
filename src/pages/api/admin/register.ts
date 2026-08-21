@@ -4,7 +4,7 @@ import { getDb, hashPassword } from "../../../lib/server/auth";
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, locals, redirect }) => {
-  const db = getDb(locals);
+  const db = await getDb(locals);
   if (!db) return redirect("/admin?register=db", 303);
 
   const formData = await request.formData();

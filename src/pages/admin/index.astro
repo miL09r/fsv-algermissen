@@ -13,7 +13,7 @@ type RegistrationRequest = {
   created_at: string;
 };
 
-const db = getDb(Astro.locals);
+const db = await getDb(Astro.locals);
 const user = await getCurrentUser(db, Astro.cookies);
 const isAdmin = user?.role === "admin";
 const pendingRequests =

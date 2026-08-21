@@ -5,7 +5,7 @@ import { getCurrentUser, getDb } from "../../lib/server/auth";
 
 export const prerender = false;
 
-const user = await getCurrentUser(getDb(Astro.locals), Astro.cookies);
+const user = await getCurrentUser(await getDb(Astro.locals), Astro.cookies);
 if (!user) return Astro.redirect("/admin?error=auth");
 ---
 

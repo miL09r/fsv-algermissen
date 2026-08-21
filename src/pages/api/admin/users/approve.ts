@@ -4,7 +4,7 @@ import { getCurrentUser, getDb } from "../../../../lib/server/auth";
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, locals, cookies, redirect }) => {
-  const db = getDb(locals);
+  const db = await getDb(locals);
   const currentUser = await getCurrentUser(db, cookies);
   if (!db || currentUser?.role !== "admin") return redirect("/admin?error=forbidden", 303);
 
