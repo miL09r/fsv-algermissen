@@ -29,7 +29,7 @@ const pendingRequests =
           .all<RegistrationRequest>()
       ).results
     : [];
-const editableTeams = teams.filter((team) => team.area !== "darts");
+const editableTeams = teams;
 const message = Astro.url.searchParams;
 ---
 

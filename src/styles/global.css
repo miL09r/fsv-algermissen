@@ -490,7 +490,6 @@ h1 {
 .news-card h3,
 .team-card h3,
 .feature-card h3,
-.football-widget h2,
 .admin-panel h2,
 .team-spotlight h3 {
   margin: 0 0 10px;
@@ -569,94 +568,127 @@ h1 {
   align-items: start;
 }
 
-.football-widget {
-  padding: 24px;
+.matchcenter-home {
+  width: min(1120px, 100%);
+  margin-left: auto;
+}
+
+.matchcenter-board {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
   color: var(--white);
   background:
-    linear-gradient(135deg, rgba(0, 105, 180, 0.72), rgba(7, 16, 24, 0.94)),
-    repeating-linear-gradient(135deg, transparent, transparent 12px, rgba(255, 255, 255, 0.06) 12px, rgba(255, 255, 255, 0.06) 24px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+    linear-gradient(145deg, rgba(7, 16, 24, 0.88), rgba(12, 35, 50, 0.78)),
+    linear-gradient(90deg, rgba(0, 105, 180, 0.14), rgba(182, 245, 0, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.2);
 }
 
-.football-widget + .football-widget {
-  margin-top: 14px;
-}
-
-.football-widget h2,
-.football-widget p {
-  color: var(--white);
-}
-
-.football-widget-head {
+.matchcenter-topline {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  align-items: start;
+  gap: 14px;
+  align-items: center;
+  text-align: right;
 }
 
-.football-widget-head span {
+.matchcenter-topline span {
   display: inline-flex;
   align-items: center;
-  min-height: 26px;
-  padding: 4px 9px;
+  min-height: 28px;
+  padding: 5px 10px;
   color: var(--black);
   background: var(--lime);
   border-radius: 999px;
-  font-size: 0.76rem;
-  font-weight: 850;
-  white-space: nowrap;
-}
-
-.fussballde_widget {
-  min-height: 360px;
-  overflow: hidden;
-  color: var(--ink);
-  background: var(--white);
-  border-radius: var(--radius);
-}
-
-.football-widget-empty {
-  display: grid;
-  gap: 16px;
-}
-
-.football-widget-meta {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  margin: 0;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: var(--radius);
-}
-
-.football-widget-meta div {
-  padding: 12px;
-  background: rgba(7, 16, 24, 0.55);
-}
-
-.football-widget-meta dt {
-  color: #a9bdd1;
-  font-size: 0.72rem;
-  font-weight: 850;
-  text-transform: uppercase;
-}
-
-.football-widget-meta dd {
-  margin: 4px 0 0;
-  color: var(--white);
+  font-size: 0.78rem;
   font-weight: 900;
 }
 
-.football-widget-actions {
-  display: flex;
-  flex-wrap: wrap;
+.matchcenter-topline strong {
+  color: var(--white);
+}
+
+.matchcenter-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.matchcenter-column {
+  display: grid;
   gap: 10px;
 }
 
-.matchcenter-home {
-  width: min(980px, 100%);
+.matchcenter-column h3 {
+  margin: 0;
+  color: var(--white);
+  font-size: 1.1rem;
+}
+
+.matchcenter-column-right {
+  text-align: right;
+}
+
+.matchcenter-list {
+  display: grid;
+  gap: 8px;
+}
+
+.matchcenter-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px 12px;
+  align-items: center;
+  padding: 12px;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.matchcenter-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(182, 245, 0, 0.5);
+}
+
+.matchcenter-meta {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  min-width: 0;
+}
+
+.matchcenter-meta b,
+.matchcenter-teams {
+  overflow-wrap: anywhere;
+}
+
+.matchcenter-meta small,
+.matchcenter-teams,
+.matchcenter-empty {
+  color: #a9bdd1;
+}
+
+.matchcenter-score {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.matchcenter-teams {
+  grid-column: 1 / -1;
+  font-size: 0.84rem;
+}
+
+.matchcenter-empty {
+  margin: 0;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
 }
 
 .result-banner {
@@ -1218,13 +1250,18 @@ fieldset input[type="checkbox"],
     grid-template-columns: 1fr;
   }
 
-  .football-widget-head,
-  .football-widget-meta {
+  .matchcenter-columns,
+  .matchcenter-topline {
     display: block;
   }
 
-  .football-widget-head span {
-    margin-top: 8px;
+  .matchcenter-column + .matchcenter-column {
+    margin-top: 16px;
+  }
+
+  .matchcenter-topline strong {
+    display: block;
+    margin-top: 10px;
   }
 
   .hero {

@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import NewsCard from "../components/NewsCard.astro";
 import TeamGrid from "../components/TeamGrid.astro";
-import FootballWidget from "../components/FootballWidget.astro";
+import MatchCenter from "../components/MatchCenter.astro";
 import ResultBanner from "../components/ResultBanner.astro";
 import SponsorMarquee from "../components/SponsorMarquee.astro";
 import TeamSpotlight from "../components/TeamSpotlight.astro";
@@ -17,6 +17,8 @@ import {
   sponsors,
   teams
 } from "../lib/data";
+import { getDb } from "../lib/server/auth";
+import { getSiteMatchResults } from "../lib/server/match-results";
 
 const latestNews = getPublishedNews().slice(0, 5);
 const youthNews = getNewsForArea("jugend").slice(0, 2);
@@ -24,6 +26,7 @@ const dartsNews = getNewsForArea("darts").slice(0, 2);
 const heroResults = getFeaturedResults(["1-herren", "2-herren", "a-junioren", "ue32"], 1);
 const spotlightTeams = teams.filter((team) => ["1-herren", "2-herren", "a-junioren", "ue32"].includes(team.slug));
 const topNews = latestNews[0];
+const matchcenterResults = await getSiteMatchResults(await getDb(Astro.locals));
 ---
 
 <BaseLayout title="FSV Algermissen" description="Die neue Website des gesamten FSV Algermissen: Fussball, Jugend, Darts, Verein und Sponsoren.">
@@ -70,12 +73,12 @@ const topNews = latestNews[0];
     <div class="section-heading">
       <div>
         <p class="eyebrow">Matchcenter</p>
-        <h2>Live aus FUSSBALL.DE</h2>
+        <h2>Spiele und Ergebnisse</h2>
       </div>
-      <p>Spielplaene, Tabellen und Begegnungen direkt aus den Mannschaftsbereichen.</p>
+      <p>Letzte Ergebnisse und kommende Spiele im FSV-Look.</p>
     </div>
     <div class="matchcenter-home">
-      <FootballWidget variant="fixtures" />
+      <MatchCenter results={matchcenterResults} />
     </div>
   </section>
 

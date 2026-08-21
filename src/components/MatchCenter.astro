@@ -1,0 +1,79 @@
+---
+import type { MatchResult, Team } from "../lib/data";
+
+type Props = {
+  results: MatchResult[];
+  team?: Team;
+};
+
+const { results, team } = Astro.props;
+
+const formatDate = (value: string) =>
+  new Intl.DateTimeFormat("de-DE", { day: "2-digit", month: "2-digit", year: "2-digit" }).format(new Date(value));
+
+const scoreLabel = (result: MatchResult) =>
+  result.homeGoals === undefined || result.awayGoals === undefined ? "-:-" : `${result.homeGoals}:${result.awayGoals}`;
+
+const teamLabel = (result: MatchResult) => result.teamName || team?.shortName || "FSV";
+
+const isFixture = (result: MatchResult) => result.status === "fixture";
+
+const lastResults = results
+  .filter((result) => !isFixture(result) && result.homeGoals !== undefined && result.awayGoals !== undefined)
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .slice(0, team ? 4 : 6);
+
+const nextFixtures = results
+  .filter((result) => isFixture(result) || result.homeGoals === undefined || result.awayGoals === undefined)
+  .sort((a, b) => a.date.localeCompare(b.date))
+  .slice(0, team ? 4 : 6);
+
+const hasContent = lastResults.length > 0 || nextFixtures.length > 0;
+---
+
+<div class="matchcenter-board" aria-label="Matchcenter">
+  <div class="matchcenter-topline">
+    <span>Saison 26/27</span>
+    <strong>{team ? team.name : "FSV Algermissen"}</strong>
+  </div>
+
+  {hasContent ? (
+    <div class="matchcenter-columns">
+      <section class="matchcenter-column matchcenter-column-right" aria-label="Letzte Spiele">
+        <h3>Letztes Spiel</h3>
+        <div class="matchcenter-list">
+          {lastResults.map((result) => (
+            <a class="matchcenter-card" href={`/teams/${result.teamSlug}`}>
+              <span class="matchcenter-meta">
+                <b>{teamLabel(result)}</b>
+                <small>{formatDate(result.date)}{result.matchday ? ` · ${result.matchday}` : ""}</small>
+              </span>
+              <strong class="matchcenter-score">{scoreLabel(result)}</strong>
+              <span class="matchcenter-teams">{result.homeTeam} - {result.awayTeam}</span>
+            </a>
+          ))}
+          {lastResults.length === 0 && <p class="matchcenter-empty">Noch kein Ergebnis eingetragen.</p>}
+        </div>
+      </section>
+
+      <section class="matchcenter-column matchcenter-column-right" aria-label="Naechste Spiele">
+        <h3>Naechste Spiele</h3>
+        <div class="matchcenter-list">
+          {nextFixtures.map((result) => (
+            <a class="matchcenter-card" href={`/teams/${result.teamSlug}`}>
+              <span class="matchcenter-meta">
+                <b>{teamLabel(result)}</b>
+                <small>{formatDate(result.date)}{result.kickoffTime ? ` · ${result.kickoffTime} Uhr` : ""}</small>
+              </span>
+              <strong class="matchcenter-score">-:-</strong>
+              <span class="matchcenter-teams">{result.homeTeam} - {result.awayTeam}</span>
+            </a>
+          ))}
+          {nextFixtures.length === 0 && <p class="matchcenter-empty">Noch kein naechstes Spiel eingetragen.</p>}
+        </div>
+      </section>
+    </div>
+  ) : (
+    <p class="matchcenter-empty">Sobald Spiele gepflegt sind, erscheinen sie hier.</p>
+  )}
+</div>

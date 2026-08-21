@@ -8,7 +8,9 @@ export const prerender = false;
 const user = await getCurrentUser(await getDb(Astro.locals), Astro.cookies);
 if (!user) return Astro.redirect("/admin?error=auth");
 
-const editableTeams = teams.filter((team) => team.area !== "darts");
+const message = new URL(Astro.request.url).searchParams;
+const profileTeams = teams.filter((team) => team.area !== "darts");
+const resultTeams = teams;
 ---
 
 <BaseLayout title="Teams verwalten" description="Teamvorstellungen, Kader und Ergebnisse verwalten.">
@@ -25,7 +27,7 @@ const editableTeams = teams.filter((team) => team.area !== "darts");
         <label>
           Team
           <select name="team">
-            {editableTeams.map((team) => <option value={team.slug}>{team.name}</option>)}
+            {profileTeams.map((team) => <option value={team.slug}>{team.name}</option>)}
           </select>
         </label>
         <label>
@@ -43,12 +45,15 @@ const editableTeams = teams.filter((team) => team.area !== "darts");
         <button class="button" type="button">Speichern</button>
       </form>
 
-      <form class="admin-panel form-grid">
+      <form class="admin-panel form-grid" method="post" action="/api/admin/results/create">
         <h2>Ergebnis eintragen</h2>
+        {message.get("result") === "ok" && <p class="status-pill">Ergebnis wurde gespeichert</p>}
+        {message.get("result") === "invalid" && <p class="status-pill danger">Bitte Team, Ergebnis und Datum pruefen</p>}
+        {message.get("result") === "forbidden" && <p class="status-pill danger">Keine Berechtigung fuer dieses Team</p>}
         <label>
           Team
           <select name="resultTeam">
-            {editableTeams.map((team) => <option value={team.slug}>{team.name}</option>)}
+            {resultTeams.map((team) => <option value={team.slug}>{team.name}</option>)}
           </select>
         </label>
         <label>
@@ -67,7 +72,19 @@ const editableTeams = teams.filter((team) => team.area !== "darts");
           Datum
           <input type="date" name="date" />
         </label>
-        <button class="button" type="button">Ergebnis speichern</button>
+        <label>
+          Wettbewerb
+          <input name="competition" placeholder="Liga / Pokal / Spieltag" />
+        </label>
+        <label>
+          Spieltag
+          <input name="matchday" placeholder="z.B. 4. Spieltag" />
+        </label>
+        <label class="inline-check">
+          <input type="checkbox" name="showOnHomepage" checked />
+          Auf Startseite anzeigen
+        </label>
+        <button class="button" type="submit">Ergebnis speichern</button>
       </form>
     </div>
   </section>
@@ -81,7 +98,7 @@ const editableTeams = teams.filter((team) => team.area !== "darts");
       <p>Diese Inhalte erscheinen aktuell auf der Website.</p>
     </div>
     <div class="feature-grid">
-      {editableTeams.slice(0, 6).map((team) => {
+      {resultTeams.slice(0, 9).map((team) => {
         const profile = getTeamProfile(team.slug);
         const results = getResultsForTeam(team.slug);
         return (
