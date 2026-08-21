@@ -25,6 +25,13 @@ const parseBody = (value: string | null) => {
   return {};
 };
 
+const chooseBody = (stored: string[] | undefined, fallback: string[]) => {
+  if (!stored?.length) return fallback;
+  const storedLength = stored.join(" ").length;
+  const fallbackLength = fallback.join(" ").length;
+  return storedLength >= Math.round(fallbackLength * 0.7) ? stored : fallback;
+};
+
 export async function getSiteClubPage(db: D1DatabaseLike | undefined, slug: string): Promise<ClubPage | undefined> {
   const fallback = clubPages.find((page) => page.slug === slug);
   if (!fallback || !db) return fallback;
@@ -41,7 +48,7 @@ export async function getSiteClubPage(db: D1DatabaseLike | undefined, slug: stri
     ...fallback,
     title: row.title || fallback.title,
     teaser: stored.teaser || fallback.teaser,
-    body: stored.body?.length ? stored.body : fallback.body,
+    body: chooseBody(stored.body, fallback.body),
     image: stored.image?.src ? stored.image : fallback.image,
     contacts: stored.contacts?.length ? stored.contacts : fallback.contacts
   };
