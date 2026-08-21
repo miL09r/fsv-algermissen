@@ -32,8 +32,16 @@ const hexToBytes = (hex: string) => {
   return bytes;
 };
 
-export function getDb(locals: unknown) {
-  return (locals as { runtime?: { env?: { DB?: D1DatabaseLike } } }).runtime?.env?.DB;
+export async function getDb(locals: unknown) {
+  const runtimeDb = (locals as { runtime?: { env?: { DB?: D1DatabaseLike } } }).runtime?.env?.DB;
+  if (runtimeDb) return runtimeDb;
+
+  try {
+    const workerModule = await import("cloudflare:workers");
+    return (workerModule.env as { DB?: D1DatabaseLike }).DB;
+  } catch {
+    return undefined;
+  }
 }
 
 export function randomToken(byteLength = 32) {
