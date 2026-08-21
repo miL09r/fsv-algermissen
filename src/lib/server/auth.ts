@@ -1,4 +1,5 @@
-import { pbkdf2Sync, randomBytes, timingSafeEqual } from "node:crypto";
+import { pbkdf2, randomBytes, timingSafeEqual } from "node:crypto";
+import { promisify } from "node:util";
 
 type D1Statement<T = unknown> = {
   bind: (...values: unknown[]) => D1Statement<T>;
@@ -20,6 +21,7 @@ export type AdminUser = {
 
 const sessionCookie = "fsv_session";
 const iterations = 210000;
+const derivePbkdf2 = promisify(pbkdf2);
 
 const hexToBytes = (hex: string) => {
   const bytes = new Uint8Array(hex.length / 2);
@@ -46,14 +48,14 @@ export function randomToken(byteLength = 32) {
 }
 
 export async function hashPassword(password: string, salt = randomToken(16)) {
-  const derived = pbkdf2Sync(password, hexToBytes(salt), iterations, 32, "sha256");
+  const derived = await derivePbkdf2(password, hexToBytes(salt), iterations, 32, "sha256");
   return `pbkdf2-sha256$${iterations}$${salt}$${derived.toString("hex")}`;
 }
 
 export async function verifyPassword(password: string, storedHash: string) {
   const [algorithm, iterationText, salt, expected] = storedHash.split("$");
   if (algorithm !== "pbkdf2-sha256" || !iterationText || !salt || !expected) return false;
-  const actual = pbkdf2Sync(password, hexToBytes(salt), Number(iterationText), 32, "sha256");
+  const actual = await derivePbkdf2(password, hexToBytes(salt), Number(iterationText), 32, "sha256");
   const expectedBytes = hexToBytes(expected);
   return actual.length === expectedBytes.length && timingSafeEqual(actual, expectedBytes);
 }
