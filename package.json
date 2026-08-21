@@ -6,7 +6,7 @@
   "packageManager": "pnpm@11.19.0",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "astro check && astro build",
+    "build": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\" && astro check && astro build",
     "preview": "astro preview --host 127.0.0.1",
     "check": "astro check"
   },
