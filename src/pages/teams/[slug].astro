@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import NewsCard from "../../components/NewsCard.astro";
 import FootballWidget from "../../components/FootballWidget.astro";
-import { getNewsForTeam, teams } from "../../lib/data";
+import { footballWidgets, getNewsForTeam, teams } from "../../lib/data";
 
 export const prerender = true;
 
@@ -12,6 +12,12 @@ export function getStaticPaths() {
 
 const { team } = Astro.props;
 const teamNews = getNewsForTeam(team.slug);
+const widgetConfig = footballWidgets[team.slug];
+const widgetVariants: Array<"upcoming" | "latest" | "table" | "fixtures"> = [];
+if (widgetConfig?.upcomingWidgetId) widgetVariants.push("upcoming");
+if (widgetConfig?.latestWidgetId) widgetVariants.push("latest");
+if (widgetConfig?.tableWidgetId) widgetVariants.push("table");
+if (widgetConfig?.fixtureWidgetId) widgetVariants.push("fixtures");
 ---
 
 <BaseLayout title={team.name} description={`${team.name} beim FSV Algermissen: News, Training, Ansprechpartner und Spielbetrieb.`}>
@@ -46,9 +52,11 @@ const teamNews = getNewsForTeam(team.slug);
       <div>
         {team.area !== "darts" ? (
           <>
-            <FootballWidget team={team} variant="upcoming" />
-            <FootballWidget team={team} variant="latest" />
-            <FootballWidget team={team} variant="table" />
+            {widgetVariants.length > 0 ? (
+              widgetVariants.map((variant) => <FootballWidget team={team} variant={variant} />)
+            ) : (
+              <FootballWidget team={team} variant="upcoming" />
+            )}
           </>
         ) : (
           <div class="content-card">

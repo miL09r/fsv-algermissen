@@ -503,9 +503,11 @@ export const downloads = [
 ];
 
 export const clubFootballWidgets: FootballWidgetConfig = {
+  fixtureWidgetId: "50b81c6d-8c29-48b7-abcc-6ba58ece362b",
+  fixtureWidgetType: "club-matches",
   fussballDeUrl: "https://www.fussball.de/",
   note:
-    "Vereinsweite Widget-IDs werden in next.fussball.de fuer die aktuelle Domain erstellt und hier hinterlegt."
+    "Testdomain-Widget fuer fsv-algermissen.pages.dev. Produktionsdomain-Widgets werden spaeter separat hinterlegt."
 };
 
 export const footballWidgets = teams.reduce<Record<string, FootballWidgetConfig>>((acc, team) => {
@@ -516,6 +518,18 @@ export const footballWidgets = teams.reduce<Record<string, FootballWidgetConfig>
   };
   return acc;
 }, {});
+
+footballWidgets["1-herren"] = {
+  ...footballWidgets["1-herren"],
+  upcomingWidgetId: "f8ae19f4-9370-49ec-93fa-e85ff801155c",
+  upcomingWidgetType: "next-match"
+};
+
+footballWidgets["2-herren"] = {
+  ...footballWidgets["2-herren"],
+  upcomingWidgetId: "260ec68c-06ec-4c44-97ed-5d017ab87fd2",
+  upcomingWidgetType: "next-match"
+};
 
 export const nav = [
   { label: "News", href: "/news" },

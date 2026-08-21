@@ -559,6 +559,10 @@ h1 {
   gap: 10px;
 }
 
+.matchcenter-home {
+  width: min(980px, 100%);
+}
+
 .side-panel {
   display: grid;
   gap: 14px;
