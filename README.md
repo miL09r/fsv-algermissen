@@ -25,13 +25,13 @@ npm run build
 
 ## Cloudflare
 
-`wrangler.jsonc` enthaelt die geplanten Bindings:
+Cloudflare Pages enthaelt die geplanten Bindings in den Projekteinstellungen:
 
 - `DB` fuer Cloudflare D1
 - `MEDIA_BUCKET` fuer Cloudflare R2
 - `APP_TIMEZONE=Europe/Berlin`
 
-Die echten Cloudflare IDs und Secrets werden ausserhalb des Repositories konfiguriert.
+Die echten Cloudflare IDs und Secrets werden ausserhalb des Repositories konfiguriert. `wrangler.jsonc` enthaelt deshalb keine Resource-IDs.
 
 ## Wichtige Dokumente
 
