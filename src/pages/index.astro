@@ -3,41 +3,54 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import NewsCard from "../components/NewsCard.astro";
 import TeamGrid from "../components/TeamGrid.astro";
 import FootballWidget from "../components/FootballWidget.astro";
-import { clubPages, filterSponsors, getNewsForArea, getPublishedNews, teams } from "../lib/data";
+import ResultBanner from "../components/ResultBanner.astro";
+import SponsorMarquee from "../components/SponsorMarquee.astro";
+import TeamSpotlight from "../components/TeamSpotlight.astro";
+import {
+  clubPages,
+  filterSponsors,
+  getFeaturedResults,
+  getNewsForArea,
+  getPublishedNews,
+  getSponsorsForTeam,
+  getTeamProfile,
+  sponsors,
+  teams
+} from "../lib/data";
 
 const latestNews = getPublishedNews().slice(0, 5);
 const youthNews = getNewsForArea("jugend").slice(0, 2);
 const dartsNews = getNewsForArea("darts").slice(0, 2);
+const heroResults = getFeaturedResults(["1-herren", "2-herren"], 3);
+const spotlightTeams = teams.filter((team) => ["1-herren", "2-herren"].includes(team.slug));
+const topNews = latestNews[0];
 ---
 
 <BaseLayout title="FSV Algermissen" description="Die neue Website des gesamten FSV Algermissen: Fussball, Jugend, Darts, Verein und Sponsoren.">
   <section class="hero">
-    <div class="hero-content">
-      <p class="eyebrow">FSV Algermissen v. 1911 / 1990 e.V.</p>
-      <h1>Ein Ort. Ein Verein. Alle Teams.</h1>
-      <p>
-        Die neue Cloudflare Edition stellt den ganzen FSV in den Mittelpunkt:
-        Herren, Senioren, JSG Nord, Bambinis, Darts, Ehrenamt, Sportstaetten,
-        Clubhaus und Partner.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="/news">News lesen</a>
-        <a class="button secondary" href="/teams/jsg-nord">Zur Jugend</a>
+    <div class="hero-shell">
+      <div class="hero-content">
+        <p class="eyebrow">FSV Algermissen v. 1911 / 1990 e.V.</p>
+        <h1>FSV Algermissen</h1>
+        <p>
+          Fussball, Jugend, Darts und Vereinsleben: kompakt, aktuell und
+          bereit fuer die Pflege im CMS.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="/news">News lesen</a>
+          <a class="button secondary" href="/teams/1-herren">Zu den Teams</a>
+        </div>
       </div>
-      <dl class="hero-stats" aria-label="Vereinsueberblick">
-        <div>
-          <dt>seit</dt>
-          <dd>1911 / 1990</dd>
-        </div>
-        <div>
-          <dt>Teams</dt>
-          <dd>Herren bis Bambinis</dd>
-        </div>
-        <div>
-          <dt>Darts</dt>
-          <dd>A-, B- und C-Team</dd>
-        </div>
-      </dl>
+      <aside class="hero-panel" aria-label="Aktuelles im Banner">
+        <ResultBanner results={heroResults} />
+        {topNews && (
+          <a class="hero-news" href="/news">
+            <span>Top-News</span>
+            <strong>{topNews.title}</strong>
+            <small>{topNews.teaser}</small>
+          </a>
+        )}
+      </aside>
     </div>
   </section>
 
@@ -58,12 +71,32 @@ const dartsNews = getNewsForArea("darts").slice(0, 2);
     <div class="section-heading">
       <div>
         <p class="eyebrow">Matchcenter</p>
-        <h2>Spielbetrieb vorbereitet</h2>
+        <h2>Live aus FUSSBALL.DE</h2>
       </div>
-      <p>FUSSBALL.DE Widgets werden spaeter zentral konfiguriert, ohne Quellcodedateien pro Team anzupassen.</p>
+      <p>Die offiziellen Widgets bleiben eingebunden. Der Ergebnisbanner nutzt zusaetzlich eigene, CMS-faehige Daten als sauberen Workaround.</p>
     </div>
     <div class="matchcenter-home">
       <FootballWidget variant="fixtures" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Teamvorstellung</p>
+        <h2>1. und 2. Herren im Fokus</h2>
+      </div>
+      <p>Inhalte, Trainer, Kaderauszuege und Team-Partner liegen datengetrieben vor und koennen spaeter im CMS gepflegt werden.</p>
+    </div>
+    <div class="spotlight-grid">
+      {spotlightTeams.map((team) => (
+        <TeamSpotlight
+          team={team}
+          profile={getTeamProfile(team.slug)}
+          sponsors={getSponsorsForTeam(team.slug)}
+          compact
+        />
+      ))}
     </div>
   </section>
 
@@ -130,6 +163,7 @@ const dartsNews = getNewsForArea("darts").slice(0, 2);
       </div>
       <p>Premium-, Exklusiv- und Team-Sponsoren koennen spaeter im CMS gepflegt und Teams zugeordnet werden.</p>
     </div>
+    <SponsorMarquee sponsors={sponsors} />
     <div class="sponsor-grid">
       {filterSponsors("Premium-Partner").concat(filterSponsors("Exklusiv-Partner")).slice(0, 6).map((sponsor) => (
         <a class="sponsor-card" href={sponsor.website ?? "/verein/sponsoren"}>

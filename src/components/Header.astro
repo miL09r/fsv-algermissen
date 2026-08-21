@@ -21,11 +21,38 @@ import { nav, site } from "../lib/data";
       <div class="nav-group">
         <a href={item.href}>{item.label}</a>
         {item.children && (
-          <div class="flyout" aria-label={`${item.label} Unterseiten`}>
-            {item.children.map((child) => <a href={child.href}>{child.label}</a>)}
-          </div>
+          <>
+            <button class="nav-toggle" type="button" aria-label={`${item.label} Untermenue oeffnen`} aria-expanded="false"></button>
+            <div class="flyout" aria-label={`${item.label} Unterseiten`}>
+              {item.children.map((child) => <a href={child.href}>{child.label}</a>)}
+            </div>
+          </>
         )}
       </div>
     ))}
   </nav>
 </header>
+
+<script is:inline>
+  document.querySelectorAll(".nav-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const group = button.closest(".nav-group");
+      const isOpen = group?.classList.toggle("is-open") ?? false;
+      button.setAttribute("aria-expanded", String(isOpen));
+
+      document.querySelectorAll(".nav-group.is-open").forEach((otherGroup) => {
+        if (otherGroup === group) return;
+        otherGroup.classList.remove("is-open");
+        otherGroup.querySelector(".nav-toggle")?.setAttribute("aria-expanded", "false");
+      });
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest(".nav-group")) return;
+    document.querySelectorAll(".nav-group.is-open").forEach((group) => {
+      group.classList.remove("is-open");
+      group.querySelector(".nav-toggle")?.setAttribute("aria-expanded", "false");
+    });
+  });
+</script>

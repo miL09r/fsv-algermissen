@@ -2,7 +2,16 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import NewsCard from "../../components/NewsCard.astro";
 import FootballWidget from "../../components/FootballWidget.astro";
-import { footballWidgets, getNewsForTeam, teams } from "../../lib/data";
+import ResultBanner from "../../components/ResultBanner.astro";
+import TeamSpotlight from "../../components/TeamSpotlight.astro";
+import {
+  footballWidgets,
+  getNewsForTeam,
+  getResultsForTeam,
+  getSponsorsForTeam,
+  getTeamProfile,
+  teams
+} from "../../lib/data";
 
 export const prerender = true;
 
@@ -12,6 +21,9 @@ export function getStaticPaths() {
 
 const { team } = Astro.props;
 const teamNews = getNewsForTeam(team.slug);
+const teamProfile = getTeamProfile(team.slug);
+const teamResults = getResultsForTeam(team.slug).slice(0, 5);
+const teamSponsors = getSponsorsForTeam(team.slug);
 const widgetConfig = footballWidgets[team.slug];
 const widgetVariants: Array<"upcoming" | "latest" | "table" | "fixtures"> = [];
 if (widgetConfig?.upcomingWidgetId) widgetVariants.push("upcoming");
@@ -30,7 +42,7 @@ if (widgetConfig?.fixtureWidgetId) widgetVariants.push("fixtures");
   <section class="section">
     <div class="split">
       <div>
-        {team.image && <img class="content-card" src={team.image} alt="" loading="lazy" />}
+        <TeamSpotlight team={team} profile={teamProfile} sponsors={teamSponsors} showLink={false} />
         <div class="feature-grid" style="margin-top: 18px;">
           <div class="feature-card">
             <h3>Training</h3>
@@ -50,6 +62,7 @@ if (widgetConfig?.fixtureWidgetId) widgetVariants.push("fixtures");
         </div>
       </div>
       <div>
+        {teamResults.length > 0 && <ResultBanner results={teamResults} />}
         {team.area !== "darts" ? (
           <>
             {widgetVariants.length > 0 ? (

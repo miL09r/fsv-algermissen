@@ -1,0 +1,57 @@
+---
+import type { Sponsor, Team, TeamProfile } from "../lib/data";
+
+type Props = {
+  team: Team;
+  profile?: TeamProfile;
+  sponsors?: Sponsor[];
+  compact?: boolean;
+  showLink?: boolean;
+};
+
+const { team, profile, sponsors = [], compact = false, showLink = true } = Astro.props;
+const visiblePlayers = compact ? profile?.players.slice(0, 6) : profile?.players.slice(0, 12);
+---
+
+<article class:list={["team-spotlight", compact && "team-spotlight-compact"]}>
+  {team.image && <img class="team-spotlight-image" src={team.image} alt="" loading="lazy" />}
+  <div class="team-spotlight-body">
+    <p class="eyebrow">Teamvorstellung</p>
+    <h3>{team.name}</h3>
+    <p class="team-spotlight-lead">{profile?.headline ?? team.description}</p>
+    {profile?.intro.map((paragraph) => <p>{paragraph}</p>)}
+
+    {profile && (
+      <div class="team-spotlight-meta">
+        {profile.staff.map((person) => (
+          <span><strong>{person.role}:</strong> {person.name}</span>
+        ))}
+      </div>
+    )}
+
+    {visiblePlayers && visiblePlayers.length > 0 && (
+      <div class="player-strip" aria-label={`Kader ${team.name}`}>
+        {visiblePlayers.map((player) => (
+          <span class="player-pill">
+            {player.image && <img src={player.image} alt="" loading="lazy" />}
+            <b>{player.number ?? "-"}</b>
+            {player.name}
+          </span>
+        ))}
+      </div>
+    )}
+
+    {sponsors.length > 0 && (
+      <div class="team-partners">
+        {sponsors.map((sponsor) => (
+          <a href={sponsor.website ?? "/verein/sponsoren"}>
+            {sponsor.logoUrl && <img src={sponsor.logoUrl} alt="" loading="lazy" />}
+            <span>{sponsor.name}</span>
+          </a>
+        ))}
+      </div>
+    )}
+
+    {showLink && <a class="button secondary" href={`/teams/${team.slug}`}>Teamseite oeffnen</a>}
+  </div>
+</article>

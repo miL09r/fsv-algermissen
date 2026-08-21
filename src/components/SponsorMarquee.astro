@@ -1,0 +1,26 @@
+---
+import type { Sponsor } from "../lib/data";
+
+type Props = {
+  sponsors: Sponsor[];
+};
+
+const { sponsors } = Astro.props;
+const loopSponsors = sponsors.concat(sponsors);
+---
+
+<div class="sponsor-marquee" aria-label="Partner und Sponsoren">
+  <div class="sponsor-marquee-track">
+    {loopSponsors.map((sponsor) => (
+      <a class="sponsor-marquee-item" href={sponsor.website ?? "/verein/sponsoren"}>
+        {sponsor.logoUrl ? (
+          <img src={sponsor.logoUrl} alt="" loading="lazy" />
+        ) : (
+          <span>{sponsor.name.slice(0, 2)}</span>
+        )}
+        <strong>{sponsor.name}</strong>
+        <small>{sponsor.category}</small>
+      </a>
+    ))}
+  </div>
+</div>

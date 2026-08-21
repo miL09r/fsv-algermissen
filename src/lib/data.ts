@@ -22,6 +22,28 @@ export type Team = {
   };
 };
 
+export type TeamProfile = {
+  teamSlug: string;
+  headline: string;
+  intro: string[];
+  staff: Array<{ role: string; name: string }>;
+  players: Array<{ name: string; number?: string; image?: string }>;
+};
+
+export type MatchResult = {
+  teamSlug: string;
+  teamName: string;
+  homeTeam: string;
+  awayTeam: string;
+  homeGoals: number;
+  awayGoals: number;
+  date: string;
+  competition: string;
+  matchday?: string;
+  reportTitle?: string;
+  sourceUrl?: string;
+};
+
 export type FootballWidgetConfig = {
   fixtureWidgetId?: string;
   fixtureWidgetType?: string;
@@ -54,6 +76,8 @@ export type Sponsor = {
   name: string;
   category: "Premium-Partner" | "Exklusiv-Partner" | "Partner" | "Team-Sponsor";
   website?: string;
+  description?: string;
+  logoUrl?: string;
 };
 
 export type ClubPage = {
@@ -90,11 +114,11 @@ export const teams: Team[] = [
     area: "senioren",
     league: "Kreisliga Staffel A",
     description:
-      "Die erste Herrenmannschaft steht fuer ambitionierten Seniorenfussball im FSV, ist aber bewusst Teil eines groesseren Vereinsauftritts.",
+      "Die 1. Herren geht in dieser Saison in der Kreisliga Staffel A an den Start.",
     trainingTimes: ["Dienstag 19:00-21:00", "Donnerstag 19:00-21:00"],
     trainingLocation: "REWE-Rudat-Arena",
     contacts: [{ role: "Sportliche Leitung", name: "wird im CMS gepflegt" }],
-    image: "https://images.ebcdn.de/club-4844/TeamImage_10821.jpg?404=default.png&format=jpg&mode=max&v=4&width=1180",
+    image: "https://images.ebcdn.de/club-4844/TeamImage_10821.jpg?v=5&width=1920&format=webp&mode=max",
     sponsorSlugs: ["cosmophone"],
     externalIds: {
       clubId: "4844",
@@ -108,12 +132,17 @@ export const teams: Team[] = [
     name: "2. Herren",
     shortName: "2. Herren",
     area: "senioren",
+    league: "2. Kreisklasse Staffel A",
     description:
-      "Die zweite Herrenmannschaft bekommt denselben redaktionellen Raum wie die erste Mannschaft: News, Teamdaten, Spielinfos und Ansprechpartner.",
-    trainingTimes: ["Trainingszeiten werden migriert"],
+      "Die 2. Herren geht in dieser Saison in der 2. Kreisklasse Staffel A an den Start.",
+    trainingTimes: ["Dienstag 19:00-21:00", "Donnerstag 19:00-21:00"],
     trainingLocation: "Ostpreussen-Stadion",
-    contacts: [{ role: "Ansprechpartner", name: "wird im CMS gepflegt" }],
-    image: "https://images.ebcdn.de/club-4844/TeamImage_10822.jpg?404=default.png&format=jpg&mode=max&v=3&width=1180",
+    contacts: [
+      { role: "Trainer", name: "Wolf Daniel Busche" },
+      { role: "Co-Trainer", name: "Marc Baxmann" }
+    ],
+    image: "https://images.ebcdn.de/club-4844/TeamImage_10822.jpg?v=3&width=1920&format=webp&mode=max",
+    sponsorSlugs: ["coiffeur-juan"],
     externalIds: {
       clubId: "4844",
       teamId: "10822",
@@ -325,11 +354,161 @@ export const sponsors: Sponsor[] = [
   { slug: "rewe-rudat", name: "Rewe - Rudat oHG", category: "Premium-Partner", website: "https://www.rewe.de/" },
   { slug: "gilde", name: "Gilde", category: "Premium-Partner", website: "https://gilde-brauerei.com/" },
   { slug: "sauk", name: "Getraenkefachgrosshandel SAUK", category: "Exklusiv-Partner", website: "https://getraenke-sauk.de/" },
-  { slug: "cosmophone", name: "Cosmophone", category: "Exklusiv-Partner", website: "https://www.cosmophone.de/" },
+  {
+    slug: "cosmophone",
+    name: "Cosmophone",
+    category: "Exklusiv-Partner",
+    website: "https://www.cosmophone.de/",
+    logoUrl: "https://images.ebcdn.de/club-4844/SponsorImage_2647.png?v=1&width=600&format=webp&height=400&mode=max"
+  },
   { slug: "sportkluft", name: "Sportkluft", category: "Exklusiv-Partner", website: "https://sportkluft.eu/" },
   { slug: "telis", name: "Telis Finanz - Umut Buz", category: "Exklusiv-Partner", website: "https://www.telis-finanz.de/" },
   { slug: "continentale", name: "Die Continentale", category: "Partner" },
-  { slug: "lokschuppen", name: "Wirtshaus zum Lokschuppen", category: "Partner", website: "https://wirtshaus-zum-lokschuppen.de/" }
+  { slug: "lokschuppen", name: "Wirtshaus zum Lokschuppen", category: "Partner", website: "https://wirtshaus-zum-lokschuppen.de/" },
+  {
+    slug: "coiffeur-juan",
+    name: "Coiffeur Juan",
+    category: "Team-Sponsor",
+    website: "https://coiffeur-juan.de/",
+    description:
+      "Exklusives Allround-Friseur Atelier fuer stilvolle Haarschnitte und erstklassige Stylings.",
+    logoUrl: "https://images.ebcdn.de/club-4844/SponsorImage_3293.png?v=4&width=600&format=webp&height=400&mode=max"
+  }
+];
+
+export const teamProfiles: TeamProfile[] = [
+  {
+    teamSlug: "1-herren",
+    headline: "Kreisliga-Fussball in der REWE-Rudat-Arena",
+    intro: [
+      "Die 1. Herren geht in dieser Saison in der Kreisliga Staffel A an den Start.",
+      "Trainiert wird dienstags und donnerstags von 19 bis 21 Uhr. Als Team-Partner ist Cosmophone auf der bestehenden Website gefuehrt."
+    ],
+    staff: [{ role: "Sportliche Leitung", name: "wird im CMS gepflegt" }],
+    players: [
+      { name: "Malte Niemann", number: "1", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_16583.jpg?v=1&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Manuel Pieper", number: "12", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_69988.jpg?v=1&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Luke Harborth", number: "3", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_16585.jpg?v=1&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Patrick Pries", number: "6", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_27166.jpg?v=1&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Elias Willerding", number: "13", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_57281.jpg?v=2&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Philipp Dimitrakakis", number: "17", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_69989.jpg?v=1&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Andreas Hinrichsen", number: "24" },
+      { name: "Farschad Babai", number: "37" },
+      { name: "Pascal Meyer", number: "3" },
+      { name: "Liam Harborth", number: "7" },
+      { name: "Yoiner Andres Serpa Lopez", number: "7" },
+      { name: "Moussa Camara", number: "8" },
+      { name: "Philipp Busche", number: "10" },
+      { name: "Louis Keita", number: "11" },
+      { name: "Mathias Koch", number: "19" },
+      { name: "Davit Tchabashvili", number: "21" },
+      { name: "Jannis Dimitrakakis", number: "25" },
+      { name: "Anderson Kipre", number: "32" },
+      { name: "Ulrich Tchakounte Leukeu", number: "1" },
+      { name: "Franco Antonio Ferraro", number: "10" }
+    ]
+  },
+  {
+    teamSlug: "2-herren",
+    headline: "2. Kreisklasse mit eigenem Profil",
+    intro: [
+      "Die 2. Herren geht in dieser Saison in der 2. Kreisklasse Staffel A an den Start.",
+      "Trainer ist Wolf Daniel Busche, Co-Trainer ist Marc Baxmann. Team-Partner ist Coiffeur Juan."
+    ],
+    staff: [
+      { role: "Trainer", name: "Wolf Daniel Busche" },
+      { role: "Co-Trainer", name: "Marc Baxmann" }
+    ],
+    players: [
+      { name: "Marcel Koberstein", number: "21", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_16605.jpg?v=2&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Louis Busche", number: "5", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_16610.jpg?v=3&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Jannis Dimitrakakis", number: "5", image: "https://images.ebcdn.de/club-4844/PlayerPhoto_36818.jpg?v=1&width=1000&format=webp&height=1000&mode=crop" },
+      { name: "Timo Rennmann", number: "23" },
+      { name: "Damien Schroeter", number: "77" },
+      { name: "Fabian Simhofer", number: "9" },
+      { name: "Felix Aschemann", number: "19" },
+      { name: "Maximilian Bendix", number: "20" },
+      { name: "Jan-Henrik Ahrens", number: "4" },
+      { name: "Daniel Wiegand", number: "13" },
+      { name: "Felix-Jonathan Herrmann", number: "16" },
+      { name: "Kornelius Paasche", number: "20" }
+    ]
+  }
+];
+
+export const matchResults: MatchResult[] = [
+  {
+    teamSlug: "1-herren",
+    teamName: "1. Herren",
+    homeTeam: "FSV Algermissen",
+    awayTeam: "TSV Foehrste",
+    homeGoals: 4,
+    awayGoals: 1,
+    date: "2026-06-14",
+    competition: "Kreisliga Hildesheim",
+    matchday: "30. Spieltag",
+    sourceUrl: "https://www.fsvalgermissen.de/"
+  },
+  {
+    teamSlug: "1-herren",
+    teamName: "1. Herren",
+    homeTeam: "FSV Algermissen",
+    awayTeam: "SV Teutonia Sorsum",
+    homeGoals: 3,
+    awayGoals: 0,
+    date: "2026-08-09",
+    competition: "Kreisliga Staffel A",
+    matchday: "2. Spieltag",
+    sourceUrl: "https://www.fsvalgermissen.de/"
+  },
+  {
+    teamSlug: "1-herren",
+    teamName: "1. Herren",
+    homeTeam: "FSV Algermissen",
+    awayTeam: "FC Concordia Hildesheim",
+    homeGoals: 0,
+    awayGoals: 1,
+    date: "2026-08-12",
+    competition: "Kreisliga Staffel A",
+    matchday: "1. Spieltag",
+    sourceUrl: "https://www.fsvalgermissen.de/"
+  },
+  {
+    teamSlug: "1-herren",
+    teamName: "1. Herren",
+    homeTeam: "SC Harsum 2",
+    awayTeam: "FSV Algermissen",
+    homeGoals: 3,
+    awayGoals: 2,
+    date: "2026-08-16",
+    competition: "Kreisliga Staffel A",
+    matchday: "3. Spieltag",
+    sourceUrl: "https://www.fsvalgermissen.de/"
+  },
+  {
+    teamSlug: "1-herren",
+    teamName: "1. Herren",
+    homeTeam: "1. FC Sarstedt",
+    awayTeam: "FSV Algermissen",
+    homeGoals: 2,
+    awayGoals: 0,
+    date: "2026-08-19",
+    competition: "Kreisliga Staffel A",
+    matchday: "4. Spieltag",
+    sourceUrl: "https://www.fsvalgermissen.de/"
+  },
+  {
+    teamSlug: "2-herren",
+    teamName: "2. Herren",
+    homeTeam: "FSV Algermissen II",
+    awayTeam: "SG Huemax/Borsum",
+    homeGoals: 2,
+    awayGoals: 3,
+    date: "2025-10-15",
+    competition: "2. Herren",
+    reportTitle: "Bittere Niederlage fuer die II. Herren",
+    sourceUrl: "https://www.fsvalgermissen.de/"
+  }
 ];
 
 export const news: NewsItem[] = [
@@ -573,10 +752,29 @@ export function getTeam(slug: string) {
   return teams.find((team) => team.slug === slug);
 }
 
+export function getTeamProfile(slug: string) {
+  return teamProfiles.find((profile) => profile.teamSlug === slug);
+}
+
+export function getResultsForTeam(slug: string) {
+  return matchResults
+    .filter((result) => result.teamSlug === slug)
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+export function getFeaturedResults(slugs: string[], limitPerTeam = 3) {
+  return slugs.flatMap((slug) => getResultsForTeam(slug).slice(0, limitPerTeam));
+}
+
 export function getClubPage(slug: string) {
   return clubPages.find((page) => page.slug === slug);
 }
 
 export function filterSponsors(category?: Sponsor["category"]) {
   return sponsors.filter((sponsor) => !category || sponsor.category === category);
+}
+
+export function getSponsorsForTeam(slug: string) {
+  const team = getTeam(slug);
+  return sponsors.filter((sponsor) => team?.sponsorSlugs?.includes(sponsor.slug));
 }
