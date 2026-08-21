@@ -234,14 +234,14 @@ button {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 520px) minmax(160px, 1fr) minmax(360px, 450px);
-  gap: clamp(18px, 3vw, 38px);
-  align-items: start;
-  justify-content: space-between;
-  width: min(1480px, 100%);
+  grid-template-columns: minmax(280px, 1fr) clamp(170px, 18vw, 260px) minmax(390px, 1fr);
+  gap: clamp(18px, 3vw, 44px);
+  align-items: center;
+  width: 100%;
 }
 
 .hero-content {
+  justify-self: start;
   width: min(610px, 100%);
 }
 
@@ -292,7 +292,7 @@ h1 {
   justify-self: end;
   align-self: start;
   width: min(470px, 100%);
-  margin-top: clamp(8px, 3vw, 36px);
+  margin-top: clamp(14px, 4vh, 34px);
 }
 
 .hero-crest {
@@ -300,9 +300,9 @@ h1 {
   place-items: center;
   justify-self: center;
   align-self: center;
-  width: min(240px, 20vw);
+  width: min(250px, 100%);
   aspect-ratio: 1;
-  margin-top: clamp(70px, 12vh, 130px);
+  margin-top: clamp(42px, 9vh, 88px);
   padding: 16px;
   background:
     radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.78) 60%, rgba(255, 255, 255, 0.08) 61%),
@@ -761,8 +761,17 @@ h1 {
 }
 
 .result-banner-head .eyebrow {
+  display: inline-flex;
+  width: max-content;
+  min-height: 24px;
+  padding: 4px 9px;
   margin-bottom: 0;
-  color: var(--lime);
+  color: var(--black);
+  background: var(--lime);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .result-track {
@@ -1288,6 +1297,29 @@ fieldset input[type="checkbox"],
 .approval-card h3,
 .approval-card p {
   margin: 0;
+}
+
+@media (max-width: 1180px) {
+  .hero-shell {
+    grid-template-columns: minmax(250px, 1fr) clamp(140px, 16vw, 190px) minmax(330px, 1fr);
+    gap: 18px;
+  }
+
+  .hero-panel {
+    width: min(420px, 100%);
+  }
+
+  .result-chip {
+    grid-template-columns: 28px minmax(90px, 1fr) auto;
+  }
+
+  .result-sport-icon {
+    display: none;
+  }
+
+  .result-teams {
+    grid-column: 2 / -1;
+  }
 }
 
 @media (max-width: 900px) {
