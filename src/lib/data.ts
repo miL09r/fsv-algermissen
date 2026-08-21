@@ -832,9 +832,19 @@ export const clubPages: ClubPage[] = [
     title: "Leitbild",
     teaser: "Modern, offen, traditionsbewusst und generationenuebergreifend.",
     body: [
-      "Der FSV versteht sich als aktiver Bestandteil der örtlichen Lebenskultur und als wichtiger Teil eines funktionierenden Gemeinwesens.",
-      "Der Verein ist modern und offen für neue Ideen, bleibt dabei traditionsbewusst und verbindet leistungsorientierten Sport mit Breitensport.",
-      "Gemeinnützigkeit, Ehrenamt, faire Zusammenarbeit, qualifizierte Aus- und Weiterbildung, solide Finanzierung und die Jugendarbeit bilden zentrale Leitplanken."
+      "Leitbild des FSV Algermissen",
+      "Unser Sportverein ist ein aktiver Bestandteil unserer Gesellschaft. Wir sehen den Sport und seine Organisationen als unentbehrlich fuer ein funktionierendes Gemeinwesen an.",
+      "Wir verstehen uns als wichtigen Teil und festen Faktor der oertlichen Lebenskultur. Uns ist bewusst, dass alle gesellschaftlichen Werte einer staendigen Veraenderung unterliegen und beruecksichtigen dieses in unserer Vereinsarbeit.",
+      "Unsere Zukunft wollen wir selbststaendig und bewusst gestalten. Deshalb entwickeln wir Visionen und leiten daraus unsere Ziele und Strategien ab.",
+      "Wir sind modern und offen fuer neue Ideen, aber auch traditionsbewusst.",
+      "Unseren Mitgliedern versuchen wir ein nach ihren Wuenschen gestaltetes Sport- und Freizeitangebot anzubieten, durch das wir eine gesunde Lebensfuehrung, eine sinnvolle Lebensgestaltung sowie den Ausbau und Erhalt sozialer Kontakte foerdern. Leistungsorientierung und Breitensport schliessen sich dabei nicht aus.",
+      "Grundlagen unserer Vereinsaktivitaeten sind Gemeinnuetzigkeit und Ehrenamtlichkeit, bei Bedarf ergaenzt um hauptamtliche Kraefte. Wir foerdern eine qualifizierte Aus- und Weiterbildung unserer Mitarbeiter und gehen offen und fair miteinander um.",
+      "Wir wollen besser sein als andere. Deshalb arbeiten wir permanent an der Optimierung unserer Strukturen und Verfahrensweisen. Wir sind bereit, dauernd zu lernen.",
+      "Unser Ziel sind zufriedene Mitglieder und Mitarbeiter, die mit der Qualitaet unseres Angebotes und der Organisation der Vereinsaktivitaeten zufrieden sind.",
+      "Wir fuehren Jung und Alt zusammen und vermitteln so zwischen den Generationen. Wir integrieren Menschen aller Nationalitaeten und sind politisch wie religioes neutral.",
+      "Wir wollen die persoenliche und soziale Lebensqualitaet erhalten, verbessern, foerdern und einen Beitrag leisten zur positiven Entwicklung der Persoenlichkeit. Die Jugendarbeit geniesst bei uns einen hohen Stellenwert.",
+      "Bei kommunalpolitischen und verbandsinternen Entscheidungen, die uns betreffen, wollen wir mitreden und mitgestalten. Keine Entscheidung in diesem Bereich soll ohne uns getroffen werden.",
+      "Wir achten auf eine solide Finanzierung aller Vereinsaktivitaeten und handeln umweltbewusst und ressourcenschonend."
     ],
     infoBlocks: [
       {
@@ -864,9 +874,12 @@ export const clubPages: ClubPage[] = [
     title: "Das Clubhaus",
     teaser: "Treffpunkt, Stammtisch, Bundesliga-Abende, Darts und Spieltagsleben.",
     body: [
-      "Das Clubhaus ist Treffpunkt und Herz des Vereins. Donnerstags ab 19 Uhr ist Stammtisch, freitags läuft Bundesliga live auf Großbild und sonntags ist rund um den Spielbetrieb geöffnet.",
-      "Montags trainieren die Darter im Clubhaus. Donnerstags zum Stammtisch laufen auch weiterhin die Geschäftszeiten.",
-      "Das Clubhaus steht Vereinsmitgliedern und Mitgliedern des Freundeskreises regelmäßig samstags für Feiern zur Verfügung."
+      "Unser Clubhaus ist der Treffpunkt und das Herz des Vereins.",
+      "Es ist jeden Donnerstag ab 19.00 Uhr zum Stammtisch fuer unsere Mitglieder, aber selbstverstaendlich auch fuer jedermann geoeffnet.",
+      "Freitags kann hier die Bundesliga live auf Grossbild geschaut werden. Sonntags ist zum Spielbetrieb und auch noch ein wenig danach geoeffnet.",
+      "Montags trainieren im Clubhaus unsere Darter und donnerstags zum Stammtisch laufen auch weiterhin die Geschaeftszeiten.",
+      "Wenn keiner mehr Durst hat, schliesst das Clubhaus auch eher.",
+      "Unser Clubhaus steht Vereinsmitgliedern und Mitgliedern des Freundeskreises auch fuer Feiern zur Verfuegung. Diese Moeglichkeit beschraenkt sich regelmaessig auf den Samstag. Bei Interesse bitte bei unserem Wirt waehrend der Oeffnungszeiten persoenlich im Clubhaus melden."
     ],
     openingHours: [
       { day: "Donnerstag", context: "Stammtisch / Geschäftszeiten", time: "19:00 Uhr - last order 23:00 Uhr" },

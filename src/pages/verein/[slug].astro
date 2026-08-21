@@ -29,9 +29,42 @@ const isSponsors = page.slug === "sponsoren";
         {page.body.map((paragraph) => <p>{paragraph}</p>)}
         {page.ctaLabel && page.ctaHref && <a class="button" href={page.ctaHref}>{page.ctaLabel}</a>}
       </article>
-      <aside class="content-card">
-        <h2>FSV Algermissen</h2>
-        <p>Alle Vereinsbereiche sind direkt über die Navigation erreichbar. Für Fragen helfen Vorstand und Ansprechpartner gern weiter.</p>
+      <aside class="content-card club-context-card">
+        <h2>{page.title}</h2>
+        {page.openingHours ? (
+          <>
+            <p class="eyebrow">Öffnungszeiten</p>
+            {page.openingHours.slice(0, 4).map((entry) => (
+              <p><strong>{entry.day}:</strong> {entry.context} · {entry.time}</p>
+            ))}
+          </>
+        ) : page.contacts ? (
+          <>
+            <p class="eyebrow">Ansprechpartner</p>
+            {page.contacts.slice(0, 4).map((contact) => (
+              <p><strong>{contact.role}:</strong> {contact.name}</p>
+            ))}
+          </>
+        ) : page.infoBlocks?.[0]?.items ? (
+          <>
+            <p class="eyebrow">{page.infoBlocks[0].title}</p>
+            {page.infoBlocks[0].items.slice(0, 5).map((item) => <p>{item}</p>)}
+          </>
+        ) : page.products ? (
+          <>
+            <p class="eyebrow">Artikel</p>
+            {page.products.slice(0, 5).map((product) => (
+              <p><strong>{product.name}</strong>{product.price ? ` · ${product.price}` : ""}</p>
+            ))}
+          </>
+        ) : (
+          <p>Alle Inhalte dieses Vereinsbereichs werden direkt auf dieser Seite gepflegt.</p>
+        )}
+        {page.links && (
+          <div class="club-context-actions">
+            {page.links.slice(0, 2).map((link) => <a class="button ghost" href={link.href}>{link.label}</a>)}
+          </div>
+        )}
       </aside>
     </div>
   </section>

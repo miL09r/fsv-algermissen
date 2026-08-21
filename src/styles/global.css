@@ -1157,6 +1157,28 @@ h1 {
   margin-top: 18px;
 }
 
+.club-context-card {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.club-context-card h2,
+.club-context-card p {
+  margin: 0;
+}
+
+.club-context-card .eyebrow {
+  margin-top: 4px;
+}
+
+.club-context-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
 .side-panel h3 {
   margin: 0;
   color: var(--black);
