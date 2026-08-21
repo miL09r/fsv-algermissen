@@ -33,10 +33,10 @@ const editableTeams = teams.filter((team) => team.area !== "darts");
 const message = Astro.url.searchParams;
 ---
 
-<BaseLayout title="Admin" description="Redaktionsbereich des FSV Algermissen.">
+<BaseLayout title="Login Bereich" description="Redaktionsbereich des FSV Algermissen.">
   <header class="page-title">
     <p class="eyebrow">Redaktion</p>
-    <h1>{user ? `Willkommen, ${user.name}` : "Admin-Login"}</h1>
+    <h1>{user ? `Willkommen, ${user.name}` : "Login Bereich"}</h1>
     <p>{user ? "Inhalte, Benutzer und Mannschaftsbereiche verwalten." : "Anmelden oder Zugang fuer die Redaktion beantragen."}</p>
   </header>
 
@@ -79,13 +79,7 @@ const message = Astro.url.searchParams;
             Passwort
             <input type="password" name="password" autocomplete="new-password" minlength="10" required />
           </label>
-          <fieldset>
-            <legend>Gewuenschter Bereich</legend>
-            <label><input type="checkbox" name="scope" value="haupt-news" /> Haupt-News</label>
-            {editableTeams.slice(0, 8).map((team) => (
-              <label><input type="checkbox" name="scope" value={team.slug} /> {team.name}</label>
-            ))}
-          </fieldset>
+          <p class="form-note">Nach der Anfrage wird festgelegt, welche Bereiche freigeschaltet werden.</p>
           <button class="button secondary" type="submit">Registrierung senden</button>
         </form>
       </div>
@@ -115,7 +109,6 @@ const message = Astro.url.searchParams;
                   <input type="hidden" name="requestId" value={request.id} />
                   <h3>{request.name}</h3>
                   <p>{request.email}</p>
-                  {request.requested_scope && <p><strong>Wunsch:</strong> {request.requested_scope}</p>}
                   <label>
                     Rolle
                     <select name="role">

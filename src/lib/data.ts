@@ -812,7 +812,7 @@ export const nav = [
     href: "/verein/vorstand",
     children: clubPages.map((page) => ({ label: page.title, href: `/verein/${page.slug}` }))
   },
-  { label: "Admin", href: "/admin" }
+  { label: "Login Bereich", href: "/admin" }
 ];
 
 export function getPublishedNews() {

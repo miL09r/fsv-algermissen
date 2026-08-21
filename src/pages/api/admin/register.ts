@@ -11,7 +11,7 @@ export const POST: APIRoute = async ({ request, locals, redirect }) => {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const name = String(formData.get("name") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const requestedScope = formData.getAll("scope").map(String).join(",");
+  const requestedScope = "";
 
   if (!email || !name || password.length < 10) return redirect("/admin?register=invalid", 303);
 
