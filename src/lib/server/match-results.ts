@@ -27,6 +27,14 @@ const resultKey = (result: MatchResult) =>
     result.awayGoals ?? ""
   ].join("|");
 
+const matchupKey = (result: MatchResult) =>
+  [
+    result.teamSlug,
+    normalizeDate(result.date),
+    result.homeTeam.toLowerCase(),
+    result.awayTeam.toLowerCase()
+  ].join("|");
+
 const mapDbResult = (row: DbMatchResultRow): MatchResult => ({
   teamSlug: row.team_slug,
   teamName: row.team_name,
@@ -72,8 +80,12 @@ export async function getSiteMatchResults(db: D1DatabaseLike | undefined, slugs?
   `;
 
   const dbResults = (await db.prepare(query).bind(...allowedSlugs).all<DbMatchResultRow>()).results.map(mapDbResult);
+  const dbMatchups = new Set(dbResults.map(matchupKey));
+  const filteredStaticResults = staticResults.filter(
+    (result) => result.status !== "fixture" || !dbMatchups.has(matchupKey(result))
+  );
   const merged = new Map<string, MatchResult>();
-  for (const result of [...staticResults, ...dbResults]) merged.set(resultKey(result), result);
+  for (const result of [...filteredStaticResults, ...dbResults]) merged.set(resultKey(result), result);
 
   return Array.from(merged.values()).sort((a, b) => b.date.localeCompare(a.date));
 }

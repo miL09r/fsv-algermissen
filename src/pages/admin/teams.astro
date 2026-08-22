@@ -108,7 +108,12 @@ const positionOptions = [
         {message.get("import") === "ok" && <p class="status-pill">Import wurde verarbeitet</p>}
         {message.get("import") === "empty" && <p class="status-pill danger">Keine verwertbaren Spiele gefunden</p>}
         {message.get("import") === "missing" && <p class="status-pill danger">Bitte FUSSBALL.DE Adresse eintragen</p>}
+        {message.get("sync") === "ok" && <p class="status-pill">Automatischer Sync verarbeitet: {message.get("inserted") ?? "0"} neu, {message.get("updated") ?? "0"} aktualisiert</p>}
+        {message.get("sync") === "empty" && <p class="status-pill danger">Automatischer Sync hat kein neues Ergebnis gefunden</p>}
         <p class="form-note">Dieser Import liest Ergebnisse serverseitig aus und speichert sie in unserem Design. Auf der Website wird kein FUSSBALL.DE Widget angezeigt.</p>
+        <div class="action-row">
+          <button class="button" type="submit" formaction="/api/admin/results/sync">Alle bekannten FUSSBALL.DE Teams synchronisieren</button>
+        </div>
         <label>
           Team
           <select name="resultTeam">
