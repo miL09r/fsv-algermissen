@@ -13,6 +13,23 @@ if (!user) return Astro.redirect("/admin?error=auth");
 const message = new URL(Astro.request.url).searchParams;
 const teams = await getSiteTeams(db);
 const items = await getSiteNews(db, true);
+
+const categoryOptions = [
+  { value: "verein", label: "Verein" },
+  { value: "fussball", label: "Fussball" },
+  { value: "jugend", label: "Jugend" },
+  { value: "darts", label: "Darts" },
+  { value: "sponsoren", label: "Sponsoren" }
+];
+
+const categoryValue = (value: string) => {
+  const normalized = value.toLowerCase();
+  if (normalized.includes("fussball") || normalized.includes("herren")) return "fussball";
+  if (normalized.includes("jugend") || normalized.includes("junioren") || normalized.includes("jsg")) return "jugend";
+  if (normalized.includes("darts")) return "darts";
+  if (normalized.includes("sponsor")) return "sponsoren";
+  return "verein";
+};
 ---
 
 <BaseLayout title="News verwalten" description="News und Vereinsmeldungen verwalten.">
@@ -35,7 +52,9 @@ const items = await getSiteNews(db, true);
       <form id="artikel" class="admin-panel form-grid" method="post" action="/api/admin/news/create" enctype="multipart/form-data">
         <h2>Artikel anlegen</h2>
         {message.get("news") === "ok" && <p class="status-pill">News wurde gespeichert</p>}
+        {message.get("news") === "updated" && <p class="status-pill">News wurde aktualisiert</p>}
         {message.get("news") === "invalid" && <p class="status-pill danger">Bitte Titel, Teaser und Inhalt pruefen</p>}
+        {message.get("news") === "slug" && <p class="status-pill danger">Dieser Slug wird bereits verwendet</p>}
         {message.get("news") === "error" && <p class="status-pill danger">News konnte nicht gespeichert werden</p>}
         <label>
           Titel
@@ -56,11 +75,7 @@ const items = await getSiteNews(db, true);
         <label>
           Kategorie
           <select name="category">
-            <option value="verein">Verein</option>
-            <option value="fussball">Fussball</option>
-            <option value="jugend">Jugend</option>
-            <option value="darts">Darts</option>
-            <option value="sponsoren">Sponsoren</option>
+            {categoryOptions.map((option) => <option value={option.value}>{option.label}</option>)}
           </select>
         </label>
         <label>
@@ -104,11 +119,77 @@ const items = await getSiteNews(db, true);
       <div id="liste" class="admin-panel">
         <h2>Aktuelle News</h2>
         {items.map((item) => (
-          <div class="content-card" style="margin-top: 12px;">
-            <p class="eyebrow">{item.status} · {item.category}</p>
-            <h3>{item.title}</h3>
-            <p>{item.teamSlugs.length ? item.teamSlugs.join(", ") : "Verein allgemein"}</p>
-          </div>
+          <details id={`news-${item.slug}`} class="admin-panel admin-accordion" style="margin-top: 12px;">
+            <summary>
+              <span>{item.title}</span>
+              <small>{item.status} · {item.category}</small>
+            </summary>
+            <form class="form-grid" method="post" action="/api/admin/news/update" enctype="multipart/form-data">
+              <input type="hidden" name="originalSlug" value={item.slug} />
+              <input type="hidden" name="existingImage" value={item.image ?? ""} />
+              <input type="hidden" name="date" value={item.date} />
+              <label>
+                Titel
+                <input name="title" value={item.title} required />
+              </label>
+              <label>
+                Slug
+                <input name="slug" value={item.slug} required />
+              </label>
+              <label>
+                Status
+                <select name="status">
+                  <option value="published" selected={item.status === "published"}>Veroeffentlicht</option>
+                  <option value="draft" selected={item.status === "draft"}>Entwurf</option>
+                  <option value="scheduled" selected={item.status === "scheduled"}>Geplant</option>
+                </select>
+              </label>
+              <label>
+                Kategorie
+                <select name="category">
+                  {categoryOptions.map((option) => (
+                    <option value={option.value} selected={categoryValue(item.category) === option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Team-/Bereichszuordnung
+                <select name="teams" multiple size="8">
+                  {teams.map((team) => (
+                    <option value={team.slug} selected={item.teamSlugs.includes(team.slug)}>{team.name}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Teaser
+                <textarea name="teaser" required>{item.teaser}</textarea>
+              </label>
+              <div class="upload-field">
+                <label>
+                  Titelbild hochladen
+                  <input type="file" name="newsImage" accept="image/*" />
+                </label>
+                <p class="field-hint">Titelbild fuer die Meldung.</p>
+              </div>
+              <label>
+                Alternativ Bild-URL
+                <input name="imageUrl" value={item.image ?? ""} placeholder="https://..." />
+              </label>
+              <div class="rich-editor-field">
+                <span class="rich-editor-label">Artikelinhalt</span>
+                <div class="rich-toolbar" aria-label="Text formatieren">
+                  <button type="button" data-rich-command="formatBlock" data-rich-value="h2">H2</button>
+                  <button type="button" data-rich-command="bold"><strong>B</strong></button>
+                  <button type="button" data-rich-command="italic"><em>I</em></button>
+                  <button type="button" data-rich-command="insertUnorderedList">Liste</button>
+                  <button type="button" data-rich-link>Link</button>
+                </div>
+                <div class="rich-editor" contenteditable="true" data-rich-editor aria-label="Artikelinhalt bearbeiten" set:html={item.body}></div>
+                <textarea name="body" data-rich-output required hidden></textarea>
+              </div>
+              <button class="button" type="submit">Aenderungen speichern</button>
+            </form>
+          </details>
         ))}
       </div>
         </div>
@@ -116,11 +197,9 @@ const items = await getSiteNews(db, true);
     </div>
   </section>
   <script>
-    const editor = document.querySelector("[data-rich-editor]");
-    const output = document.querySelector("[data-rich-output]");
-    const form = document.querySelector("#artikel");
-
-    const syncEditor = () => {
+    const syncEditor = (field: Element | null) => {
+      const editor = field?.querySelector("[data-rich-editor]");
+      const output = field?.querySelector("[data-rich-output]");
       if (editor instanceof HTMLElement && output instanceof HTMLTextAreaElement) {
         output.value = editor.innerHTML.trim();
       }
@@ -132,19 +211,29 @@ const items = await getSiteNews(db, true);
         const command = button.dataset.richCommand ?? "";
         const value = button.dataset.richValue;
         document.execCommand(command, false, value);
-        syncEditor();
+        syncEditor(button.closest(".rich-editor-field"));
       });
     });
 
-    document.querySelector("[data-rich-link]")?.addEventListener("click", () => {
-      const url = window.prompt("Link-Adresse eingeben");
-      if (!url) return;
-      document.execCommand("createLink", false, url);
-      syncEditor();
+    document.querySelectorAll("[data-rich-link]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const url = window.prompt("Link-Adresse eingeben");
+        if (!url) return;
+        document.execCommand("createLink", false, url);
+        syncEditor(button.closest(".rich-editor-field"));
+      });
     });
 
-    editor?.addEventListener("input", syncEditor);
-    form?.addEventListener("submit", syncEditor);
-    syncEditor();
+    document.querySelectorAll("[data-rich-editor]").forEach((editor) => {
+      editor.addEventListener("input", () => syncEditor(editor.closest(".rich-editor-field")));
+    });
+
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", () => {
+        form.querySelectorAll(".rich-editor-field").forEach(syncEditor);
+      });
+    });
+
+    document.querySelectorAll(".rich-editor-field").forEach(syncEditor);
   </script>
 </BaseLayout>
