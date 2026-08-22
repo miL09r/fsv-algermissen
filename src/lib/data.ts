@@ -498,7 +498,7 @@ export const teamProfiles: TeamProfile[] = [
     headline: "Kreisliga-Fussball in der REWE-Rudat-Arena",
     intro: [
       "Die 1. Herren geht in dieser Saison in der Kreisliga Staffel A an den Start.",
-      "Trainiert wird dienstags und donnerstags von 19 bis 21 Uhr. Als Team-Partner ist Cosmophone auf der bestehenden Website gefuehrt."
+      "Trainiert wird dienstags und donnerstags von 19 bis 21 Uhr. Cosmophone begleitet die Mannschaft als Team-Partner."
     ],
     staff: [{ role: "Sportliche Leitung", name: "FSV Algermissen" }],
     players: [
@@ -777,7 +777,7 @@ export const news: NewsItem[] = [
     title: "Spieltag 14",
     teaser: "Informationen zum 14. Spieltag im Herrenbereich.",
     body:
-      "Der 14. Spieltag wurde auf der alten Website als aktuelle Vereinsmeldung gefuehrt und ist jetzt in der neuen News-Struktur sichtbar.",
+      "Informationen und Hinweise zum 14. Spieltag im Herrenbereich des FSV Algermissen.",
     date: "2025-11-08",
     status: "published",
     category: "Fussball",
@@ -803,7 +803,7 @@ export const news: NewsItem[] = [
     title: "Spielbericht von Sportnews Hildesheim",
     teaser: "FSV Algermissen - SV Teutonia Sorsum 2:1.",
     body:
-      "Der Spielbericht zum Spiel FSV Algermissen gegen SV Teutonia Sorsum wurde auf der alten Website im Bereich der 1. Herren gefuehrt.",
+      "Rund um das Spiel FSV Algermissen gegen SV Teutonia Sorsum gibt es einen Spielbericht von Sportnews Hildesheim.",
     date: "2025-10-15",
     status: "published",
     category: "1. Herren",
@@ -877,7 +877,7 @@ export const clubPages: ClubPage[] = [
       alt: "Vorstand des FSV Algermissen"
     },
     body: [
-      "Der Vorstand des Fußball- und Sportverein Algermissen von 1911 / 1990 e.V. ist mit Stand 19.05.2026 gepflegt.",
+      "Der Vorstand des Fußball- und Sportverein Algermissen von 1911 / 1990 e.V. mit Stand 19.05.2026.",
       "Vorstandsmitglieder:"
     ],
     contacts: [
@@ -929,7 +929,7 @@ export const clubPages: ClubPage[] = [
     teaser: "Datenschutz und Vereinsdokumente des FSV Algermissen.",
     body: [
       "Die Datenschutzordnung ist als eigener Vereinsbereich hinterlegt und gehoert zu den zentralen Dokumenten des FSV Algermissen.",
-      "Das Dokument wird im Downloadbereich gepflegt, damit es bei Aktualisierungen zentral ausgetauscht werden kann."
+      "Die aktuelle Fassung steht im Downloadbereich bereit."
     ],
     links: [{ label: "Zum Downloadbereich", href: "/verein/downloads" }]
   },
@@ -964,7 +964,7 @@ export const clubPages: ClubPage[] = [
     teaser: "Sportstaette am Grasweg mit Anfahrt und Dokumenten.",
     body: [
       "Die REWE-Rudat-Arena am Grasweg ist die zentrale Sportstätte für Training, Spielbetrieb und Vereinsleben.",
-      "Anfahrt und Hygienekonzept werden als eigene Links geführt, damit die Angaben später im Redaktionsbereich einzeln aktualisiert werden können."
+      "Anfahrt und Hygienekonzept sind direkt mit dieser Sportstaette verbunden."
     ],
     links: [
       { label: "Anfahrt öffnen", href: "https://www.google.com/maps/search/?api=1&query=REWE-Rudat-Arena%20Algermissen" },
@@ -1075,15 +1075,13 @@ export const clubFootballWidgets: FootballWidgetConfig = {
   fixtureWidgetId: "50b81c6d-8c29-48b7-abcc-6ba58ece362b",
   fixtureWidgetType: "club-matches",
   fussballDeUrl: "https://www.fussball.de/",
-  note:
-    "Testdomain-Widget fuer fsv-algermissen.pages.dev. Produktionsdomain-Widgets werden spaeter separat hinterlegt."
+  note: "FUSSBALL.DE Datenquelle fuer den Ergebnisimport."
 };
 
 export const footballWidgets = teams.reduce<Record<string, FootballWidgetConfig>>((acc, team) => {
   acc[team.slug] = {
     fussballDeUrl: team.externalIds?.currentWebsiteUrl,
-    note:
-      "Team-Widget-IDs werden in next.fussball.de erzeugt. data-id und data-type aus dem Codeblock hier eintragen."
+    note: "FUSSBALL.DE Datenquelle fuer den Ergebnisimport."
   };
   return acc;
 }, {});

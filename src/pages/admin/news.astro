@@ -19,7 +19,7 @@ const items = await getSiteNews(db, true);
   <header class="page-title">
     <p class="eyebrow">Redaktion</p>
     <h1>News verwalten</h1>
-    <p>Ein Artikel kann mehreren Teams oder Bereichen zugeordnet werden und muss nicht mehrfach gespeichert werden.</p>
+    <p>Berichte, Termine und Meldungen aus dem Vereinsleben.</p>
   </header>
 
   <section class="section">
@@ -37,7 +37,6 @@ const items = await getSiteNews(db, true);
         {message.get("news") === "ok" && <p class="status-pill">News wurde gespeichert</p>}
         {message.get("news") === "invalid" && <p class="status-pill danger">Bitte Titel, Teaser und Inhalt pruefen</p>}
         {message.get("news") === "error" && <p class="status-pill danger">News konnte nicht gespeichert werden</p>}
-        <p class="form-note">Hier entstehen normale Website-News. Der Inhalt darf formatiert werden und wird als HTML gespeichert, damit Ueberschriften, Listen, Links und Hervorhebungen erhalten bleiben.</p>
         <label>
           Titel
           <input name="title" placeholder="Jugendcamp 2026" />
@@ -69,7 +68,6 @@ const items = await getSiteNews(db, true);
           <select name="teams" multiple size="8">
             {teams.map((team) => <option value={team.slug}>{team.name}</option>)}
           </select>
-          <span class="field-hint">Mehrere Teams mit Strg/Cmd anklicken. Ohne Auswahl erscheint die News allgemein im Verein.</span>
         </label>
         <label>
           Teaser
@@ -80,12 +78,11 @@ const items = await getSiteNews(db, true);
             Titelbild hochladen
             <input type="file" name="newsImage" accept="image/*" />
           </label>
-          <p class="field-hint">Direkt vom Computer hochladen. Das Bild erscheint auf der News-Kachel und kann spaeter ersetzt werden.</p>
+          <p class="field-hint">Titelbild fuer die Meldung.</p>
         </div>
         <label>
           Alternativ Bild-URL
           <input name="imageUrl" placeholder="https://..." />
-          <span class="field-hint">Nur verwenden, wenn das Bild bereits online liegt.</span>
         </label>
         <div class="rich-editor-field">
           <span class="rich-editor-label">Artikelinhalt</span>
@@ -100,7 +97,6 @@ const items = await getSiteNews(db, true);
             <p>Hier den Artikel schreiben.</p>
           </div>
           <textarea name="body" data-rich-output required hidden></textarea>
-          <p class="form-note">Tipp: Text markieren und dann Fett, Kursiv, Liste oder Link waehlen.</p>
         </div>
         <button class="button" type="submit">News speichern</button>
       </form>

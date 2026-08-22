@@ -65,7 +65,7 @@ const hasContent = lastResults.length > 0 || nextFixtures.length > 0;
               </span>
             </a>
           ))}
-          {lastResults.length === 0 && <p class="matchcenter-empty">Noch kein Ergebnis eingetragen.</p>}
+          {lastResults.length === 0 && <p class="matchcenter-empty">Noch kein Ergebnis bekannt.</p>}
         </div>
       </section>
 
@@ -87,11 +87,11 @@ const hasContent = lastResults.length > 0 || nextFixtures.length > 0;
               </span>
             </a>
           ))}
-          {nextFixtures.length === 0 && <p class="matchcenter-empty">Noch kein naechstes Spiel eingetragen.</p>}
+          {nextFixtures.length === 0 && <p class="matchcenter-empty">Noch kein naechstes Spiel bekannt.</p>}
         </div>
       </section>
     </div>
   ) : (
-    <p class="matchcenter-empty">Sobald Spiele gepflegt sind, erscheinen sie hier.</p>
+    <p class="matchcenter-empty">Aktuelle Spiele folgen.</p>
   )}
 </div>

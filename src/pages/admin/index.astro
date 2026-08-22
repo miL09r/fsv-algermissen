@@ -34,7 +34,7 @@ const editableTeams = await getSiteTeams(db, { includeInactive: true });
 const message = Astro.url.searchParams;
 ---
 
-<BaseLayout title="Login Bereich" description="Redaktionsbereich des FSV Algermissen.">
+<BaseLayout title="Login Bereich" description="Login Bereich des FSV Algermissen.">
   <header class="page-title">
     <p class="eyebrow">Redaktion</p>
     <h1>{user ? `Willkommen, ${user.name}` : "Login Bereich"}</h1>
@@ -44,8 +44,8 @@ const message = Astro.url.searchParams;
   <section class="section">
     {!db && (
       <div class="content-card">
-        <h2>Datenbank nicht verbunden</h2>
-        <p>Der Redaktionsbereich braucht die Cloudflare-D1-Bindung <strong>DB</strong>.</p>
+        <h2>Login Bereich nicht erreichbar</h2>
+        <p>Bitte spaeter erneut versuchen oder den technischen Ansprechpartner informieren.</p>
       </div>
     )}
 
@@ -81,7 +81,7 @@ const message = Astro.url.searchParams;
             Passwort
             <input type="password" name="password" autocomplete="new-password" minlength="10" required />
           </label>
-          <p class="form-note">Nach der Anfrage wird festgelegt, welche Bereiche freigeschaltet werden.</p>
+          <p class="form-note">Nach der Anfrage werden die passenden Vereinsbereiche freigeschaltet.</p>
           <button class="button secondary" type="submit">Registrierung senden</button>
         </form>
       </div>

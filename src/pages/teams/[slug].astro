@@ -70,8 +70,8 @@ const teamSponsors = getSponsorsForTeam(team.slug);
     <div class="news-grid">
       {teamNews.length > 0 ? teamNews.map((item) => <NewsCard item={item} />) : (
         <div class="content-card">
-          <h3>Noch keine zugeordneten News</h3>
-          <p>Sobald es neue Meldungen gibt, erscheinen sie hier auf der Teamseite.</p>
+          <h3>Aktuell keine Team-News</h3>
+          <p>Neue Meldungen rund um {team.shortName} folgen hier.</p>
         </div>
       )}
     </div>

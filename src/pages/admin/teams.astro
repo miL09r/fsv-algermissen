@@ -42,7 +42,7 @@ const positionOptions = [
   <header class="page-title">
     <p class="eyebrow">Redaktion</p>
     <h1>Teamprofile und Ergebnisse</h1>
-    <p>Teamvorstellungen, Kaderauszuege, Sponsoren und Ergebnisbanner verwalten.</p>
+    <p>Mannschaften, Kader, Training und Ergebnisse.</p>
   </header>
 
   <section class="section">
@@ -110,7 +110,7 @@ const positionOptions = [
         {message.get("import") === "missing" && <p class="status-pill danger">Bitte FUSSBALL.DE Adresse eintragen</p>}
         {message.get("sync") === "ok" && <p class="status-pill">Automatischer Sync verarbeitet: {message.get("inserted") ?? "0"} neu, {message.get("updated") ?? "0"} aktualisiert</p>}
         {message.get("sync") === "empty" && <p class="status-pill danger">Automatischer Sync hat kein neues Ergebnis gefunden</p>}
-        <p class="form-note">Dieser Import liest Ergebnisse serverseitig aus und speichert sie in unserem Design. Auf der Website wird kein FUSSBALL.DE Widget angezeigt.</p>
+        <p class="form-note">Automatische Ergebnisse fuer Fussballteams.</p>
         <div class="action-row">
           <button class="button" type="submit" formaction="/api/admin/results/sync">Alle bekannten FUSSBALL.DE Teams synchronisieren</button>
         </div>
@@ -123,7 +123,7 @@ const positionOptions = [
         <label>
           FUSSBALL.DE Team- oder Spielplan-Adresse
           <input name="sourceUrl" placeholder="https://www.fussball.de/..." />
-          <span class="field-hint">Die Adresse wird nur fuer den Import genutzt. Darts-Ergebnisse bleiben manuell.</span>
+          <span class="field-hint">Darts-Ergebnisse bleiben manuell.</span>
         </label>
         <label class="inline-check">
           <input type="checkbox" name="showOnHomepage" checked />
@@ -189,12 +189,11 @@ const positionOptions = [
                 Teamfoto hochladen
                 <input type="file" name="teamImage" accept="image/*" />
               </label>
-              <p class="field-hint">Direkt vom Computer hochladen. Dieses Bild wird fuer Teamkarte, Teamseite und Teamvorstellung genutzt.</p>
+              <p class="field-hint">Teamfoto fuer Mannschaft und Teamseite.</p>
             </div>
             <label>
               Alternativ Teamfoto-URL
               <input name="imageUrl" value={team.image ?? ""} />
-              <span class="field-hint">Nur noetig, wenn das Bild bereits online liegt.</span>
             </label>
             <label>
               Trainingszeiten
@@ -216,7 +215,7 @@ const positionOptions = [
               <div class="player-editor-head">
                 <div>
                   <strong>Spieler und Positionen</strong>
-                  <p class="form-note">Name, Position und Bild steuern direkt die Teamvorstellung. Bei Fussball-Teams setzt die Position den Spieler auf den Platz.</p>
+                  <p class="form-note">Name, Position, Bild und Kurztext.</p>
                 </div>
                 <button class="button secondary" type="button" data-add-player>Spieler hinzufuegen</button>
               </div>
@@ -253,14 +252,13 @@ const positionOptions = [
                   </div>
                 ))}
               </div>
-              <p class="form-note">Spielerbilder werden zeilenweise zugeordnet: Der erste Upload gehoert zum ersten Spieler, der zweite Upload zum zweiten Spieler.</p>
+              <p class="form-note">Spielerbilder in der Reihenfolge der Spielerliste auswaehlen.</p>
             </div>
             <label>
               Spielerbilder hochladen
               <input type="file" name="playerImages" accept="image/*" multiple />
               <span class="field-hint">Mehrere Bilder auswaehlen. Die Reihenfolge entspricht der Spielerliste oben.</span>
             </label>
-            <p class="form-note">Spielerbilder werden zeilenweise zugeordnet. Zeile 1 im Kader bekommt Bild 1, Zeile 2 bekommt Bild 2.</p>
             <button class="button" type="submit">Team speichern</button>
             </form>
           </details>
@@ -276,10 +274,10 @@ const positionOptions = [
   <section id="ueberblick" class="section band">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Aktuelle Daten</p>
-        <h2>Was schon auf der Seite erscheint</h2>
+        <p class="eyebrow">Teams</p>
+        <h2>Aktuelle Teamuebersicht</h2>
       </div>
-      <p>Diese Inhalte erscheinen aktuell auf der Website.</p>
+      <p>Mannschaften und Ergebnisse im Ueberblick.</p>
     </div>
     <div class="feature-grid">
       {resultTeams.slice(0, 9).map((team) => {
@@ -289,7 +287,7 @@ const positionOptions = [
           <div class="feature-card">
             <h3>{team.name}</h3>
             <p>{profile?.headline ?? team.description}</p>
-            <p>{results.length} Ergebnis(se) im Banner-Datenmodell</p>
+            <p>{results.length} Ergebnis(se) im Spielbetrieb</p>
           </div>
         );
       })}
