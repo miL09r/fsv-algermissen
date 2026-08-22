@@ -780,6 +780,7 @@ h1 {
 }
 
 .league-table-card {
+  container-type: inline-size;
   display: grid;
   gap: 12px;
   padding: 16px;
@@ -857,6 +858,58 @@ h1 {
 
 .league-table tr.is-own td {
   border-bottom-color: rgba(16, 24, 32, 0.16);
+}
+
+@container (max-width: 560px) {
+  .league-table-wrap {
+    overflow-x: visible;
+  }
+
+  .league-table {
+    min-width: 0;
+    table-layout: fixed;
+    font-size: 0.76rem;
+  }
+
+  .league-table .hide-compact {
+    display: none;
+  }
+
+  .league-table th,
+  .league-table td {
+    padding: 7px 4px;
+  }
+
+  .league-table th:nth-child(1),
+  .league-table td:nth-child(1) {
+    width: 28px;
+  }
+
+  .league-table th:nth-child(2),
+  .league-table td:nth-child(2) {
+    width: auto;
+  }
+
+  .league-table th:nth-child(3),
+  .league-table td:nth-child(3) {
+    width: 34px;
+  }
+
+  .league-table th:nth-child(7),
+  .league-table td:nth-child(7) {
+    width: 46px;
+  }
+
+  .league-table th:nth-child(9),
+  .league-table td:nth-child(9) {
+    width: 36px;
+  }
+
+  .league-table td:nth-child(2) strong {
+    display: block;
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+  }
 }
 
 .result-banner {
