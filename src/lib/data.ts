@@ -1099,15 +1099,8 @@ footballWidgets["2-herren"] = {
 };
 
 export const nav = [
-  { label: "News", href: "/news" },
-  { label: "Kleinanzeigen", href: "/verein/kleinanzeigen" },
-  {
-    label: "Fussball",
-    href: "/teams/1-herren",
-    children: teams
-      .filter((team) => team.area !== "darts")
-      .map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
-  },
+  { label: "1. Herren", href: "/teams/1-herren" },
+  { label: "2. Herren", href: "/teams/2-herren" },
   {
     label: "Darts",
     href: "/darts",
@@ -1115,11 +1108,21 @@ export const nav = [
       .filter((team) => team.area === "darts")
       .map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
   },
+  { label: "Ü32", href: "/teams/ue32" },
+  { label: "News", href: "/news" },
+  {
+    label: "Fussball",
+    href: "/teams/a-junioren",
+    children: teams
+      .filter((team) => team.area !== "darts" && !["1-herren", "2-herren", "ue32"].includes(team.slug))
+      .map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
+  },
   {
     label: "Verein",
     href: "/verein/vorstand",
     children: clubPages.map((page) => ({ label: page.title, href: `/verein/${page.slug}` }))
   },
+  { label: "Shop", href: "https://fsvalgermissen.fan12.de/", external: true },
   { label: "Login Bereich", href: "/admin" }
 ];
 
