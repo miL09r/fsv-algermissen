@@ -6,11 +6,13 @@ type DbMatchResultRow = {
   team_name: string;
   home_team: string;
   away_team: string;
-  home_goals: number;
-  away_goals: number;
+  home_goals: number | null;
+  away_goals: number | null;
   played_at: string;
+  kickoff_time: string | null;
   competition: string;
   matchday: string | null;
+  status: "result" | "fixture" | null;
   report_title: string | null;
   source_url: string | null;
 };
@@ -40,15 +42,16 @@ const mapDbResult = (row: DbMatchResultRow): MatchResult => ({
   teamName: row.team_name,
   homeTeam: row.home_team,
   awayTeam: row.away_team,
-  homeGoals: row.home_goals,
-  awayGoals: row.away_goals,
+  homeGoals: row.home_goals ?? undefined,
+  awayGoals: row.away_goals ?? undefined,
   date: normalizeDate(row.played_at),
+  kickoffTime: row.kickoff_time ?? undefined,
   season: currentSeason,
   competition: row.competition,
   matchday: row.matchday ?? undefined,
   reportTitle: row.report_title ?? undefined,
   sourceUrl: row.source_url ?? undefined,
-  status: "result"
+  status: row.status ?? (row.home_goals === null || row.away_goals === null ? "fixture" : "result")
 });
 
 export async function getSiteMatchResults(db: D1DatabaseLike | undefined, slugs?: string[]) {
@@ -69,8 +72,10 @@ export async function getSiteMatchResults(db: D1DatabaseLike | undefined, slugs?
       match_results.home_goals,
       match_results.away_goals,
       match_results.played_at,
+      match_results.kickoff_time,
       match_results.competition,
       match_results.matchday,
+      match_results.status,
       match_results.report_title,
       match_results.source_url
     FROM match_results

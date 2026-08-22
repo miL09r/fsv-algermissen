@@ -9,12 +9,14 @@ type ImportedMatch = {
   teamSlug: string;
   homeTeam: string;
   awayTeam: string;
-  homeGoals: number;
-  awayGoals: number;
+  homeGoals?: number;
+  awayGoals?: number;
   date: string;
+  kickoffTime?: string;
   competition: string;
   matchday?: string;
   sourceUrl: string;
+  status: "result" | "fixture";
 };
 
 type FontTable = {
@@ -116,6 +118,8 @@ const normalizeDate = (value: string) => {
   const year = match[3].length === 2 ? `20${match[3]}` : match[3];
   return `${year}-${match[2].padStart(2, "0")}-${match[1].padStart(2, "0")}`;
 };
+
+const normalizeTime = (value: string) => value.match(/\b(\d{1,2}:\d{2})\b/)?.[1];
 
 const tagText = (html: string, className: string) => {
   const match = html.match(new RegExp(`<span[^>]*class=["'][^"']*${className}[^"']*["'][^>]*>([\\s\\S]*?)<\\/span>`, "i"));
@@ -252,25 +256,28 @@ async function parseSource(source: ImportSource) {
   const matches: ImportedMatch[] = [];
 
   for (const chunk of chunks) {
-    if (!/Letztes Spiel/i.test(chunk)) continue;
+    const isFixture = /Nächstes Spiel/i.test(chunk);
+    if (!/Letztes Spiel|Nächstes Spiel/i.test(chunk)) continue;
     const href = chunk.match(/<a href="([^"]*\/spiel\/[^"]+)"/i)?.[1];
     const homeTeam = tagText(chunk, "team-home");
     const awayTeam = tagText(chunk, "team-away");
-    const score = await decodeScore(chunk);
+    const score = isFixture ? undefined : await decodeScore(chunk);
     const meta = stripTags(chunk.match(/<div class="match-meta">([\s\S]*?)<\/div>/i)?.[1] ?? "");
     const date = normalizeDate(meta);
-    if (!href || !homeTeam || !awayTeam || !score || !date) continue;
+    if (!href || !homeTeam || !awayTeam || !date || (!isFixture && !score)) continue;
 
     matches.push({
       teamSlug: source.teamSlug,
       homeTeam,
       awayTeam,
-      homeGoals: score.homeGoals,
-      awayGoals: score.awayGoals,
+      homeGoals: score?.homeGoals,
+      awayGoals: score?.awayGoals,
       date,
+      kickoffTime: normalizeTime(meta),
       competition: meta.split("|").at(-1)?.trim() || "FUSSBALL.DE",
       matchday: await parseMatchday(href),
-      sourceUrl: href
+      sourceUrl: href,
+      status: isFixture ? "fixture" : "result"
     });
   }
 
@@ -293,11 +300,20 @@ async function upsertMatch(db: D1DatabaseLike, match: ImportedMatch) {
     await db
       .prepare(
         `UPDATE match_results
-         SET home_goals = ?, away_goals = ?, competition = ?, matchday = ?, source_url = ?,
+         SET home_goals = ?, away_goals = ?, kickoff_time = ?, competition = ?, matchday = ?, status = ?, source_url = ?,
              show_on_homepage = 1, updated_at = CURRENT_TIMESTAMP
          WHERE id = ?`
       )
-      .bind(match.homeGoals, match.awayGoals, match.competition || team.league || "FUSSBALL.DE", match.matchday ?? null, match.sourceUrl, existing.id)
+      .bind(
+        match.homeGoals ?? null,
+        match.awayGoals ?? null,
+        match.kickoffTime ?? null,
+        match.competition || team.league || "FUSSBALL.DE",
+        match.matchday ?? null,
+        match.status,
+        match.sourceUrl,
+        existing.id
+      )
       .run();
     return "updated" as const;
   }
@@ -306,18 +322,20 @@ async function upsertMatch(db: D1DatabaseLike, match: ImportedMatch) {
     .prepare(
       `INSERT INTO match_results (
         team_id, home_team, away_team, home_goals, away_goals, played_at,
-        competition, matchday, report_title, source_url, show_on_homepage
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`
+        kickoff_time, competition, matchday, status, report_title, source_url, show_on_homepage
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`
     )
     .bind(
       team.id,
       match.homeTeam,
       match.awayTeam,
-      match.homeGoals,
-      match.awayGoals,
+      match.homeGoals ?? null,
+      match.awayGoals ?? null,
       match.date,
+      match.kickoffTime ?? null,
       match.competition || team.league || "FUSSBALL.DE",
       match.matchday ?? null,
+      match.status,
       null,
       match.sourceUrl
     )

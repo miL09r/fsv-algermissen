@@ -21,6 +21,8 @@ const isFixture = (result: MatchResult) => result.status === "fixture";
 
 const isFsvTeam = (name: string) => /algermissen|jsg nord/i.test(name);
 
+const fixtureSortKey = (result: MatchResult) => `${result.date}T${result.kickoffTime ?? "23:59"}`;
+
 const sportIcon = (result: MatchResult) => {
   const resultTeam = teams.find((item) => item.slug === result.teamSlug);
   return resultTeam?.area === "darts" ? "➜" : "⚽";
@@ -33,7 +35,7 @@ const lastResults = results
 
 const nextFixtures = results
   .filter((result) => isFixture(result) || result.homeGoals === undefined || result.awayGoals === undefined)
-  .sort((a, b) => a.date.localeCompare(b.date))
+  .sort((a, b) => fixtureSortKey(a).localeCompare(fixtureSortKey(b)))
   .slice(0, compact ? 1 : team ? 4 : 6);
 
 const hasContent = lastResults.length > 0 || nextFixtures.length > 0;

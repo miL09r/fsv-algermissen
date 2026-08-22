@@ -35,6 +35,8 @@ const metaLabel = (result: MatchResult) =>
     ? `${formatDate(result.date)}${result.kickoffTime ? ` · ${result.kickoffTime} Uhr` : ""}`
     : `${formatDate(result.date)} · ${result.matchday ?? result.competition}`;
 
+const fixtureSortKey = (result: MatchResult) => `${result.date}T${result.kickoffTime ?? "23:59"}`;
+
 const lastResults = results
   .filter((result) => result.status !== "fixture" && result.homeGoals !== undefined && result.awayGoals !== undefined)
   .sort((a, b) => b.date.localeCompare(a.date))
@@ -42,7 +44,7 @@ const lastResults = results
 
 const nextFixtures = results
   .filter((result) => result.status === "fixture" || result.homeGoals === undefined || result.awayGoals === undefined)
-  .sort((a, b) => a.date.localeCompare(b.date))
+  .sort((a, b) => fixtureSortKey(a).localeCompare(fixtureSortKey(b)))
   .slice(0, 4);
 ---
 
