@@ -98,8 +98,56 @@ export const fussballImportSources: ImportSource[] = [
     url: "https://www.fussball.de/mannschaft/fsv-algermissen-fsv-algermissen-niedersachsen/-/saison/2627/team-id/01SBNP0VUG000000VS548984VTL2SVNK"
   },
   {
+    teamSlug: "ue40",
+    url: "https://www.fussball.de/mannschaft/fsv-algermissen-fsv-algermissen-niedersachsen/-/saison/2627/team-id/01L0AF7UQ4000000VV0AG80NVVQMG8U7"
+  },
+  {
     teamSlug: "a-junioren",
     url: "https://www.fussball.de/mannschaft/jsg-nord-fsv-algermissen-niedersachsen/-/saison/2627/team-id/03155A9JH4000000VS5489BSVSCPI5U4"
+  },
+  {
+    teamSlug: "b-junioren",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF10MVP8000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "c-junioren",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF18OMHK000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "d-junioren",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF198I7S000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "e-junioren",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-u11-1-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF12HR28000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "e-junioren-ii",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-u11-2-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF1689A8000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "e-junioren-iii",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-u11-3-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF16N97S000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "e-junioren-iv",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-u10-1-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF1716QK000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "f-junioren-u8-1",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-u8-1-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF15CE1K000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "f-junioren",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-u9-1-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF143SAO000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "f-junioren-u9-2",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-u9-2-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF14JNCS000000VS5489BRVU522QNF"
+  },
+  {
+    teamSlug: "g-junioren",
+    url: "https://www.fussball.de/mannschaft/jsg-nord-u7-1-fsv-algermissen-niedersachsen/-/saison/2627/team-id/02TF13IOAS000000VS5489BRVU522QNF"
   }
 ];
 
@@ -134,6 +182,8 @@ const normalizeDate = (value: string) => {
 };
 
 const normalizeTime = (value: string) => value.match(/\b(\d{1,2}:\d{2})\b/)?.[1];
+
+const matchdayFromMeta = (value: string) => value.match(/\b\d+\.\s*Spieltag\b/i)?.[0];
 
 const numberValue = (value: string) => Number.parseInt(value.replace(/[^\d-]/g, ""), 10) || 0;
 
@@ -261,21 +311,14 @@ async function decodeScore(matchHtml: string) {
   return { homeGoals, awayGoals };
 }
 
-async function parseMatchday(matchUrl: string) {
-  const response = await fetch(matchUrl, {
-    headers: { "user-agent": "FSV-Algermissen-Website/1.0 Ergebnisimport", accept: "text/html,application/xhtml+xml" }
-  });
-  if (!response.ok) return undefined;
-  const html = await response.text();
-  return stripTags(html.match(/<li class="row"><span>Spiel:<\/span><span>([\s\S]*?)<\/span><\/li>/i)?.[1] ?? "").split("/").at(1)?.trim();
-}
-
-async function parseSource(source: ImportSource) {
+async function fetchSourceHtml(source: ImportSource) {
   const response = await fetch(source.url, {
     headers: { "user-agent": "FSV-Algermissen-Website/1.0 Ergebnisimport", accept: "text/html,application/xhtml+xml" }
   });
-  if (!response.ok) return [];
-  const html = await response.text();
+  return response.ok ? response.text() : undefined;
+}
+
+async function parseSource(source: ImportSource, html: string) {
   const chunks = html.match(/<li[\s\S]*?data-cycle-slider-element[\s\S]*?<\/li>/g) ?? [];
   const matches: ImportedMatch[] = [];
 
@@ -299,7 +342,7 @@ async function parseSource(source: ImportSource) {
       date,
       kickoffTime: normalizeTime(meta),
       competition: meta.split("|").at(-1)?.trim() || "FUSSBALL.DE",
-      matchday: await parseMatchday(href),
+      matchday: matchdayFromMeta(meta),
       sourceUrl: href,
       status: isFixture ? "fixture" : "result"
     });
@@ -447,19 +490,17 @@ export async function runFussballImport(db: D1DatabaseLike, sources = fussballIm
 
   for (const source of sources) {
     try {
-      const matches = await parseSource(source);
+      const html = await fetchSourceHtml(source);
+      if (!html) continue;
+
+      const matches = await parseSource(source, html);
       parsed += matches.length;
       for (const match of matches) {
         const action = await upsertMatch(db, match);
         if (action === "inserted") inserted += 1;
         if (action === "updated") updated += 1;
       }
-      const response = await fetch(source.url, {
-        headers: { "user-agent": "FSV-Algermissen-Website/1.0 Ergebnisimport", accept: "text/html,application/xhtml+xml" }
-      });
-      if (response.ok) {
-        standings += await replaceStandings(db, source, parseStandings(await response.text()));
-      }
+      standings += await replaceStandings(db, source, parseStandings(html));
     } catch (error) {
       errors.push(`${source.teamSlug}: ${error instanceof Error ? error.message : String(error)}`);
     }
