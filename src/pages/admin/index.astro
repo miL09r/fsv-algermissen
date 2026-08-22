@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import AdminNav from "../../components/AdminNav.astro";
 import { getCurrentUser, getDb } from "../../lib/server/auth";
 import { getSiteTeams } from "../../lib/server/teams";
 
@@ -85,22 +86,35 @@ const message = Astro.url.searchParams;
         </form>
       </div>
     ) : (
-      <div class="admin-grid">
+      <div class="admin-workspace">
+        <AdminNav active="dashboard" />
+
+        <div class="admin-dashboard">
+          <a class="admin-tile" href="/admin/news">
+            <span>News</span>
+            <strong>Artikel und Meldungen</strong>
+            <small>Vereinsnews, Teamzuordnung und Startseiten-Inhalte.</small>
+          </a>
+          <a class="admin-tile" href="/admin/teams">
+            <span>Teams</span>
+            <strong>Teams, Spieler, Ergebnisse</strong>
+            <small>Fußball, Jugend und Darts inklusive Kader und Fotos.</small>
+          </a>
+          <a class="admin-tile" href="/admin/verein">
+            <span>Verein</span>
+            <strong>Vereinsseiten</strong>
+            <small>Vorstand, Leitbild, Clubhaus, Sportstätten und Service.</small>
+          </a>
+        </div>
+
         <div class="admin-panel">
-          <h2>Bereiche</h2>
+          <h2>Aktueller Zugang</h2>
+          <p><strong>Name:</strong> {user.name}</p>
           <p><strong>Rolle:</strong> {user.role}</p>
-          <div class="action-row">
-            <a class="button" href="/admin/news">News verwalten</a>
-            <a class="button secondary" href="/admin/teams">Teams & Ergebnisse</a>
-            <a class="button ghost" href="/admin/verein">Verein verwalten</a>
-          </div>
-          <form method="post" action="/api/admin/logout" style="margin-top: 14px;">
-            <button class="button ghost" type="submit">Ausloggen</button>
-          </form>
         </div>
 
         {isAdmin && (
-          <div class="admin-panel">
+          <div class="admin-panel admin-section">
             <h2>Registrierungen freigeben</h2>
             {message.get("approve") === "ok" && <p class="status-pill">Benutzer freigegeben</p>}
             {pendingRequests.length === 0 ? (

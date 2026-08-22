@@ -1,0 +1,24 @@
+---
+type Props = {
+  active: "dashboard" | "news" | "teams" | "verein";
+};
+
+const { active } = Astro.props;
+const links = [
+  { key: "dashboard", label: "Übersicht", href: "/admin" },
+  { key: "news", label: "News", href: "/admin/news" },
+  { key: "teams", label: "Teams & Spieler", href: "/admin/teams" },
+  { key: "verein", label: "Verein", href: "/admin/verein" }
+];
+---
+
+<nav class="admin-subnav" aria-label="Adminbereiche">
+  <div class="admin-subnav-links">
+    {links.map((link) => (
+      <a href={link.href} aria-current={active === link.key ? "page" : undefined}>{link.label}</a>
+    ))}
+  </div>
+  <form method="post" action="/api/admin/logout">
+    <button class="button ghost" type="submit">Ausloggen</button>
+  </form>
+</nav>

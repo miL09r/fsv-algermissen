@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import AdminNav from "../../components/AdminNav.astro";
 import { getResultsForTeam } from "../../lib/data";
 import { getCurrentUser, getDb } from "../../lib/server/auth";
 import { getSiteTeamProfile, getSiteTeams } from "../../lib/server/teams";
@@ -16,6 +17,11 @@ const resultTeams = profileTeams.filter((team) => team.area === "darts" || team.
 const profiles = new Map(
   await Promise.all(profileTeams.map(async (team) => [team.slug, await getSiteTeamProfile(db, team.slug)] as const))
 );
+const teamGroups = [
+  { id: "fussball", label: "Fußball / Senioren", teams: profileTeams.filter((team) => team.area === "senioren") },
+  { id: "jugend", label: "Jugend / JSG", teams: profileTeams.filter((team) => team.area === "jugend") },
+  { id: "darts", label: "Darts", teams: profileTeams.filter((team) => team.area === "darts") }
+];
 ---
 
 <BaseLayout title="Teams verwalten" description="Teamvorstellungen, Kader und Ergebnisse verwalten.">
@@ -29,8 +35,19 @@ const profiles = new Map(
     {message.get("team") === "ok" && <p class="status-pill">Team wurde gespeichert</p>}
     {message.get("team") === "invalid" && <p class="status-pill danger">Teamdaten unvollstaendig</p>}
     {message.get("team") === "forbidden" && <p class="status-pill danger">Keine Berechtigung fuer dieses Team</p>}
-    <div class="admin-grid">
-      <form class="admin-panel form-grid" method="post" action="/api/admin/results/create">
+    <div class="admin-workspace">
+      <AdminNav active="teams" />
+      <div class="admin-layout">
+        <aside class="admin-side-menu">
+          <strong>Teams</strong>
+          <a href="#ergebnisse">Ergebnisse</a>
+          <a href="#fussball">Fußball / Senioren</a>
+          <a href="#jugend">Jugend / JSG</a>
+          <a href="#darts">Darts</a>
+          <a href="#ueberblick">Überblick</a>
+        </aside>
+        <div class="admin-main">
+      <form id="ergebnisse" class="admin-panel form-grid" method="post" action="/api/admin/results/create">
         <h2>Ergebnis eintragen</h2>
         {message.get("result") === "ok" && <p class="status-pill">Ergebnis wurde gespeichert</p>}
         {message.get("result") === "invalid" && <p class="status-pill danger">Bitte Team, Ergebnis und Datum pruefen</p>}
@@ -72,12 +89,22 @@ const profiles = new Map(
         <button class="button" type="submit">Ergebnis speichern</button>
       </form>
 
-      {profileTeams.map((team) => {
-        const profile = profiles.get(team.slug);
-        return (
-          <form id={`team-${team.slug}`} class="admin-panel form-grid" method="post" action="/api/admin/teams/update" enctype="multipart/form-data">
+      {teamGroups.map((group) => (
+        <section id={group.id} class="admin-team-group">
+          <div class="admin-section-title">
+            <p class="eyebrow">{group.label}</p>
+            <h2>{group.teams.length} Bereich(e) pflegen</h2>
+          </div>
+          {group.teams.map((team) => {
+            const profile = profiles.get(team.slug);
+            return (
+          <details id={`team-${team.slug}`} class="admin-panel admin-accordion" open={team.slug === "1-herren"}>
+            <summary>
+              <span>{team.name}</span>
+              <small>{team.isActive === false ? "Inaktiv" : "Aktiv"} · {team.league ?? team.area}</small>
+            </summary>
+            <form class="form-grid" method="post" action="/api/admin/teams/update" enctype="multipart/form-data">
             <input type="hidden" name="teamSlug" value={team.slug} />
-            <h2>{team.name}</h2>
             <label class="inline-check">
               <input type="checkbox" name="isActive" checked={team.isActive !== false} />
               In Navigation und Seiten anzeigen
@@ -148,13 +175,18 @@ const profiles = new Map(
             </label>
             <p class="form-note">Spielerbilder werden zeilenweise zugeordnet. Zeile 1 im Kader bekommt Bild 1, Zeile 2 bekommt Bild 2.</p>
             <button class="button" type="submit">Team speichern</button>
-          </form>
-        );
-      })}
+            </form>
+          </details>
+            );
+          })}
+        </section>
+      ))}
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="section band">
+  <section id="ueberblick" class="section band">
     <div class="section-heading">
       <div>
         <p class="eyebrow">Aktuelle Daten</p>

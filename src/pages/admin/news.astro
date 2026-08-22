@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import AdminNav from "../../components/AdminNav.astro";
 import { news } from "../../lib/data";
 import { getCurrentUser, getDb } from "../../lib/server/auth";
 import { getSiteTeams } from "../../lib/server/teams";
@@ -20,8 +21,16 @@ const teams = await getSiteTeams(db);
   </header>
 
   <section class="section">
-    <div class="split">
-      <form class="admin-panel form-grid">
+    <div class="admin-workspace">
+      <AdminNav active="news" />
+      <div class="admin-layout">
+        <aside class="admin-side-menu">
+          <strong>News</strong>
+          <a href="#artikel">Artikel anlegen</a>
+          <a href="#liste">Aktuelle News</a>
+        </aside>
+        <div class="admin-main">
+      <form id="artikel" class="admin-panel form-grid">
         <h2>Artikel anlegen</h2>
         <label>
           Titel
@@ -52,7 +61,7 @@ const teams = await getSiteTeams(db);
         <button class="button" type="button">Speichern</button>
       </form>
 
-      <div class="admin-panel">
+      <div id="liste" class="admin-panel">
         <h2>Aktuelle News</h2>
         {news.map((item) => (
           <div class="content-card" style="margin-top: 12px;">
@@ -61,6 +70,8 @@ const teams = await getSiteTeams(db);
             <p>{item.teamSlugs.length ? item.teamSlugs.join(", ") : "Verein allgemein"}</p>
           </div>
         ))}
+      </div>
+        </div>
       </div>
     </div>
   </section>

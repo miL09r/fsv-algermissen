@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import AdminNav from "../../components/AdminNav.astro";
 import { getCurrentUser, getDb } from "../../lib/server/auth";
 import { getSiteClubPages } from "../../lib/server/club-pages";
 
@@ -22,40 +23,54 @@ const message = Astro.url.searchParams;
 
   <section class="section">
     {message.get("page") === "ok" && <p class="status-pill">Vereinsseite gespeichert</p>}
-    <div class="admin-grid">
-      {pages.map((page) => (
-        <form class="admin-panel form-grid" method="post" action="/api/admin/pages/update">
-          <input type="hidden" name="slug" value={page.slug} />
-          <h2>{page.title}</h2>
-          <label>
-            Titel
-            <input name="title" value={page.title} required />
-          </label>
-          <label>
-            Kurztext
-            <textarea name="teaser" required>{page.teaser}</textarea>
-          </label>
-          <label>
-            Bild-URL
-            <input name="imageSrc" value={page.image?.src ?? ""} />
-          </label>
-          <label>
-            Bildbeschreibung
-            <input name="imageAlt" value={page.image?.alt ?? ""} />
-          </label>
-          <label>
-            Inhalt
-            <textarea name="body" required>{page.body.join("\n\n")}</textarea>
-          </label>
-          {page.contacts && (
-            <label>
-              Kontakte
-              <textarea name="contacts">{page.contacts.map((contact) => [contact.role, contact.name, contact.phone ?? "", contact.email ?? ""].join("; ")).join("\n")}</textarea>
-            </label>
-          )}
-          <button class="button" type="submit">Speichern</button>
-        </form>
-      ))}
+    <div class="admin-workspace">
+      <AdminNav active="verein" />
+      <div class="admin-layout">
+        <aside class="admin-side-menu">
+          <strong>Verein</strong>
+          {pages.map((page) => <a href={`#page-${page.slug}`}>{page.title}</a>)}
+        </aside>
+        <div class="admin-main">
+          {pages.map((page) => (
+            <details id={`page-${page.slug}`} class="admin-panel admin-accordion" open={page.slug === "vorstand"}>
+              <summary>
+                <span>{page.title}</span>
+                <small>{page.teaser}</small>
+              </summary>
+              <form class="form-grid" method="post" action="/api/admin/pages/update">
+                <input type="hidden" name="slug" value={page.slug} />
+                <label>
+                  Titel
+                  <input name="title" value={page.title} required />
+                </label>
+                <label>
+                  Kurztext
+                  <textarea name="teaser" required>{page.teaser}</textarea>
+                </label>
+                <label>
+                  Bild-URL
+                  <input name="imageSrc" value={page.image?.src ?? ""} />
+                </label>
+                <label>
+                  Bildbeschreibung
+                  <input name="imageAlt" value={page.image?.alt ?? ""} />
+                </label>
+                <label>
+                  Inhalt
+                  <textarea name="body" required>{page.body.join("\n\n")}</textarea>
+                </label>
+                {page.contacts && (
+                  <label>
+                    Kontakte
+                    <textarea name="contacts">{page.contacts.map((contact) => [contact.role, contact.name, contact.phone ?? "", contact.email ?? ""].join("; ")).join("\n")}</textarea>
+                  </label>
+                )}
+                <button class="button" type="submit">Speichern</button>
+              </form>
+            </details>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>
