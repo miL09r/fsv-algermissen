@@ -19,6 +19,20 @@ type ImportedMatch = {
   status: "result" | "fixture";
 };
 
+type ImportedStandingRow = {
+  position: number;
+  clubName: string;
+  played: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDifference: number;
+  points: number;
+  isOwn: boolean;
+};
+
 type FontTable = {
   offset: number;
   length: number;
@@ -85,7 +99,7 @@ export const fussballImportSources: ImportSource[] = [
   },
   {
     teamSlug: "a-junioren",
-    url: "https://www.fussball.de/verein/fsv-algermissen-niedersachsen/-/id/00ES8GN7P4000010VV0AG08LVUPGND5I"
+    url: "https://www.fussball.de/mannschaft/jsg-nord-fsv-algermissen-niedersachsen/-/saison/2627/team-id/03155A9JH4000000VS5489BSVSCPI5U4"
   }
 ];
 
@@ -120,6 +134,16 @@ const normalizeDate = (value: string) => {
 };
 
 const normalizeTime = (value: string) => value.match(/\b(\d{1,2}:\d{2})\b/)?.[1];
+
+const numberValue = (value: string) => Number.parseInt(value.replace(/[^\d-]/g, ""), 10) || 0;
+
+const parseGoals = (value: string) => {
+  const match = value.match(/(-?\d+)\s*:\s*(-?\d+)/);
+  return {
+    goalsFor: match ? Number.parseInt(match[1], 10) : 0,
+    goalsAgainst: match ? Number.parseInt(match[2], 10) : 0
+  };
+};
 
 const tagText = (html: string, className: string) => {
   const match = html.match(new RegExp(`<span[^>]*class=["'][^"']*${className}[^"']*["'][^>]*>([\\s\\S]*?)<\\/span>`, "i"));
@@ -284,6 +308,43 @@ async function parseSource(source: ImportSource) {
   return matches;
 }
 
+function parseStandings(html: string) {
+  const tableStart = html.indexOf('id="team-fixture-league-tables"');
+  if (tableStart < 0) return [];
+  const tableEnd = html.indexOf("</table>", tableStart);
+  if (tableEnd < 0) return [];
+  const tableHtml = html.slice(tableStart, tableEnd);
+  const rows: ImportedStandingRow[] = [];
+
+  for (const match of tableHtml.matchAll(/<tr([^>]*)>([\s\S]*?)<\/tr>/gi)) {
+    const className = match[1] ?? "";
+    const rowHtml = match[2] ?? "";
+    if (!/column-rank|column-club/i.test(rowHtml)) continue;
+
+    const position = numberValue(stripTags(rowHtml.match(/<td[^>]*class=["'][^"']*column-rank[^"']*["'][^>]*>([\s\S]*?)<\/td>/i)?.[1] ?? ""));
+    const clubName = stripTags(rowHtml.match(/<div[^>]*class=["'][^"']*club-name[^"']*["'][^>]*>([\s\S]*?)<\/div>/i)?.[1] ?? "");
+    const cells = Array.from(rowHtml.matchAll(/<td(?:\s[^>]*)?>([\s\S]*?)<\/td>/gi)).map((cell) => stripTags(cell[1] ?? ""));
+    if (!position || !clubName || cells.length < 10) continue;
+
+    const goals = parseGoals(cells[7] ?? "");
+    rows.push({
+      position,
+      clubName,
+      played: numberValue(cells[3] ?? ""),
+      wins: numberValue(cells[4] ?? ""),
+      draws: numberValue(cells[5] ?? ""),
+      losses: numberValue(cells[6] ?? ""),
+      goalsFor: goals.goalsFor,
+      goalsAgainst: goals.goalsAgainst,
+      goalDifference: numberValue(cells[8] ?? ""),
+      points: numberValue(cells[9] ?? ""),
+      isOwn: /\bown\b/i.test(className)
+    });
+  }
+
+  return rows;
+}
+
 async function upsertMatch(db: D1DatabaseLike, match: ImportedMatch) {
   const team = await db.prepare("SELECT id, league FROM teams WHERE slug = ?").bind(match.teamSlug).first<{ id: number; league: string | null }>();
   if (!team) return "missing-team" as const;
@@ -343,8 +404,43 @@ async function upsertMatch(db: D1DatabaseLike, match: ImportedMatch) {
   return "inserted" as const;
 }
 
+async function replaceStandings(db: D1DatabaseLike, source: ImportSource, rows: ImportedStandingRow[]) {
+  const team = await db.prepare("SELECT id FROM teams WHERE slug = ?").bind(source.teamSlug).first<{ id: number }>();
+  if (!team || rows.length === 0) return 0;
+
+  await db.prepare("DELETE FROM team_standings WHERE team_id = ?").bind(team.id).run();
+  for (const row of rows) {
+    await db
+      .prepare(
+        `INSERT INTO team_standings (
+          team_id, position, club_name, played, wins, draws, losses,
+          goals_for, goals_against, goal_difference, points, is_own, source_url
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .bind(
+        team.id,
+        row.position,
+        row.clubName,
+        row.played,
+        row.wins,
+        row.draws,
+        row.losses,
+        row.goalsFor,
+        row.goalsAgainst,
+        row.goalDifference,
+        row.points,
+        row.isOwn ? 1 : 0,
+        source.url
+      )
+      .run();
+  }
+
+  return rows.length;
+}
+
 export async function runFussballImport(db: D1DatabaseLike, sources = fussballImportSources) {
   let parsed = 0;
+  let standings = 0;
   let inserted = 0;
   let updated = 0;
   const errors: string[] = [];
@@ -358,10 +454,16 @@ export async function runFussballImport(db: D1DatabaseLike, sources = fussballIm
         if (action === "inserted") inserted += 1;
         if (action === "updated") updated += 1;
       }
+      const response = await fetch(source.url, {
+        headers: { "user-agent": "FSV-Algermissen-Website/1.0 Ergebnisimport", accept: "text/html,application/xhtml+xml" }
+      });
+      if (response.ok) {
+        standings += await replaceStandings(db, source, parseStandings(await response.text()));
+      }
     } catch (error) {
       errors.push(`${source.teamSlug}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
-  return { parsed, inserted, updated, errors };
+  return { parsed, standings, inserted, updated, errors };
 }

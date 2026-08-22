@@ -1,0 +1,53 @@
+---
+import type { TeamStandingRow } from "../lib/server/standings";
+
+type Props = {
+  rows: TeamStandingRow[];
+  title?: string;
+};
+
+const { rows, title = "Aktuelle Tabelle" } = Astro.props;
+---
+
+{rows.length > 0 && (
+  <section class="league-table-card" aria-label={title}>
+    <div class="league-table-head">
+      <p class="eyebrow">Tabelle</p>
+      <h2>{title}</h2>
+    </div>
+    <div class="league-table-wrap">
+      <table class="league-table">
+        <thead>
+          <tr>
+            <th>Pl.</th>
+            <th>Mannschaft</th>
+            <th>Sp.</th>
+            <th class="hide-compact">S</th>
+            <th class="hide-compact">U</th>
+            <th class="hide-compact">N</th>
+            <th>Tore</th>
+            <th class="hide-compact">Diff.</th>
+            <th>Pkt.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr class:list={[row.isOwn && "is-own"]}>
+              <td>{row.position}</td>
+              <td>
+                <strong>{row.clubName}</strong>
+              </td>
+              <td>{row.played}</td>
+              <td class="hide-compact">{row.wins}</td>
+              <td class="hide-compact">{row.draws}</td>
+              <td class="hide-compact">{row.losses}</td>
+              <td>{row.goalsFor}:{row.goalsAgainst}</td>
+              <td class="hide-compact">{row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}</td>
+              <td><b>{row.points}</b></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+)}

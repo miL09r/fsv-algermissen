@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import LeagueTable from "../../components/LeagueTable.astro";
 import NewsCard from "../../components/NewsCard.astro";
 import MatchCenter from "../../components/MatchCenter.astro";
 import TeamSpotlight from "../../components/TeamSpotlight.astro";
@@ -9,6 +10,7 @@ import {
 } from "../../lib/data";
 import { getDb } from "../../lib/server/auth";
 import { getSiteMatchResults } from "../../lib/server/match-results";
+import { getTeamStandings } from "../../lib/server/standings";
 import { getSiteTeam, getSiteTeamProfile } from "../../lib/server/teams";
 
 export const prerender = false;
@@ -22,6 +24,7 @@ const teamNews = getNewsForTeam(team.slug);
 const teamProfile = await getSiteTeamProfile(db, team.slug);
 const teamResults = (await getSiteMatchResults(db, [team.slug])).slice(0, 8);
 const teamSponsors = getSponsorsForTeam(team.slug);
+const standings = team.area === "darts" ? [] : await getTeamStandings(db, team.slug);
 ---
 
 <BaseLayout title={team.name} description={`${team.name} beim FSV Algermissen: News, Training, Ansprechpartner und Spielbetrieb.`}>
@@ -55,6 +58,7 @@ const teamSponsors = getSponsorsForTeam(team.slug);
       </div>
       <aside class="team-detail-aside">
         <MatchCenter results={teamResults} team={team} compact />
+        <LeagueTable rows={standings} />
       </aside>
     </div>
   </section>
