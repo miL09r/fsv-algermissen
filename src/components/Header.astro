@@ -25,7 +25,7 @@ const nav = buildNavigation(await getSiteTeams(db), await getSiteClubPages(db));
   </a>
   <nav class="main-nav" aria-label="Hauptnavigation">
     {nav.map((item) => (
-      <div class="nav-group">
+      <div class:list={["nav-group", item.children && "has-children"]}>
         <a href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined}>{item.label}</a>
         {item.children && (
           <>
@@ -41,17 +41,37 @@ const nav = buildNavigation(await getSiteTeams(db), await getSiteClubPages(db));
 </header>
 
 <script is:inline>
-  document.querySelectorAll(".nav-toggle").forEach((button) => {
-    button.addEventListener("click", () => {
-      const group = button.closest(".nav-group");
-      const isOpen = group?.classList.toggle("is-open") ?? false;
-      button.setAttribute("aria-expanded", String(isOpen));
+  const isMobileNav = () => window.matchMedia("(max-width: 900px)").matches;
 
-      document.querySelectorAll(".nav-group.is-open").forEach((otherGroup) => {
-        if (otherGroup === group) return;
-        otherGroup.classList.remove("is-open");
-        otherGroup.querySelector(".nav-toggle")?.setAttribute("aria-expanded", "false");
-      });
+  function closeOtherNavGroups(group) {
+    document.querySelectorAll(".nav-group.is-open").forEach((otherGroup) => {
+      if (otherGroup === group) return;
+      otherGroup.classList.remove("is-open");
+      otherGroup.querySelector(".nav-toggle")?.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function toggleNavGroup(group) {
+    const isOpen = group?.classList.toggle("is-open") ?? false;
+    group?.querySelector(".nav-toggle")?.setAttribute("aria-expanded", String(isOpen));
+    closeOtherNavGroups(group);
+  }
+
+  document.querySelectorAll(".nav-toggle").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleNavGroup(button.closest(".nav-group"));
+    });
+  });
+
+  document.querySelectorAll(".nav-group.has-children").forEach((group) => {
+    group.addEventListener("click", (event) => {
+      if (!isMobileNav()) return;
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target || target.closest(".flyout")) return;
+      event.preventDefault();
+      toggleNavGroup(group);
     });
   });
 
