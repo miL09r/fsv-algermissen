@@ -18,25 +18,18 @@ function sortTeamsForNavigation(teams: Team[]) {
 export function buildNavigation(teams: Team[], clubPages: ClubPage[]) {
   const footballTeams = sortTeamsForNavigation(teams.filter((team) => team.area !== "darts"));
   const dartsTeams = sortTeamsForNavigation(teams.filter((team) => team.area === "darts"));
-  const firstTeam = teams.find((team) => team.slug === "1-herren");
-  const secondTeam = teams.find((team) => team.slug === "2-herren");
-  const ue32Team = teams.find((team) => team.slug === "ue32");
-  const remainingFootballTeams = footballTeams.filter((team) => !featuredTeamOrder.includes(team.slug));
 
   return [
-    ...(firstTeam ? [{ label: firstTeam.shortName, href: `/teams/${firstTeam.slug}` }] : []),
-    ...(secondTeam ? [{ label: secondTeam.shortName, href: `/teams/${secondTeam.slug}` }] : []),
+    { label: "News", href: "/news" },
+    {
+      label: "Fussball",
+      href: footballTeams[0] ? `/teams/${footballTeams[0].slug}` : "/news",
+      children: footballTeams.map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
+    },
     {
       label: "Darts",
       href: "/darts",
       children: dartsTeams.map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
-    },
-    ...(ue32Team ? [{ label: ue32Team.shortName, href: `/teams/${ue32Team.slug}` }] : []),
-    { label: "News", href: "/news" },
-    {
-      label: "Fussball",
-      href: remainingFootballTeams[0] ? `/teams/${remainingFootballTeams[0].slug}` : "/teams/1-herren",
-      children: remainingFootballTeams.map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
     },
     {
       label: "Verein",

@@ -1099,22 +1099,28 @@ footballWidgets["2-herren"] = {
 };
 
 export const nav = [
-  { label: "1. Herren", href: "/teams/1-herren" },
-  { label: "2. Herren", href: "/teams/2-herren" },
+  { label: "News", href: "/news" },
+  {
+    label: "Fussball",
+    href: "/teams/1-herren",
+    children: teams
+      .filter((team) => team.area !== "darts")
+      .sort((a, b) => {
+        const order = ["1-herren", "2-herren", "ue32"];
+        const aIndex = order.indexOf(a.slug);
+        const bIndex = order.indexOf(b.slug);
+        if (aIndex !== -1 || bIndex !== -1) {
+          return (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) - (bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex);
+        }
+        return a.shortName.localeCompare(b.shortName, "de");
+      })
+      .map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
+  },
   {
     label: "Darts",
     href: "/darts",
     children: teams
       .filter((team) => team.area === "darts")
-      .map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
-  },
-  { label: "Ü32", href: "/teams/ue32" },
-  { label: "News", href: "/news" },
-  {
-    label: "Fussball",
-    href: "/teams/a-junioren",
-    children: teams
-      .filter((team) => team.area !== "darts" && !["1-herren", "2-herren", "ue32"].includes(team.slug))
       .map((team) => ({ label: team.shortName, href: `/teams/${team.slug}` }))
   },
   {
