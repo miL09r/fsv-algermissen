@@ -34,29 +34,86 @@ const metaLabel = (result: MatchResult) =>
   result.status === "fixture"
     ? `${formatDate(result.date)}${result.kickoffTime ? ` · ${result.kickoffTime} Uhr` : ""}`
     : `${formatDate(result.date)} · ${result.matchday ?? result.competition}`;
+
+const lastResults = results
+  .filter((result) => result.status !== "fixture" && result.homeGoals !== undefined && result.awayGoals !== undefined)
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .slice(0, 4);
+
+const nextFixtures = results
+  .filter((result) => result.status === "fixture" || result.homeGoals === undefined || result.awayGoals === undefined)
+  .sort((a, b) => a.date.localeCompare(b.date))
+  .slice(0, 4);
 ---
 
-<div class="result-banner" aria-label="Letzte Ergebnisse">
+<div class="result-banner" aria-label="Ergebnisse und Spiele" data-result-banner>
   <div class="result-banner-head">
     <p class="eyebrow">Saison 26/27</p>
     <strong>Ergebnisse & Spiele</strong>
   </div>
-  <div class="result-track">
-    {results.map((result) => (
-      <a class="result-chip" href={`/teams/${result.teamSlug}`}>
-        <span class:list={["result-state", `result-state-${fsvScore(result).toLowerCase()}`]}>{fsvScore(result)}</span>
-        <span class="result-sport-icon" aria-hidden="true">{sportIcon(result)}</span>
-        <span>
-          <strong>{result.teamName}</strong>
-          <small>{result.status === "fixture" ? "Naechstes Spiel" : "Letztes Ergebnis"} · {metaLabel(result)}</small>
-        </span>
-        <b>{scoreLabel(result)}</b>
-        <span class="result-teams">
-          <span class:list={[isFsvTeam(result.homeTeam) && "result-team-fsv"]}>{result.homeTeam}</span>
-          <span aria-hidden="true"> - </span>
-          <span class:list={[isFsvTeam(result.awayTeam) && "result-team-fsv"]}>{result.awayTeam}</span>
-        </span>
-      </a>
-    ))}
+  <div class="result-tabs" role="tablist" aria-label="Ergebnisansicht">
+    <button type="button" role="tab" aria-selected="true" aria-controls="result-panel-last" id="result-tab-last" data-result-tab="last">
+      Letzte Ergebnisse
+    </button>
+    <button type="button" role="tab" aria-selected="false" aria-controls="result-panel-next" id="result-tab-next" data-result-tab="next">
+      Kommende Spiele
+    </button>
   </div>
+  <section id="result-panel-last" class="result-panel" role="tabpanel" aria-labelledby="result-tab-last" data-result-panel="last">
+    <div class="result-track">
+      {lastResults.length > 0 ? lastResults.map((result) => (
+        <a class="result-chip" href={`/teams/${result.teamSlug}`}>
+          <span class:list={["result-state", `result-state-${fsvScore(result).toLowerCase()}`]}>{fsvScore(result)}</span>
+          <span class="result-sport-icon" aria-hidden="true">{sportIcon(result)}</span>
+          <span>
+            <strong>{result.teamName}</strong>
+            <small>{metaLabel(result)}</small>
+          </span>
+          <b>{scoreLabel(result)}</b>
+          <span class="result-teams">
+            <span class:list={[isFsvTeam(result.homeTeam) && "result-team-fsv"]}>{result.homeTeam}</span>
+            <span aria-hidden="true"> - </span>
+            <span class:list={[isFsvTeam(result.awayTeam) && "result-team-fsv"]}>{result.awayTeam}</span>
+          </span>
+        </a>
+      )) : <p class="result-empty">Noch kein Ergebnis bekannt.</p>}
+    </div>
+  </section>
+  <section id="result-panel-next" class="result-panel" role="tabpanel" aria-labelledby="result-tab-next" data-result-panel="next" hidden>
+    <div class="result-track">
+      {nextFixtures.length > 0 ? nextFixtures.map((result) => (
+        <a class="result-chip" href={`/teams/${result.teamSlug}`}>
+          <span class:list={["result-state", "result-state-ns"]}>NS</span>
+          <span class="result-sport-icon" aria-hidden="true">{sportIcon(result)}</span>
+          <span>
+            <strong>{result.teamName}</strong>
+            <small>{metaLabel(result)}</small>
+          </span>
+          <b>-:-</b>
+          <span class="result-teams">
+            <span class:list={[isFsvTeam(result.homeTeam) && "result-team-fsv"]}>{result.homeTeam}</span>
+            <span aria-hidden="true"> - </span>
+            <span class:list={[isFsvTeam(result.awayTeam) && "result-team-fsv"]}>{result.awayTeam}</span>
+          </span>
+        </a>
+      )) : <p class="result-empty">Noch kein kommendes Spiel bekannt.</p>}
+    </div>
+  </section>
 </div>
+
+<script>
+  document.querySelectorAll("[data-result-banner]").forEach((banner) => {
+    const tabs = Array.from(banner.querySelectorAll("[data-result-tab]"));
+    const panels = Array.from(banner.querySelectorAll("[data-result-panel]"));
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = tab.getAttribute("data-result-tab");
+        tabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
+        panels.forEach((panel) => {
+          panel.toggleAttribute("hidden", panel.getAttribute("data-result-panel") !== target);
+        });
+      });
+    });
+  });
+</script>

@@ -809,6 +809,37 @@ h1 {
   white-space: nowrap;
 }
 
+.result-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+}
+
+.result-tabs button {
+  justify-content: center;
+  min-height: 34px;
+  padding: 7px 8px;
+  color: #d8e7f5;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  box-shadow: none;
+  font-size: 0.82rem;
+}
+
+.result-tabs button[aria-selected="true"] {
+  color: var(--black);
+  background: var(--lime);
+}
+
+.result-panel[hidden] {
+  display: none;
+}
+
 .result-track {
   display: grid;
   gap: 7px;
@@ -873,6 +904,16 @@ h1 {
 .result-state-ns {
   color: var(--black);
   background: var(--white);
+}
+
+.result-empty {
+  margin: 0;
+  padding: 12px;
+  color: #d8e7f5;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  text-align: center;
 }
 
 .team-spotlight {

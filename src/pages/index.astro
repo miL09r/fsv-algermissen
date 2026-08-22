@@ -24,7 +24,7 @@ const allNews = await getSiteNews(db);
 const latestNews = allNews.slice(0, 5);
 const youthNews = allNews.filter((item) => item.areaTags.includes("jugend")).slice(0, 2);
 const dartsNews = allNews.filter((item) => item.areaTags.includes("darts")).slice(0, 2);
-const heroResults = (await getSiteMatchResults(db, ["1-herren", "2-herren", "a-junioren", "ue32"])).slice(0, 4);
+const heroResults = await getSiteMatchResults(db, ["1-herren", "2-herren", "a-junioren", "ue32"]);
 const spotlightTeams = teams.filter((team) => ["1-herren", "2-herren", "a-junioren", "ue32"].includes(team.slug));
 const spotlightProfiles = new Map(
   await Promise.all(spotlightTeams.map(async (team) => [team.slug, await getSiteTeamProfile(db, team.slug)] as const))
