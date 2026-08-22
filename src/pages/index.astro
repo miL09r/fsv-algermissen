@@ -8,22 +8,22 @@ import SponsorMarquee from "../components/SponsorMarquee.astro";
 import TeamSpotlight from "../components/TeamSpotlight.astro";
 import {
   filterSponsors,
-  getNewsForArea,
-  getPublishedNews,
   getSponsorsForTeam,
   sponsors
 } from "../lib/data";
 import { getDb } from "../lib/server/auth";
 import { getSiteClubPages } from "../lib/server/club-pages";
 import { getSiteMatchResults } from "../lib/server/match-results";
+import { getSiteNews } from "../lib/server/news";
 import { getSiteTeamProfile, getSiteTeams } from "../lib/server/teams";
 
 const db = await getDb(Astro.locals);
 const teams = await getSiteTeams(db);
 const clubPages = await getSiteClubPages(db);
-const latestNews = getPublishedNews().slice(0, 5);
-const youthNews = getNewsForArea("jugend").slice(0, 2);
-const dartsNews = getNewsForArea("darts").slice(0, 2);
+const allNews = await getSiteNews(db);
+const latestNews = allNews.slice(0, 5);
+const youthNews = allNews.filter((item) => item.areaTags.includes("jugend")).slice(0, 2);
+const dartsNews = allNews.filter((item) => item.areaTags.includes("darts")).slice(0, 2);
 const heroResults = (await getSiteMatchResults(db, ["1-herren", "2-herren", "a-junioren", "ue32"])).slice(0, 4);
 const spotlightTeams = teams.filter((team) => ["1-herren", "2-herren", "a-junioren", "ue32"].includes(team.slug));
 const spotlightProfiles = new Map(

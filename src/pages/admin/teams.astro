@@ -22,6 +22,20 @@ const teamGroups = [
   { id: "jugend", label: "Jugend / JSG", teams: profileTeams.filter((team) => team.area === "jugend") },
   { id: "darts", label: "Darts", teams: profileTeams.filter((team) => team.area === "darts") }
 ];
+const positionOptions = [
+  "Torwart",
+  "Abwehr links",
+  "Abwehr Mitte links",
+  "Abwehr Mitte rechts",
+  "Abwehr rechts",
+  "Mittelfeld links",
+  "Mittelfeld zentral",
+  "Mittelfeld rechts",
+  "Angriff links",
+  "Sturm",
+  "Angriff rechts",
+  "Darts Spieler"
+];
 ---
 
 <BaseLayout title="Teams verwalten" description="Teamvorstellungen, Kader und Ergebnisse verwalten.">
@@ -87,6 +101,30 @@ const teamGroups = [
           Auf Startseite anzeigen
         </label>
         <button class="button" type="submit">Ergebnis speichern</button>
+      </form>
+
+      <form class="admin-panel form-grid" method="post" action="/api/admin/results/import">
+        <h2>FUSSBALL.DE Import</h2>
+        {message.get("import") === "ok" && <p class="status-pill">Import wurde verarbeitet</p>}
+        {message.get("import") === "empty" && <p class="status-pill danger">Keine verwertbaren Spiele gefunden</p>}
+        {message.get("import") === "missing" && <p class="status-pill danger">Bitte FUSSBALL.DE Adresse eintragen</p>}
+        <p class="form-note">Dieser Import liest Ergebnisse serverseitig aus und speichert sie in unserem Design. Auf der Website wird kein FUSSBALL.DE Widget angezeigt.</p>
+        <label>
+          Team
+          <select name="resultTeam">
+            {resultTeams.filter((team) => team.area !== "darts").map((team) => <option value={team.slug}>{team.name}</option>)}
+          </select>
+        </label>
+        <label>
+          FUSSBALL.DE Team- oder Spielplan-Adresse
+          <input name="sourceUrl" placeholder="https://www.fussball.de/..." />
+          <span class="field-hint">Die Adresse wird nur fuer den Import genutzt. Darts-Ergebnisse bleiben manuell.</span>
+        </label>
+        <label class="inline-check">
+          <input type="checkbox" name="showOnHomepage" checked />
+          Importierte Ergebnisse auf der Startseite anzeigen
+        </label>
+        <button class="button secondary" type="submit">FUSSBALL.DE Daten einlesen</button>
       </form>
 
       {teamGroups.map((group) => (
@@ -165,10 +203,49 @@ const teamGroups = [
               Vorstellungstext
               <textarea name="intro" placeholder="Absatz 1&#10;&#10;Absatz 2">{profile?.intro.join("\n\n") ?? ""}</textarea>
             </label>
-            <label>
-              Spieler / Staff
-              <textarea name="players" placeholder="Name; Rueckennummer; Position; Bild-URL; staff; Kurztext">{profile?.players.map((player) => [player.name, player.number ?? "", player.position ?? "", player.image ?? "", "", player.bio ?? ""].join("; ")).join("\n") ?? ""}</textarea>
-            </label>
+            <div class="player-editor" data-player-editor>
+              <div class="player-editor-head">
+                <div>
+                  <strong>Spieler und Positionen</strong>
+                  <p class="form-note">Name, Position und Bild steuern direkt die Teamvorstellung. Bei Fussball-Teams setzt die Position den Spieler auf den Platz.</p>
+                </div>
+                <button class="button secondary" type="button" data-add-player>Spieler hinzufuegen</button>
+              </div>
+              <textarea name="players" data-player-output hidden>{profile?.players.map((player) => [player.name, player.number ?? "", player.position ?? "", player.image ?? "", "", player.bio ?? ""].join("; ")).join("\n") ?? ""}</textarea>
+              <div class="player-list" data-player-list>
+                {(profile?.players ?? []).map((player) => (
+                  <div class="player-row" data-player-row>
+                    <label>
+                      Name
+                      <input data-player-field="name" value={player.name} placeholder="Max Mustermann" />
+                    </label>
+                    <label>
+                      Nr.
+                      <input data-player-field="number" value={player.number ?? ""} placeholder="10" />
+                    </label>
+                    <label>
+                      Position
+                      <select data-player-field="position">
+                        <option value="" selected={!player.position}>Bitte waehlen</option>
+                        {positionOptions.map((position) => (
+                          <option value={position} selected={player.position === position}>{position}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      Bild-URL
+                      <input data-player-field="image" value={player.image ?? ""} placeholder="/api/media/..." />
+                    </label>
+                    <label class="player-row-wide">
+                      Kurztext
+                      <textarea data-player-field="bio" placeholder="Kurzer Hinweis zum Spieler">{player.bio ?? ""}</textarea>
+                    </label>
+                    <button class="button ghost" type="button" data-remove-player>Entfernen</button>
+                  </div>
+                ))}
+              </div>
+              <p class="form-note">Spielerbilder werden zeilenweise zugeordnet: Der erste Upload gehoert zum ersten Spieler, der zweite Upload zum zweiten Spieler.</p>
+            </div>
             <label>
               Spielerbilder hochladen
               <input type="file" name="playerImages" accept="image/*" multiple />
@@ -208,4 +285,75 @@ const teamGroups = [
       })}
     </div>
   </section>
+  <script>
+    const positionOptions = [
+      "Torwart",
+      "Abwehr links",
+      "Abwehr Mitte links",
+      "Abwehr Mitte rechts",
+      "Abwehr rechts",
+      "Mittelfeld links",
+      "Mittelfeld zentral",
+      "Mittelfeld rechts",
+      "Angriff links",
+      "Sturm",
+      "Angriff rechts",
+      "Darts Spieler"
+    ];
+
+    const clean = (value: unknown) => String(value ?? "").replace(/;/g, ",").trim();
+
+    const createPlayerRow = () => {
+      const row = document.createElement("div");
+      row.className = "player-row";
+      row.dataset.playerRow = "";
+      row.innerHTML = `
+        <label>Name<input data-player-field="name" placeholder="Max Mustermann"></label>
+        <label>Nr.<input data-player-field="number" placeholder="10"></label>
+        <label>Position<select data-player-field="position"><option value="">Bitte waehlen</option>${positionOptions
+          .map((position) => `<option value="${position}">${position}</option>`)
+          .join("")}</select></label>
+        <label>Bild-URL<input data-player-field="image" placeholder="/api/media/..."></label>
+        <label class="player-row-wide">Kurztext<textarea data-player-field="bio" placeholder="Kurzer Hinweis zum Spieler"></textarea></label>
+        <button class="button ghost" type="button" data-remove-player>Entfernen</button>
+      `;
+      return row;
+    };
+
+    document.querySelectorAll("[data-player-editor]").forEach((editor) => {
+      const list = editor.querySelector("[data-player-list]");
+      const output = editor.querySelector("[data-player-output]");
+      const sync = () => {
+        if (!(output instanceof HTMLTextAreaElement)) return;
+        const rows = Array.from(editor.querySelectorAll("[data-player-row]"));
+        output.value = rows
+          .map((row) => {
+            const value = (field: string) => {
+              const input = row.querySelector(`[data-player-field="${field}"]`);
+              return input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement || input instanceof HTMLSelectElement
+                ? input.value
+                : "";
+            };
+            return [value("name"), value("number"), value("position"), value("image"), "", value("bio")].map(clean).join("; ");
+          })
+          .filter((line) => line.split(";")[0]?.trim())
+          .join("\n");
+      };
+
+      editor.querySelector("[data-add-player]")?.addEventListener("click", () => {
+        list?.append(createPlayerRow());
+        sync();
+      });
+
+      editor.addEventListener("input", sync);
+      editor.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement) || !target.matches("[data-remove-player]")) return;
+        target.closest("[data-player-row]")?.remove();
+        sync();
+      });
+      editor.closest("form")?.addEventListener("submit", sync);
+      sync();
+    });
+  </script>
 </BaseLayout>

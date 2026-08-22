@@ -1427,6 +1427,111 @@ h1 {
   line-height: 1.45;
 }
 
+.field-hint {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.rich-editor-field,
+.player-editor {
+  display: grid;
+  gap: 10px;
+}
+
+.rich-editor-label {
+  color: var(--black);
+  font-weight: 850;
+}
+
+.rich-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rich-toolbar button,
+.button.ghost {
+  min-height: 36px;
+  padding: 7px 11px;
+  color: var(--ink);
+  background: #eef6ff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.rich-toolbar button:hover,
+.button.ghost:hover {
+  color: var(--black);
+  background: var(--lime);
+}
+
+.rich-editor {
+  min-height: 220px;
+  padding: 14px;
+  overflow: auto;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  line-height: 1.6;
+}
+
+.rich-editor:focus {
+  border-color: var(--blue);
+  outline: 3px solid rgba(0, 129, 214, 0.14);
+}
+
+.rich-editor h2,
+.rich-editor h3,
+.rich-editor p,
+.rich-editor ul {
+  margin-top: 0;
+}
+
+.player-editor {
+  grid-column: 1 / -1;
+  padding: 14px;
+  background: rgba(238, 246, 255, 0.8);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.player-editor-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: start;
+}
+
+.player-editor-head strong {
+  color: var(--black);
+  font-size: 1rem;
+}
+
+.player-list {
+  display: grid;
+  gap: 10px;
+}
+
+.player-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.4fr) minmax(70px, 0.45fr) minmax(160px, 1fr) minmax(160px, 1.2fr) auto;
+  gap: 10px;
+  align-items: end;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(203, 216, 230, 0.95);
+  border-radius: var(--radius);
+}
+
+.player-row-wide {
+  grid-column: 1 / -2;
+}
+
 label {
   display: grid;
   gap: 7px;
@@ -1591,6 +1696,16 @@ fieldset input[type="checkbox"],
 
   .club-detail-row {
     grid-template-columns: 1fr;
+  }
+
+  .player-editor-head,
+  .player-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .player-row-wide {
+    grid-column: auto;
   }
 
   .hero {

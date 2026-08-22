@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import NewsCard from "../components/NewsCard.astro";
-import { getPublishedNews } from "../lib/data";
+import { getDb } from "../lib/server/auth";
+import { getSiteNews } from "../lib/server/news";
 
-const items = getPublishedNews();
+const db = await getDb(Astro.locals);
+const items = await getSiteNews(db);
 const filters = [
   "Alle",
   ...Array.from(new Set(items.flatMap((item) => [item.category, ...item.areaTags]))).sort()

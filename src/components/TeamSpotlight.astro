@@ -26,6 +26,44 @@ const lineupSlots = [
   "att-c",
   "att-r"
 ];
+const positionSlots: Record<string, string> = {
+  torwart: "gk",
+  keeper: "gk",
+  tw: "gk",
+  "abwehr links": "def-l",
+  "linke abwehr": "def-l",
+  "innenverteidigung links": "def-cl",
+  "abwehr mitte links": "def-cl",
+  innenverteidigung: "def-cl",
+  "abwehr mitte": "def-cl",
+  "abwehr mitte rechts": "def-cr",
+  "innenverteidigung rechts": "def-cr",
+  "abwehr rechts": "def-r",
+  "rechte abwehr": "def-r",
+  "mittelfeld links": "mid-l",
+  "linkes mittelfeld": "mid-l",
+  mittelfeld: "mid-c",
+  "zentrales mittelfeld": "mid-c",
+  "mittelfeld zentral": "mid-c",
+  "mittelfeld rechts": "mid-r",
+  "rechtes mittelfeld": "mid-r",
+  "angriff links": "att-l",
+  "linker fluegel": "att-l",
+  "linker flügel": "att-l",
+  sturm: "att-c",
+  "zentraler sturm": "att-c",
+  mittelstuermer: "att-c",
+  mittelstürmer: "att-c",
+  "angriff rechts": "att-r",
+  "rechter fluegel": "att-r",
+  "rechter flügel": "att-r"
+};
+
+const normalizePosition = (position?: string) =>
+  position?.trim().toLowerCase().replace(/\s+/g, " ") ?? "";
+
+const getLineupSlot = (position: string | undefined, index: number) =>
+  positionSlots[normalizePosition(position)] ?? lineupSlots[index] ?? "bench";
 ---
 
 <article class:list={["team-spotlight", compact && "team-spotlight-compact"]}>
@@ -50,7 +88,7 @@ const lineupSlots = [
         <span class="pitch-goal pitch-goal-bottom"></span>
         <span class="pitch-circle"></span>
         {lineup.map((player, index) => (
-          <span class:list={["lineup-player", `lineup-${lineupSlots[index] ?? "bench"}`]}>
+          <span class:list={["lineup-player", `lineup-${getLineupSlot(player.position, index)}`]} title={player.position ?? player.name}>
             {player.image && <img src={player.image} alt="" loading="lazy" />}
             <b>{player.number ?? "-"}</b>
             <span>{player.name}</span>

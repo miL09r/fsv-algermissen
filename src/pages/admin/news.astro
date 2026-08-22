@@ -1,8 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AdminNav from "../../components/AdminNav.astro";
-import { news } from "../../lib/data";
 import { getCurrentUser, getDb } from "../../lib/server/auth";
+import { getSiteNews } from "../../lib/server/news";
 import { getSiteTeams } from "../../lib/server/teams";
 
 export const prerender = false;
@@ -10,7 +10,9 @@ export const prerender = false;
 const db = await getDb(Astro.locals);
 const user = await getCurrentUser(db, Astro.cookies);
 if (!user) return Astro.redirect("/admin?error=auth");
+const message = new URL(Astro.request.url).searchParams;
 const teams = await getSiteTeams(db);
+const items = await getSiteNews(db, true);
 ---
 
 <BaseLayout title="News verwalten" description="News und Vereinsmeldungen verwalten.">
@@ -30,8 +32,12 @@ const teams = await getSiteTeams(db);
           <a href="#liste">Aktuelle News</a>
         </aside>
         <div class="admin-main">
-      <form id="artikel" class="admin-panel form-grid">
+      <form id="artikel" class="admin-panel form-grid" method="post" action="/api/admin/news/create">
         <h2>Artikel anlegen</h2>
+        {message.get("news") === "ok" && <p class="status-pill">News wurde gespeichert</p>}
+        {message.get("news") === "invalid" && <p class="status-pill danger">Bitte Titel, Teaser und Inhalt pruefen</p>}
+        {message.get("news") === "error" && <p class="status-pill danger">News konnte nicht gespeichert werden</p>}
+        <p class="form-note">Hier entstehen normale Website-News. Der Inhalt darf formatiert werden und wird als HTML gespeichert, damit Ueberschriften, Listen, Links und Hervorhebungen erhalten bleiben.</p>
         <label>
           Titel
           <input name="title" placeholder="Jugendcamp 2026" />
@@ -43,9 +49,19 @@ const teams = await getSiteTeams(db);
         <label>
           Status
           <select name="status">
-            <option>Entwurf</option>
-            <option>Veroeffentlicht</option>
-            <option>Geplant</option>
+            <option value="published">Veroeffentlicht</option>
+            <option value="draft">Entwurf</option>
+            <option value="scheduled">Geplant</option>
+          </select>
+        </label>
+        <label>
+          Kategorie
+          <select name="category">
+            <option value="verein">Verein</option>
+            <option value="fussball">Fussball</option>
+            <option value="jugend">Jugend</option>
+            <option value="darts">Darts</option>
+            <option value="sponsoren">Sponsoren</option>
           </select>
         </label>
         <label>
@@ -53,17 +69,37 @@ const teams = await getSiteTeams(db);
           <select name="teams" multiple size="8">
             {teams.map((team) => <option value={team.slug}>{team.name}</option>)}
           </select>
+          <span class="field-hint">Mehrere Teams mit Strg/Cmd anklicken. Ohne Auswahl erscheint die News allgemein im Verein.</span>
         </label>
         <label>
           Teaser
           <textarea name="teaser"></textarea>
         </label>
-        <button class="button" type="button">Speichern</button>
+        <label>
+          Bild-URL
+          <input name="imageUrl" placeholder="https://..." />
+        </label>
+        <div class="rich-editor-field">
+          <span class="rich-editor-label">Artikelinhalt</span>
+          <div class="rich-toolbar" aria-label="Text formatieren">
+            <button type="button" data-rich-command="formatBlock" data-rich-value="h2">H2</button>
+            <button type="button" data-rich-command="bold"><strong>B</strong></button>
+            <button type="button" data-rich-command="italic"><em>I</em></button>
+            <button type="button" data-rich-command="insertUnorderedList">Liste</button>
+            <button type="button" data-rich-link>Link</button>
+          </div>
+          <div class="rich-editor" contenteditable="true" data-rich-editor aria-label="Artikelinhalt eingeben">
+            <p>Hier den Artikel schreiben.</p>
+          </div>
+          <textarea name="body" data-rich-output required hidden></textarea>
+          <p class="form-note">Tipp: Text markieren und dann Fett, Kursiv, Liste oder Link waehlen.</p>
+        </div>
+        <button class="button" type="submit">News speichern</button>
       </form>
 
       <div id="liste" class="admin-panel">
         <h2>Aktuelle News</h2>
-        {news.map((item) => (
+        {items.map((item) => (
           <div class="content-card" style="margin-top: 12px;">
             <p class="eyebrow">{item.status} · {item.category}</p>
             <h3>{item.title}</h3>
@@ -75,4 +111,36 @@ const teams = await getSiteTeams(db);
       </div>
     </div>
   </section>
+  <script>
+    const editor = document.querySelector("[data-rich-editor]");
+    const output = document.querySelector("[data-rich-output]");
+    const form = document.querySelector("#artikel");
+
+    const syncEditor = () => {
+      if (editor instanceof HTMLElement && output instanceof HTMLTextAreaElement) {
+        output.value = editor.innerHTML.trim();
+      }
+    };
+
+    document.querySelectorAll("[data-rich-command]").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (!(button instanceof HTMLButtonElement)) return;
+        const command = button.dataset.richCommand ?? "";
+        const value = button.dataset.richValue;
+        document.execCommand(command, false, value);
+        syncEditor();
+      });
+    });
+
+    document.querySelector("[data-rich-link]")?.addEventListener("click", () => {
+      const url = window.prompt("Link-Adresse eingeben");
+      if (!url) return;
+      document.execCommand("createLink", false, url);
+      syncEditor();
+    });
+
+    editor?.addEventListener("input", syncEditor);
+    form?.addEventListener("submit", syncEditor);
+    syncEditor();
+  </script>
 </BaseLayout>
