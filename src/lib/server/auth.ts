@@ -17,7 +17,7 @@ export type AdminUser = {
 };
 
 const sessionCookie = "fsv_session";
-const newPasswordIterations = 210000;
+const newPasswordIterations = 100000;
 
 const hexToBytes = (hex: string) => {
   const bytes = new Uint8Array(hex.length / 2);
