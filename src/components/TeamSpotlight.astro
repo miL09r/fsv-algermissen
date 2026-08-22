@@ -10,6 +10,7 @@ type Props = {
 };
 
 const { team, profile, sponsors = [], compact = false, showLink = true } = Astro.props;
+const isDarts = team.area === "darts";
 const lineup = profile?.players.slice(0, 11) ?? [];
 const substitutes = profile?.players.slice(11, compact ? 14 : 18) ?? [];
 const lineupSlots = [
@@ -43,7 +44,7 @@ const lineupSlots = [
       </div>
     )}
 
-    {lineup.length > 0 && (
+    {lineup.length > 0 && !isDarts && (
       <div class="pitch-lineup" aria-label={`Aufstellung ${team.name}`}>
         <span class="pitch-goal pitch-goal-top"></span>
         <span class="pitch-goal pitch-goal-bottom"></span>
@@ -58,7 +59,19 @@ const lineupSlots = [
       </div>
     )}
 
-    {substitutes.length > 0 && (
+    {lineup.length > 0 && isDarts && (
+      <div class="player-strip player-strip-large" aria-label={`Spieler ${team.name}`}>
+        {lineup.map((player) => (
+          <span class="player-pill">
+            {player.image && <img src={player.image} alt="" loading="lazy" />}
+            <b>{player.number ?? player.position ?? "-"}</b>
+            {player.name}
+          </span>
+        ))}
+      </div>
+    )}
+
+    {substitutes.length > 0 && !isDarts && (
       <div class="player-strip" aria-label={`Kaderbank ${team.name}`}>
         {substitutes.map((player) => (
           <span class="player-pill">

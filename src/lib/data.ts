@@ -13,6 +13,7 @@ export type Team = {
   trainingLocation?: string;
   contacts: Array<{ role: string; name: string; email?: string; phone?: string }>;
   image?: string;
+  isActive?: boolean;
   sponsorSlugs?: string[];
   externalIds?: {
     clubId?: string;
@@ -27,7 +28,7 @@ export type TeamProfile = {
   headline: string;
   intro: string[];
   staff: Array<{ role: string; name: string }>;
-  players: Array<{ name: string; number?: string; image?: string }>;
+  players: Array<{ name: string; number?: string; image?: string; position?: string; bio?: string }>;
 };
 
 export type MatchResult = {

@@ -7,21 +7,21 @@ import TeamSpotlight from "../../components/TeamSpotlight.astro";
 import {
   getNewsForTeam,
   getSponsorsForTeam,
-  getTeamProfile,
-  teams
 } from "../../lib/data";
 import { getDb } from "../../lib/server/auth";
 import { getSiteMatchResults } from "../../lib/server/match-results";
+import { getSiteTeam, getSiteTeamProfile } from "../../lib/server/teams";
 
 export const prerender = false;
 
 const slug = String(Astro.params.slug ?? "");
-const team = teams.find((item) => item.slug === slug);
+const db = await getDb(Astro.locals);
+const team = await getSiteTeam(db, slug);
 if (!team) return Astro.redirect("/");
 
 const teamNews = getNewsForTeam(team.slug);
-const teamProfile = getTeamProfile(team.slug);
-const teamResults = (await getSiteMatchResults(await getDb(Astro.locals), [team.slug])).slice(0, 8);
+const teamProfile = await getSiteTeamProfile(db, team.slug);
+const teamResults = (await getSiteMatchResults(db, [team.slug])).slice(0, 8);
 const teamSponsors = getSponsorsForTeam(team.slug);
 ---
 

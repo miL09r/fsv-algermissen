@@ -1,5 +1,12 @@
 ---
-import { nav, site } from "../lib/data";
+import { site } from "../lib/data";
+import { getDb } from "../lib/server/auth";
+import { getSiteClubPages } from "../lib/server/club-pages";
+import { buildNavigation } from "../lib/server/navigation";
+import { getSiteTeams } from "../lib/server/teams";
+
+const db = await getDb(Astro.locals);
+const nav = buildNavigation(await getSiteTeams(db), await getSiteClubPages(db));
 ---
 
 <header class="site-header">

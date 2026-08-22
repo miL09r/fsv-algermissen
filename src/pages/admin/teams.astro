@@ -1,16 +1,21 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getResultsForTeam, getTeamProfile, teams } from "../../lib/data";
+import { getResultsForTeam } from "../../lib/data";
 import { getCurrentUser, getDb } from "../../lib/server/auth";
+import { getSiteTeamProfile, getSiteTeams } from "../../lib/server/teams";
 
 export const prerender = false;
 
-const user = await getCurrentUser(await getDb(Astro.locals), Astro.cookies);
+const db = await getDb(Astro.locals);
+const user = await getCurrentUser(db, Astro.cookies);
 if (!user) return Astro.redirect("/admin?error=auth");
 
 const message = new URL(Astro.request.url).searchParams;
-const profileTeams = teams.filter((team) => team.area !== "darts");
-const resultTeams = teams;
+const profileTeams = await getSiteTeams(db, { includeInactive: true });
+const resultTeams = profileTeams.filter((team) => team.area === "darts" || team.trainingTimes.length >= 0);
+const profiles = new Map(
+  await Promise.all(profileTeams.map(async (team) => [team.slug, await getSiteTeamProfile(db, team.slug)] as const))
+);
 ---
 
 <BaseLayout title="Teams verwalten" description="Teamvorstellungen, Kader und Ergebnisse verwalten.">
@@ -21,30 +26,10 @@ const resultTeams = teams;
   </header>
 
   <section class="section">
+    {message.get("team") === "ok" && <p class="status-pill">Team wurde gespeichert</p>}
+    {message.get("team") === "invalid" && <p class="status-pill danger">Teamdaten unvollstaendig</p>}
+    {message.get("team") === "forbidden" && <p class="status-pill danger">Keine Berechtigung fuer dieses Team</p>}
     <div class="admin-grid">
-      <form class="admin-panel form-grid">
-        <h2>Teamvorstellung pflegen</h2>
-        <label>
-          Team
-          <select name="team">
-            {profileTeams.map((team) => <option value={team.slug}>{team.name}</option>)}
-          </select>
-        </label>
-        <label>
-          Ueberschrift
-          <input name="headline" placeholder="Kreisliga-Fussball in der REWE-Rudat-Arena" />
-        </label>
-        <label>
-          Vorstellungstext
-          <textarea name="intro" placeholder="Trainingszeiten, Trainer, Liga, Team-Partner ..."></textarea>
-        </label>
-        <label>
-          Spieler/Kader
-          <textarea name="players" placeholder="Name; Rueckennummer; Bild-URL"></textarea>
-        </label>
-        <button class="button" type="button">Speichern</button>
-      </form>
-
       <form class="admin-panel form-grid" method="post" action="/api/admin/results/create">
         <h2>Ergebnis eintragen</h2>
         {message.get("result") === "ok" && <p class="status-pill">Ergebnis wurde gespeichert</p>}
@@ -86,6 +71,86 @@ const resultTeams = teams;
         </label>
         <button class="button" type="submit">Ergebnis speichern</button>
       </form>
+
+      {profileTeams.map((team) => {
+        const profile = profiles.get(team.slug);
+        return (
+          <form id={`team-${team.slug}`} class="admin-panel form-grid" method="post" action="/api/admin/teams/update" enctype="multipart/form-data">
+            <input type="hidden" name="teamSlug" value={team.slug} />
+            <h2>{team.name}</h2>
+            <label class="inline-check">
+              <input type="checkbox" name="isActive" checked={team.isActive !== false} />
+              In Navigation und Seiten anzeigen
+            </label>
+            <label>
+              Bereich
+              <select name="area">
+                <option value="senioren" selected={team.area === "senioren"}>Fussball / Senioren</option>
+                <option value="jugend" selected={team.area === "jugend"}>Jugend / JSG</option>
+                <option value="darts" selected={team.area === "darts"}>Darts</option>
+              </select>
+            </label>
+            <label>
+              Teamname
+              <input name="name" value={team.name} required />
+            </label>
+            <label>
+              Navigationsname
+              <input name="shortName" value={team.shortName} required />
+            </label>
+            <label>
+              Jahrgang / Altersklasse
+              <input name="ageGroup" value={team.ageGroup ?? ""} />
+            </label>
+            <label>
+              Liga / Wettbewerb
+              <input name="league" value={team.league ?? ""} />
+            </label>
+            <label>
+              Trainingsort
+              <input name="trainingLocation" value={team.trainingLocation ?? ""} />
+            </label>
+            <label>
+              Beschreibung
+              <textarea name="description" required>{team.description}</textarea>
+            </label>
+            <label>
+              Teamfoto hochladen
+              <input type="file" name="teamImage" accept="image/*" />
+            </label>
+            <label>
+              Teamfoto-URL
+              <input name="imageUrl" value={team.image ?? ""} />
+            </label>
+            <label>
+              Trainingszeiten
+              <textarea name="trainingTimes" placeholder="Donnerstag; 19:00; 21:00; Clubhaus; Training">{team.trainingTimes.join("\n")}</textarea>
+            </label>
+            <label>
+              Kontakte
+              <textarea name="contacts" placeholder="Trainer; Max Mustermann; mail@example.de; 0151...">{team.contacts.map((contact) => [contact.role, contact.name, contact.email ?? "", contact.phone ?? ""].join("; ")).join("\n")}</textarea>
+            </label>
+            <label>
+              Ueberschrift Teamvorstellung
+              <input name="headline" value={profile?.headline ?? ""} />
+            </label>
+            <label>
+              Vorstellungstext
+              <textarea name="intro" placeholder="Absatz 1&#10;&#10;Absatz 2">{profile?.intro.join("\n\n") ?? ""}</textarea>
+            </label>
+            <label>
+              Spieler / Staff
+              <textarea name="players" placeholder="Name; Rueckennummer; Position; Bild-URL; staff; Kurztext">{profile?.players.map((player) => [player.name, player.number ?? "", player.position ?? "", player.image ?? "", "", player.bio ?? ""].join("; ")).join("\n") ?? ""}</textarea>
+            </label>
+            <label>
+              Spielerbilder hochladen
+              <input type="file" name="playerImages" accept="image/*" multiple />
+            </label>
+            <p class="form-note">Spielerbilder werden zeilenweise zugeordnet. Zeile 1 im Kader bekommt Bild 1, Zeile 2 bekommt Bild 2.</p>
+            <button class="button" type="submit">Team speichern</button>
+          </form>
+        );
+      })}
     </div>
   </section>
 
@@ -99,7 +164,7 @@ const resultTeams = teams;
     </div>
     <div class="feature-grid">
       {resultTeams.slice(0, 9).map((team) => {
-        const profile = getTeamProfile(team.slug);
+        const profile = profiles.get(team.slug);
         const results = getResultsForTeam(team.slug);
         return (
           <div class="feature-card">

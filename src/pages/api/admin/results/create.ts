@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { teams } from "../../../../lib/data";
 import { getCurrentUser, getDb } from "../../../../lib/server/auth";
 
 export const prerender = false;
@@ -28,12 +27,11 @@ export const POST: APIRoute = async ({ request, locals, cookies, redirect }) => 
   const matchday = String(formData.get("matchday") ?? "").trim();
   const showOnHomepage = formData.get("showOnHomepage") === "on" ? 1 : 0;
 
-  const knownTeam = teams.find((team) => team.slug === teamSlug);
-  if (!knownTeam || !homeTeam || !awayTeam || !score || !date) {
+  if (!teamSlug || !homeTeam || !awayTeam || !score || !date) {
     return redirect("/admin/teams?result=invalid", 303);
   }
 
-  const team = await db.prepare("SELECT id FROM teams WHERE slug = ?").bind(teamSlug).first<{ id: number }>();
+  const team = await db.prepare("SELECT id, league FROM teams WHERE slug = ?").bind(teamSlug).first<{ id: number; league: string | null }>();
   if (!team) return redirect("/admin/teams?result=invalid", 303);
 
   if (currentUser.role !== "admin") {
@@ -72,7 +70,7 @@ export const POST: APIRoute = async ({ request, locals, cookies, redirect }) => 
       score.homeGoals,
       score.awayGoals,
       date,
-      competition || knownTeam.league || "Spielbetrieb",
+      competition || team.league || "Spielbetrieb",
       matchday || null,
       null,
       null,

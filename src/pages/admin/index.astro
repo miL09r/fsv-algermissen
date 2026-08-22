@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { teams } from "../../lib/data";
 import { getCurrentUser, getDb } from "../../lib/server/auth";
+import { getSiteTeams } from "../../lib/server/teams";
 
 export const prerender = false;
 
@@ -29,7 +29,7 @@ const pendingRequests =
           .all<RegistrationRequest>()
       ).results
     : [];
-const editableTeams = teams;
+const editableTeams = await getSiteTeams(db, { includeInactive: true });
 const message = Astro.url.searchParams;
 ---
 
@@ -53,6 +53,7 @@ const message = Astro.url.searchParams;
         <form class="admin-panel form-grid" method="post" action="/api/admin/login">
           <h2>Anmelden</h2>
           {message.get("error") === "login" && <p class="status-pill danger">Login fehlgeschlagen</p>}
+          {message.get("error") === "server" && <p class="status-pill danger">Login technisch fehlgeschlagen</p>}
           <label>
             E-Mail
             <input type="email" name="email" autocomplete="username" required />

@@ -2,8 +2,11 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TeamGrid from "../components/TeamGrid.astro";
 import NewsCard from "../components/NewsCard.astro";
-import { getNewsForArea, teams } from "../lib/data";
+import { getNewsForArea } from "../lib/data";
+import { getDb } from "../lib/server/auth";
+import { getSiteTeams } from "../lib/server/teams";
 
+const teams = await getSiteTeams(await getDb(Astro.locals));
 const dartsTeams = teams.filter((team) => team.area === "darts");
 const dartsNews = getNewsForArea("darts");
 ---
@@ -29,9 +32,7 @@ const dartsNews = getNewsForArea("darts");
       </article>
       <aside class="content-card">
         <h2>Darts-Teams</h2>
-        <p>A-Team: Bezirksklasse 4</p>
-        <p>B-Team: Kreisoberliga 3</p>
-        <p>C-Team: Kreisklasse 06</p>
+        {dartsTeams.map((team) => <p>{team.shortName}: {team.league ?? "Spielbetrieb"}</p>)}
       </aside>
     </div>
   </section>

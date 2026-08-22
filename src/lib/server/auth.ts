@@ -17,7 +17,7 @@ export type AdminUser = {
 };
 
 const sessionCookie = "fsv_session";
-const iterations = 210000;
+const newPasswordIterations = 210000;
 
 const hexToBytes = (hex: string) => {
   const bytes = new Uint8Array(hex.length / 2);
@@ -75,8 +75,8 @@ export function randomToken(byteLength = 32) {
 }
 
 export async function hashPassword(password: string, salt = randomToken(16)) {
-  const derived = await derivePbkdf2(password, hexToBytes(salt), iterations);
-  return `pbkdf2-sha256$${iterations}$${salt}$${bytesToHex(derived)}`;
+  const derived = await derivePbkdf2(password, hexToBytes(salt), newPasswordIterations);
+  return `pbkdf2-sha256$${newPasswordIterations}$${salt}$${bytesToHex(derived)}`;
 }
 
 export async function verifyPassword(password: string, storedHash: string) {

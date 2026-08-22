@@ -1,12 +1,15 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { news, teams } from "../../lib/data";
+import { news } from "../../lib/data";
 import { getCurrentUser, getDb } from "../../lib/server/auth";
+import { getSiteTeams } from "../../lib/server/teams";
 
 export const prerender = false;
 
-const user = await getCurrentUser(await getDb(Astro.locals), Astro.cookies);
+const db = await getDb(Astro.locals);
+const user = await getCurrentUser(db, Astro.cookies);
 if (!user) return Astro.redirect("/admin?error=auth");
+const teams = await getSiteTeams(db);
 ---
 
 <BaseLayout title="News verwalten" description="News und Vereinsmeldungen verwalten.">
