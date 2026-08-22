@@ -2,7 +2,6 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import NewsCard from "../../components/NewsCard.astro";
 import MatchCenter from "../../components/MatchCenter.astro";
-import ResultBanner from "../../components/ResultBanner.astro";
 import TeamSpotlight from "../../components/TeamSpotlight.astro";
 import {
   getNewsForTeam,
@@ -33,10 +32,10 @@ const teamSponsors = getSponsorsForTeam(team.slug);
   </header>
 
   <section class="section">
-    <div class="split">
-      <div>
-        <TeamSpotlight team={team} profile={teamProfile} sponsors={teamSponsors} showLink={false} />
-        <div class="feature-grid" style="margin-top: 18px;">
+    <div class="team-detail-layout">
+      <div class="team-detail-main">
+        <TeamSpotlight team={team} profile={teamProfile} sponsors={teamSponsors} showLink={false} detail />
+        <div class="feature-grid team-facts">
           <div class="feature-card">
             <h3>Training</h3>
             {team.trainingTimes.map((time) => <p>{time}</p>)}
@@ -54,10 +53,9 @@ const teamSponsors = getSponsorsForTeam(team.slug);
           </div>
         </div>
       </div>
-      <div>
-        {teamResults.length > 0 && <ResultBanner results={teamResults.slice(0, 5)} />}
-        <MatchCenter results={teamResults} team={team} />
-      </div>
+      <aside class="team-detail-aside">
+        <MatchCenter results={teamResults} team={team} compact />
+      </aside>
     </div>
   </section>
 

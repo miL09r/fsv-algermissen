@@ -139,12 +139,12 @@ export const currentSeason = "2026/2027";
 export const teams: Team[] = [
   {
     slug: "1-herren",
-    name: "1. Herren",
+    name: "Herren - FSV Algermissen",
     shortName: "1. Herren",
     area: "senioren",
-    league: "Kreisliga Staffel A",
+    league: "Kreisliga Staffel A · Krombacher Kreispokal · Gilde Börde Cup 2026 · Freundschaftsspiele",
     description:
-      "Die 1. Herren geht in dieser Saison in der Kreisliga Staffel A an den Start.",
+      "Die 1. Herren des FSV Algermissen spielt in der Saison 2026/2027 in der Kreisliga Staffel A.",
     trainingTimes: ["Dienstag 19:00-21:00", "Donnerstag 19:00-21:00"],
     trainingLocation: "REWE-Rudat-Arena",
     contacts: [{ role: "Sportliche Leitung", name: "FSV Algermissen" }],
@@ -159,12 +159,12 @@ export const teams: Team[] = [
   },
   {
     slug: "2-herren",
-    name: "2. Herren",
+    name: "Herren - FSV Algermissen II",
     shortName: "2. Herren",
     area: "senioren",
-    league: "2. Kreisklasse Staffel A",
+    league: "2. Kreisklasse Staffel A · Freundschaftsspiele",
     description:
-      "Die 2. Herren geht in dieser Saison in der 2. Kreisklasse Staffel A an den Start.",
+      "Die 2. Herren des FSV Algermissen spielt in der Saison 2026/2027 in der 2. Kreisklasse Staffel A.",
     trainingTimes: ["Dienstag 19:00-21:00", "Donnerstag 19:00-21:00"],
     trainingLocation: "Ostpreussen-Stadion",
     contacts: [
@@ -181,12 +181,13 @@ export const teams: Team[] = [
   },
   {
     slug: "ue32",
-    name: "Alt-Herren (Ü32)",
+    name: "Herren Ü32 - FSV Algermissen",
     shortName: "Ü32",
     area: "senioren",
-    league: "Ü32 2. Kreisklasse Staffel A",
+    ageGroup: "Ü32",
+    league: "Ü32 2.Kreisklasse Staffel A · Kreispokal Ü32 Kleinfeld",
     description:
-      "Die Ü32 spielt in der 2. Kreisklasse 8er-Feld und trainiert mittwochs am Grasweg.",
+      "Herren Ü32 des FSV Algermissen im Spielbetrieb 2026/2027.",
     trainingTimes: ["Mittwoch 19:00"],
     trainingLocation: "Sportplatz am Grasweg",
     contacts: [{ role: "Ansprechpartner", name: "Alexander Reslan", email: "alexander.reslan@fsvalgermissen.de" }],
@@ -199,11 +200,13 @@ export const teams: Team[] = [
   },
   {
     slug: "ue40",
-    name: "Alt-Senioren (Ü40)",
+    name: "Herren Ü40 - FSV Algermissen",
     shortName: "Ü40",
     area: "senioren",
+    ageGroup: "Ü40",
+    league: "Kreisliga A · Kreispokal",
     description:
-      "Die Alt-Senioren gehören sichtbar zur Vereinsstruktur und erhalten eigene Inhalte.",
+      "Herren Ü40 des FSV Algermissen im Spielbetrieb 2026/2027.",
     trainingTimes: ["nach Absprache"],
     contacts: [{ role: "Ansprechpartner", name: "FSV Algermissen" }],
     externalIds: {
@@ -229,12 +232,12 @@ export const teams: Team[] = [
   },
   {
     slug: "a-junioren",
-    name: "A-Junioren",
+    name: "A-Junioren - JSG Nord",
     shortName: "A-Junioren",
     area: "jugend",
     ageGroup: "A",
-    league: "A-Junioren Kreisliga Staffel A",
-    description: "Die A-Junioren der JSG Nord sind der U19-Bereich im FSV/JSG-Kontext.",
+    league: "A-Junioren Kreisliga Staffel A · Kreispokal A-Junioren · Leistungsvergleich · Freundschaftsspiele",
+    description: "A-Junioren der JSG Nord im Spielbetrieb 2026/2027.",
     trainingTimes: ["Montag 17:00-18:30", "Donnerstag 17:00-18:30"],
     trainingLocation: "Luehnde, Hangeraethsweg",
     contacts: [{ role: "Trainer", name: "Sebastian Boppel", email: "2007er@jsg-nord.com", phone: "015154309230" }],
@@ -247,11 +250,12 @@ export const teams: Team[] = [
   },
   {
     slug: "b-junioren",
-    name: "B-Junioren",
+    name: "B-Junioren - JSG Nord",
     shortName: "B-Junioren",
     area: "jugend",
     ageGroup: "B",
-    description: "B-Junioren mit Spielbetrieb, Training, Trainerteam und aktuellen Mannschaftsinfos.",
+    league: "B-Junioren Kreisliga Staffel A · Kreispokal B-Junioren · Freundschaftsspiele",
+    description: "B-Junioren der JSG Nord im Spielbetrieb 2026/2027.",
     trainingTimes: ["nach Teamplan"],
     contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
@@ -262,11 +266,12 @@ export const teams: Team[] = [
   },
   {
     slug: "c-junioren",
-    name: "C-Junioren",
+    name: "C-Junioren - JSG Nord",
     shortName: "C-Junioren",
     area: "jugend",
     ageGroup: "C",
-    description: "C-Junioren der JSG Nord mit eigener Mannschaftsseite und aktuellen Vereinsmeldungen.",
+    league: "C-Junioren 1. KK Staffel A · Kreispokal C-Junioren · Freundschaftsspiele",
+    description: "C-Junioren der JSG Nord im Spielbetrieb 2026/2027.",
     trainingTimes: ["nach Teamplan"],
     contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
@@ -277,11 +282,12 @@ export const teams: Team[] = [
   },
   {
     slug: "d-junioren",
-    name: "D-Junioren",
+    name: "D-Junioren - JSG Nord",
     shortName: "D-Junioren",
     area: "jugend",
     ageGroup: "D",
-    description: "D-Junioren als eigener Bereich innerhalb der JSG- und Jugendstruktur.",
+    league: "1.Kreisklasse Staffel B (Hinrunde) · Kreispokal D-Junioren · Freundschaftsspiele",
+    description: "D-Junioren der JSG Nord im Spielbetrieb 2026/2027.",
     trainingTimes: ["nach Teamplan"],
     contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
@@ -292,12 +298,12 @@ export const teams: Team[] = [
   },
   {
     slug: "e-junioren",
-    name: "E-Junioren Team 1 & 2",
-    shortName: "E-Junioren",
+    name: "E-Junioren - JSG Nord I",
+    shortName: "E-Junioren I",
     area: "jugend",
     ageGroup: "E",
-    description:
-      "Die Architektur erlaubt mehrere Teams pro Jahrgang, etwa E I, E II oder weitere Mannschaften.",
+    league: "1.Kreisklasse Staffel A (Hinrunde)",
+    description: "E-Junioren JSG Nord I im Spielbetrieb 2026/2027.",
     trainingTimes: ["nach Teamplan"],
     contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
@@ -307,12 +313,46 @@ export const teams: Team[] = [
     }
   },
   {
+    slug: "e-junioren-ii",
+    name: "E-Junioren - JSG Nord II",
+    shortName: "E-Junioren II",
+    area: "jugend",
+    ageGroup: "E",
+    league: "1.Kreisklasse Staffel A (Hinrunde)",
+    description: "E-Junioren JSG Nord II im Spielbetrieb 2026/2027.",
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }]
+  },
+  {
+    slug: "e-junioren-iii",
+    name: "E-Junioren - JSG Nord III",
+    shortName: "E-Junioren III",
+    area: "jugend",
+    ageGroup: "E",
+    league: "1.Kreisklasse Staffel C (Hinrunde)",
+    description: "E-Junioren JSG Nord III im Spielbetrieb 2026/2027.",
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }]
+  },
+  {
+    slug: "e-junioren-iv",
+    name: "E-Junioren - JSG Nord IV",
+    shortName: "E-Junioren IV",
+    area: "jugend",
+    ageGroup: "E",
+    league: "1.Kreisklasse Staffel B (Hinrunde)",
+    description: "E-Junioren JSG Nord IV im Spielbetrieb 2026/2027.",
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }]
+  },
+  {
     slug: "f-junioren",
-    name: "F-Junioren",
-    shortName: "F-Junioren",
+    name: "F-Junioren - JSG Nord U9-1",
+    shortName: "F U9-1",
     area: "jugend",
     ageGroup: "F",
-    description: "F-Junioren mit Raum fuer Trainingszeiten, Ansprechpartner und kindgerechte News.",
+    league: "Festival A Kaspel 3/1",
+    description: "F-Junioren JSG Nord U9-1 im Festival-Spielbetrieb 2026/2027.",
     trainingTimes: ["nach Teamplan"],
     contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {
@@ -322,12 +362,35 @@ export const teams: Team[] = [
     }
   },
   {
+    slug: "f-junioren-u9-2",
+    name: "F-Junioren - JSG Nord U9-2",
+    shortName: "F U9-2",
+    area: "jugend",
+    ageGroup: "F",
+    league: "Festival D Giften",
+    description: "F-Junioren JSG Nord U9-2 im Festival-Spielbetrieb 2026/2027.",
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }]
+  },
+  {
+    slug: "f-junioren-u8-1",
+    name: "F-Junioren - JSG Nord U8-1",
+    shortName: "F U8-1",
+    area: "jugend",
+    ageGroup: "F",
+    league: "Festival D Giften",
+    description: "F-Junioren JSG Nord U8-1 im Festival-Spielbetrieb 2026/2027.",
+    trainingTimes: ["nach Teamplan"],
+    contacts: [{ role: "Trainerteam", name: "JSG Nord" }]
+  },
+  {
     slug: "g-junioren",
-    name: "G-Junioren",
-    shortName: "G-Junioren",
+    name: "G-Junioren - JSG Nord U7-1",
+    shortName: "G U7-1",
     area: "jugend",
     ageGroup: "G",
-    description: "G-Junioren als frueher Einstieg in den Fussball beim FSV.",
+    league: "Festival B",
+    description: "G-Junioren JSG Nord U7-1 im Festival-Spielbetrieb 2026/2027.",
     trainingTimes: ["nach Teamplan"],
     contacts: [{ role: "Trainerteam", name: "JSG Nord" }],
     externalIds: {

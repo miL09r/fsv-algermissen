@@ -7,9 +7,10 @@ type Props = {
   sponsors?: Sponsor[];
   compact?: boolean;
   showLink?: boolean;
+  detail?: boolean;
 };
 
-const { team, profile, sponsors = [], compact = false, showLink = true } = Astro.props;
+const { team, profile, sponsors = [], compact = false, showLink = true, detail = false } = Astro.props;
 const isDarts = team.area === "darts";
 const lineup = profile?.players.slice(0, 11) ?? [];
 const substitutes = profile?.players.slice(11, compact ? 14 : 18) ?? [];
@@ -66,7 +67,7 @@ const getLineupSlot = (position: string | undefined, index: number) =>
   positionSlots[normalizePosition(position)] ?? lineupSlots[index] ?? "bench";
 ---
 
-<article class:list={["team-spotlight", compact && "team-spotlight-compact"]}>
+<article class:list={["team-spotlight", compact && "team-spotlight-compact", detail && "team-spotlight-detail"]}>
   {team.image && <img class="team-spotlight-image" src={team.image} alt="" loading="lazy" />}
   <div class="team-spotlight-body">
     <p class="eyebrow">Teamvorstellung</p>

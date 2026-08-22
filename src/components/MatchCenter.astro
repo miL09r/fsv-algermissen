@@ -4,9 +4,10 @@ import { teams, type MatchResult, type Team } from "../lib/data";
 type Props = {
   results: MatchResult[];
   team?: Team;
+  compact?: boolean;
 };
 
-const { results, team } = Astro.props;
+const { results, team, compact = false } = Astro.props;
 
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat("de-DE", { day: "2-digit", month: "2-digit", year: "2-digit" }).format(new Date(value));
@@ -28,17 +29,17 @@ const sportIcon = (result: MatchResult) => {
 const lastResults = results
   .filter((result) => !isFixture(result) && result.homeGoals !== undefined && result.awayGoals !== undefined)
   .sort((a, b) => b.date.localeCompare(a.date))
-  .slice(0, team ? 4 : 6);
+  .slice(0, compact ? 1 : team ? 4 : 6);
 
 const nextFixtures = results
   .filter((result) => isFixture(result) || result.homeGoals === undefined || result.awayGoals === undefined)
   .sort((a, b) => a.date.localeCompare(b.date))
-  .slice(0, team ? 4 : 6);
+  .slice(0, compact ? 1 : team ? 4 : 6);
 
 const hasContent = lastResults.length > 0 || nextFixtures.length > 0;
 ---
 
-<div class="matchcenter-board" aria-label="Matchcenter">
+<div class:list={["matchcenter-board", compact && "matchcenter-board-compact"]} aria-label="Matchcenter">
   <div class="matchcenter-topline">
     <span>Saison 26/27</span>
     <strong>{team ? team.name : "FSV Algermissen"}</strong>
