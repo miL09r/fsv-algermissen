@@ -1930,7 +1930,7 @@ fieldset input[type="checkbox"],
   }
 
   .league-table {
-    min-width: 420px;
+    min-width: 0;
   }
 
   .league-table .hide-compact {
