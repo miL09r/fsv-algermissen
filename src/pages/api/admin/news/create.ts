@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { getCurrentUser, getDb } from "../../../../lib/server/auth";
+import { getMediaBucket, uploadMediaFile } from "../../../../lib/server/media";
 
 export const prerender = false;
 
@@ -48,7 +49,6 @@ export const POST: APIRoute = async ({ request, locals, cookies, redirect }) => 
   const body = sanitizeBody(text(formData, "body"));
   const status = mapStatus(text(formData, "status"));
   const categorySlug = text(formData, "category") || "verein";
-  const imageUrl = text(formData, "imageUrl") || null;
   const publishedAt = status === "published" ? new Date().toISOString() : null;
   let slug = slugify(text(formData, "slug") || title);
 
@@ -68,6 +68,10 @@ export const POST: APIRoute = async ({ request, locals, cookies, redirect }) => 
 
   const existing = await db.prepare("SELECT id FROM news WHERE slug = ?").bind(slug).first<{ id: number }>();
   if (existing) slug = `${slug}-${Date.now().toString(36)}`;
+
+  const bucket = await getMediaBucket(locals);
+  const uploadedImage = await uploadMediaFile(db, bucket, formData.get("newsImage"), currentUser.id);
+  const imageUrl = uploadedImage || text(formData, "imageUrl") || null;
 
   const result = await db
     .prepare(

@@ -179,13 +179,17 @@ const positionOptions = [
               Beschreibung
               <textarea name="description" required>{team.description}</textarea>
             </label>
+            <div class="upload-field">
+              <label>
+                Teamfoto hochladen
+                <input type="file" name="teamImage" accept="image/*" />
+              </label>
+              <p class="field-hint">Direkt vom Computer hochladen. Dieses Bild wird fuer Teamkarte, Teamseite und Teamvorstellung genutzt.</p>
+            </div>
             <label>
-              Teamfoto hochladen
-              <input type="file" name="teamImage" accept="image/*" />
-            </label>
-            <label>
-              Teamfoto-URL
+              Alternativ Teamfoto-URL
               <input name="imageUrl" value={team.image ?? ""} />
+              <span class="field-hint">Nur noetig, wenn das Bild bereits online liegt.</span>
             </label>
             <label>
               Trainingszeiten
@@ -249,6 +253,7 @@ const positionOptions = [
             <label>
               Spielerbilder hochladen
               <input type="file" name="playerImages" accept="image/*" multiple />
+              <span class="field-hint">Mehrere Bilder auswaehlen. Die Reihenfolge entspricht der Spielerliste oben.</span>
             </label>
             <p class="form-note">Spielerbilder werden zeilenweise zugeordnet. Zeile 1 im Kader bekommt Bild 1, Zeile 2 bekommt Bild 2.</p>
             <button class="button" type="submit">Team speichern</button>

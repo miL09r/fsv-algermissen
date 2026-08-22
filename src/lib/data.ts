@@ -128,7 +128,7 @@ export const site = {
     white: "#ffffff"
   },
   socialLinks: [
-    { label: "Instagram", href: "https://www.instagram.com/fsvalgermissen/" },
+    { label: "Instagram", href: "https://www.instagram.com/fsv.algermissen/" },
     { label: "JSG Nord Facebook", href: "https://www.facebook.com/elsternkids/" },
     { label: "FUSSBALL.DE", href: "https://www.fussball.de/" }
   ]

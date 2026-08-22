@@ -32,7 +32,7 @@ const items = await getSiteNews(db, true);
           <a href="#liste">Aktuelle News</a>
         </aside>
         <div class="admin-main">
-      <form id="artikel" class="admin-panel form-grid" method="post" action="/api/admin/news/create">
+      <form id="artikel" class="admin-panel form-grid" method="post" action="/api/admin/news/create" enctype="multipart/form-data">
         <h2>Artikel anlegen</h2>
         {message.get("news") === "ok" && <p class="status-pill">News wurde gespeichert</p>}
         {message.get("news") === "invalid" && <p class="status-pill danger">Bitte Titel, Teaser und Inhalt pruefen</p>}
@@ -75,9 +75,17 @@ const items = await getSiteNews(db, true);
           Teaser
           <textarea name="teaser"></textarea>
         </label>
+        <div class="upload-field">
+          <label>
+            Titelbild hochladen
+            <input type="file" name="newsImage" accept="image/*" />
+          </label>
+          <p class="field-hint">Direkt vom Computer hochladen. Das Bild erscheint auf der News-Kachel und kann spaeter ersetzt werden.</p>
+        </div>
         <label>
-          Bild-URL
+          Alternativ Bild-URL
           <input name="imageUrl" placeholder="https://..." />
+          <span class="field-hint">Nur verwenden, wenn das Bild bereits online liegt.</span>
         </label>
         <div class="rich-editor-field">
           <span class="rich-editor-label">Artikelinhalt</span>

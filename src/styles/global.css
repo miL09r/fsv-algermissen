@@ -1434,6 +1434,15 @@ h1 {
   line-height: 1.35;
 }
 
+.upload-field {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(238, 246, 255, 0.8);
+  border: 1px dashed rgba(0, 105, 180, 0.42);
+  border-radius: var(--radius);
+}
+
 .rich-editor-field,
 .player-editor {
   display: grid;
